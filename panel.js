@@ -513,9 +513,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         errOldPw.style.display = 'none';
       }
 
-      if (!newPw || newPw.length < 8) {
+      if (!newPw || newPw.length < 12) {
         if (errNewPw) {
-          errNewPw.textContent = 'Yeni şifre en az 8 karakter olmalıdır.';
+          errNewPw.textContent = 'Yeni şifre en az 12 karakter olmalıdır.';
           errNewPw.style.display = 'block';
         }
         valid = false;

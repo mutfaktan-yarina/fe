@@ -49,7 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (inpNew) {
     inpNew.addEventListener('input', () => {
       checkStrength(inpNew.value);
-      if (fieldNew.classList.contains('invalid') && inpNew.value.length >= 8) {
+      if (fieldNew.classList.contains('invalid') && inpNew.value.length >= 12) {
         fieldNew.classList.remove('invalid');
       }
     });
@@ -86,9 +86,9 @@ document.addEventListener('DOMContentLoaded', () => {
       const p1 = inpNew.value;
       const p2 = inpConfirm.value;
 
-      if (p1.length < 8) {
+      if (p1.length < 12) {
         fieldNew.classList.add('invalid');
-        errNew.textContent = 'Şifreniz en az 8 karakter uzunluğunda olmalıdır.';
+        errNew.textContent = 'Şifreniz en az 12 karakter uzunluğunda olmalıdır.';
         isValid = false;
       }
 

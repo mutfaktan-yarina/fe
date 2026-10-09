@@ -72,7 +72,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const score = evaluateStrength(val);
       if (score <= 1) {
         pwStrengthFill.classList.add('weak');
-        pwStrengthText.textContent = 'Zayıf şifre (En az 8 karakter, harf ve rakam)';
+        pwStrengthText.textContent = 'Zayıf şifre (En az 12 karakter, harf ve rakam)';
       } else if (score === 2 || score === 3) {
         pwStrengthFill.classList.add('medium');
         pwStrengthText.textContent = 'Orta seviye şifre';
@@ -127,8 +127,8 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
       }
 
-      if (pwVal.length < 8) {
-        showFeedback('Şifreniz en az 8 karakterden oluşmalıdır.', false);
+      if (pwVal.length < 12) {
+        showFeedback('Şifreniz en az 12 karakterden oluşmalıdır.', false);
         passwordInput.focus();
         return;
       }

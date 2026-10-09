@@ -69,9 +69,9 @@ document.addEventListener('DOMContentLoaded', () => {
       errEl.textContent = 'Şifre alanı boş bırakılamaz.';
       return false;
     }
-    if (val.length < 8) {
+    if (val.length < 12) {
       fieldPass.classList.add('invalid');
-      errEl.textContent = 'Şifreniz en az 8 karakter uzunluğunda olmalıdır.';
+      errEl.textContent = 'Şifreniz en az 12 karakter uzunluğunda olmalıdır.';
       return false;
     }
     fieldPass.classList.remove('invalid');
@@ -89,7 +89,7 @@ document.addEventListener('DOMContentLoaded', () => {
       strengthBox.classList.remove('active');
       strengthBox.dataset.score = '0';
     }
-    if (val.length >= 8) {
+    if (val.length >= 12) {
       fieldPass.classList.remove('invalid');
     }
   });
@@ -176,7 +176,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (window.MYAPI && typeof window.MYAPI.signup === 'function') {
       try {
-        await window.MYAPI.signup({ email: emailVal });
+        await window.MYAPI.signup({ email: emailVal, password: passVal });
         submitBtn.classList.remove('loading');
         submitBtn.disabled = false;
         if (verifyEmailDisplay) verifyEmailDisplay.textContent = emailVal;
@@ -196,10 +196,12 @@ document.addEventListener('DOMContentLoaded', () => {
           openSuccess();
           return;
         }
-        fieldUser.classList.add('invalid');
-        const errEl = fieldUser.querySelector('.error');
+        const passErr = !!(err.getField && err.getField('password'));
+        const badField = passErr ? fieldPass : fieldUser;
+        badField.classList.add('invalid');
+        const errEl = badField.querySelector('.error');
         if (errEl) errEl.textContent = err.message || 'Kayıt işlemi başarısız oldu.';
-        userInput.focus();
+        (passErr ? passInput : userInput).focus();
       }
     } else {
       setTimeout(openSuccess, 700);
@@ -246,7 +248,7 @@ document.addEventListener('DOMContentLoaded', () => {
     btnResend.addEventListener('click', async () => {
       btnResend.disabled = true;
       try {
-        await window.MYAPI.signup({ email: userInput.value.trim() });
+        await window.MYAPI.signup({ email: userInput.value.trim(), password: passInput.value });
         showVerifyNote('Kod yeniden gönderildi. Birkaç dakika içinde gelmezse gereksiz (spam) klasörünü kontrol edin.', true);
         startResendCountdown();
       } catch (err) {
