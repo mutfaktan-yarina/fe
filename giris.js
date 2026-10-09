@@ -38,7 +38,8 @@ document.addEventListener('DOMContentLoaded', () => {
       errEl.textContent = 'Lütfen şifrenizi giriniz.';
       return false;
     }
-    fieldPass.classList.remove('invalid');
+    // Sunucudan gelen hata, kullanıcı şifreyi düzenleyene kadar ekranda kalır (blur silmez).
+    if (!fieldPass.dataset.serverError) fieldPass.classList.remove('invalid');
     return true;
   }
 
@@ -47,6 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   passInput.addEventListener('input', () => {
+    delete fieldPass.dataset.serverError;
     if (passInput.value.length > 0) fieldPass.classList.remove('invalid');
   });
 
@@ -91,6 +93,7 @@ document.addEventListener('DOMContentLoaded', () => {
       submitBtn.classList.remove('loading');
       submitBtn.disabled = false;
       fieldPass.classList.add('invalid');
+      fieldPass.dataset.serverError = '1';
       const errEl = fieldPass.querySelector('.error');
       if (errEl) errEl.textContent = msg || 'E-posta veya şifre hatalı.';
       passInput.focus();
@@ -99,6 +102,10 @@ document.addEventListener('DOMContentLoaded', () => {
     if (window.MYAPI && typeof window.MYAPI.login === 'function') {
       window.MYAPI.login({ email: userVal, password: passVal })
         .then((res) => {
+          if (!res || !res.user) {
+            handleError('Giriş yanıtı beklenen biçimde değil. Lütfen tekrar deneyiniz.');
+            return;
+          }
           handleSuccess(res.user);
         })
         .catch((err) => {

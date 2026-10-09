@@ -214,7 +214,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const draft = MYUI.readJSON(getDraftKey());
     const app = MYUI.readJSON(getAppKey());
     const isObj = d => d && typeof d === 'object';
-    const data = [draft, app].find(isObj);
+    // Gönderilmiş başvuru yalnızca düzenleme modunda forma yüklenir; yeni açılışta gönderilmiş kayıt hatırlanmaz.
+    const isDraftObj = d => isObj(d) && d.status === 'draft';
+    const data = isEditMode ? [draft, app].find(isObj) : [draft].find(isDraftObj);
     const metaSrc = [app, draft].find(d => isObj(d) && d.refNo);
     if (metaSrc) {
       refNo = metaSrc.refNo;
@@ -244,6 +246,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const apiApp = res.application;
             if (apiApp.ref) refNo = apiApp.ref;
             if (apiApp.submittedAt) submittedAt = apiApp.submittedAt;
+            if (!isEditMode && apiApp.status !== 'draft') return;
             populateForm(apiApp);
             const merged = Object.assign({}, MYUI.readJSON(getDraftKey(), {}), apiApp);
             MYUI.writeJSON(getDraftKey(), merged);
@@ -708,6 +711,7 @@ document.addEventListener('DOMContentLoaded', () => {
           if (realRef) finalData.refNo = realRef;
           finalData.status = (res && res.application && res.application.status) || 'submitted';
           MYUI.writeJSON(getAppKey(), finalData);
+          try { localStorage.removeItem(getDraftKey()); } catch (e) {}
           try { sessionStorage.removeItem(stepKey); } catch (e) {}
           window.location.href = 'panel.html';
         } catch (err) {
