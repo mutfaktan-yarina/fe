@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <!-- @include head title="Hibe Başvuru Formu | Mutfaktan Yarına" description="Mutfaktan Yarına - 2026 Hibe Başvuru Sihirbazı." css="base layout-split basvuru" scripts="ui scoring config api basvuru" robots=noindex bold=1 -->
+  <!-- DÜZENLEME: partials/head.html dosyasını değiştirin, sonra ./build.sh çalıştırın -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hibe Başvuru Formu | Mutfaktan Yarına</title>
+  <meta name="description" content="Mutfaktan Yarına - 2026 Hibe Başvuru Sihirbazı.">
+  <meta name="theme-color" content="#F40009">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; connect-src 'self' http://127.0.0.1:4666 http://localhost:4666 https://api.mutfaktanyarina.com; base-uri 'self';">
+  <meta name="robots" content="noindex">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Hibe Başvuru Formu | Mutfaktan Yarına">
+  <meta property="og:description" content="Mutfaktan Yarına - 2026 Hibe Başvuru Sihirbazı.">
+  <meta property="og:image" content="https://mutfaktanyarina.com/assets/og-image.jpg">
+  <meta property="og:image:type" content="image/jpeg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta property="og:locale" content="tr_TR">
+  <link rel="icon" href="favicon.ico" sizes="any">
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+  <link rel="preload" href="fonts/TCCC-UnityText-Regular.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="fonts/TCCC-UnityText-Bold.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="fonts/TCCC-UnityHeadline-Black.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="fonts/TCCC-UnityHeadline-Bold.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="forms.css">
+  <link rel="stylesheet" href="base.css">
+  <link rel="stylesheet" href="layout-split.css">
+  <link rel="stylesheet" href="basvuru.css">
+  <link rel="stylesheet" href="print.css" media="print">
+  <link rel="stylesheet" href="cerez.css">
+  <script src="cerez.js" defer></script>
+  <script src="ui.js" defer></script>
+  <script src="scoring.js" defer></script>
+  <script src="config.js" defer></script>
+  <script src="api.js" defer></script>
+  <script src="basvuru.js" defer></script>
+  <!-- @end head -->
+</head>
+<body>
+  <!-- @include skip-link -->
+  <!-- DÜZENLEME: partials/skip-link.html dosyasını değiştirin, sonra ./build.sh çalıştırın -->
+  <a href="#main">İçeriğe geç</a>
+  <!-- @end skip-link -->
+
+  <!-- İki Kolonlu Split-Screen Düzeni (Potenza Modeli) -->
+  <div class="split-container">
+    
+    <!-- @include aside-brand tagline="Hibe Başvuru Sihirbazı" -->
+    <!-- DÜZENLEME: partials/aside-brand.html dosyasını değiştirin, sonra ./build.sh çalıştırın -->
+    <aside class="content-left">
+      <div>
+        <header>
+          <a href="index.html" class="brand-logo-card" title="Ana Sayfaya Dön">
+            <img class="brand-logo" src="assets/logo-full-opt.png" alt="Coca-Cola Akademi, Mutfaktan Yarına, Eğitim ve Destek Programı" width="114" height="89" decoding="async">
+          </a>
+          <a href="index.html" class="left-nav-home" title="Ana Sayfaya Dön">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+              <polyline points="9 22 9 12 15 12 15 22"></polyline>
+            </svg>
+            <span>Ana Sayfa</span>
+          </a>
+        </header>
+
+        <div>
+          <figure>
+            <picture>
+              <source srcset="assets/brand-collage-sm.webp" type="image/webp">
+              <img src="assets/brand-collage.jpg" alt="Mutfaktan Yarına Programı" width="330" height="180" decoding="async">
+            </picture>
+            <figcaption>2026 BAŞVURU DÖNEMİ</figcaption>
+          </figure>
+          <p>Mutfaktan Yarına</p>
+          <p>Hibe Başvuru Sihirbazı</p>
+          <p>Gastronomi sektöründeki kadın işletmecilere ve kadın kooperatiflerine ücretsiz MSA eğitimi ve bir işletmeye 1 Milyon TL, toplamda 25 işletmeye 4 Milyon TL hibe desteği!</p>
+          <ul>
+            <li><strong>4 Milyon TL</strong><span>Toplam Hibe</span></li>
+            <li><strong>1 Milyon TL</strong><span>1. Sıra Desteği</span></li>
+            <li><strong>25 Aday</strong><span>Hibe Desteği</span></li>
+            <li><strong>Ücretsiz MSA</strong><span>Akademi Eğitimi</span></li>
+          </ul>
+          <a href="index.html#hibe-destegi">Hibe ve Program Detayları <span aria-hidden="true">➔</span></a>
+        </div>
+
+        <footer>
+          <p>&copy; 2026 Mutfaktan Yarına · Coca-Cola Akademi &amp; ÖSGD</p>
+        </footer>
+      </div>
+    </aside>
+    <!-- @end aside-brand -->
+
+    <!-- SAĞ TARAF: Sihirbaz Alanı -->
+    <main class="content-right wizard-content" id="main">
+      <div>
+
+        <!-- @include topbar-mobile -->
+        <!-- DÜZENLEME: partials/topbar-mobile.html dosyasını değiştirin, sonra ./build.sh çalıştırın -->
+        <div class="mobile-topbar">
+          <a href="index.html" aria-label="Mutfaktan Yarına Ana Sayfa">
+            <img class="brand-logo" src="assets/mutfaktan-clean-mark-opt.png" alt="Mutfaktan Yarına" width="128" height="50" decoding="async">
+          </a>
+          <a href="index.html">← Ana Sayfa</a>
+        </div>
+        <!-- @end topbar-mobile -->
+
+        <!-- Üst Başlık ve Kullanıcı Çubuğu -->
+        <div class="wizard-header-bar">
+          <div>
+            <span class="eyebrow">HİBE PROGRAMI 2026</span>
+            <h1>Hibe Başvuru Formu</h1>
+          </div>
+          <div class="user-pill">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+            <span id="user-display">Başvuru Sahibi</span>
+          </div>
+        </div>
+
+    <div class="edit-mode-banner" id="edit-banner">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+      </svg>
+      <span>Başvuru Düzenleme Modu: Değişikliklerinizi yaptıktan sonra son adımda tekrar onaylayıp göndermeniz gerekmektedir.</span>
+    </div>
+
+    <div class="deadline-banner" id="deadline-banner">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+        <circle cx="12" cy="12" r="10"></circle>
+        <polyline points="12 6 12 12 16 14"></polyline>
+      </svg>
+      <span>Başvuru son tarihi: <strong>20 Kasım 2026 saat 23:59 (Türkiye Saati / UTC+3)</strong></span>
+    </div>
+
+    <div class="steps-bar">
+      <div class="active" data-step="1">
+        <span class="step-circle">1</span>
+        <span>Uygunluk</span>
+      </div>
+      <div data-step="2">
+        <span class="step-circle">2</span>
+        <span>Kimlik & İletişim</span>
+      </div>
+      <div data-step="3">
+        <span class="step-circle">3</span>
+        <span>İşletme</span>
+      </div>
+      <div data-step="4">
+        <span class="step-circle">4</span>
+        <span>MSA Sertifikası</span>
+      </div>
+      <div data-step="5">
+        <span class="step-circle">5</span>
+        <span>Değerlendirme</span>
+      </div>
+      <div data-step="6">
+        <span class="step-circle">6</span>
+        <span>Özet & Onay</span>
+      </div>
+    </div>
+
+    <div class="wizard-card">
+
+      <div id="top-wizard" class="top-wizard">
+        <div class="top-wizard-header">
+          <span id="location" class="location">Adım 1 / 6</span>
+          <span id="progress-pct" class="progress-pct">%17</span>
+        </div>
+        <div id="progressbar" class="progressbar">
+          <div id="progressbar-fill"></div>
+        </div>
+      </div>
+
+      <div class="step-pane active" id="step-1">
+        <header>
+          <h2>Adım 1 — Uygunluk Beyanları</h2>
+          <p>Hibe başvurusuna devam edebilmek için aşağıdaki tüm koşulların sağlanması zorunludur.</p>
+        </header>
+
+        <div class="gate-notice" id="gate-error">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="8" x2="12" y2="12"></line>
+            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+          </svg>
+          <span>Hibe şartları gereği tüm uygunluk maddelerinin eksiksiz onaylanması gerekmektedir.</span>
+        </div>
+
+        <div class="checklist">
+          <label>
+            <input type="checkbox" name="eligibility" id="chk-el-1">
+            <span>Gastronomi sektöründe faaliyet gösteren kadın işletmeciyim veya kadın kooperatifi adına temsile yetkiliyim.</span>
+          </label>
+          <label>
+            <input type="checkbox" name="eligibility" id="chk-el-2">
+            <span>Gastronomi (yeme-içme) sektöründe faaliyet gösteriyorum.</span>
+          </label>
+          <label>
+            <input type="checkbox" name="eligibility" id="chk-el-3">
+            <span>Başvuru tarihinde 18 yaşını doldurdum ve 31 Aralık 2026 tarihine kadar 30 yaşını doldurmamış olacağım.</span>
+          </label>
+          <label>
+            <input type="checkbox" name="eligibility" id="chk-el-4">
+            <span>İşletmem en az 2 yıldır faaliyettedir.</span>
+          </label>
+          <label>
+            <input type="checkbox" name="eligibility" id="chk-el-5">
+            <span>Başvuru tarihi itibarıyla işletmemde, kendim hariç, en az 2 aktif SGK'lı çalışan bulunmaktadır. (Kooperatifler için de aynı şart geçerlidir; aktif ortaklar çalışan sayılmaz.)</span>
+          </label>
+          <label>
+            <input type="checkbox" name="eligibility" id="chk-el-6">
+            <span>İşletmem adına geçerli vergi levhasına veya kadın kooperatifi resmî belgelerine sahibim.</span>
+          </label>
+          <label>
+            <input type="checkbox" name="eligibility" id="chk-el-7">
+            <span>Başka bir markaya ait franchise/bayilik işletmesi olarak faaliyet göstermiyorum.</span>
+          </label>
+          <label>
+            <input type="checkbox" name="eligibility" id="chk-el-8">
+            <span>Mevcut bir üretim alanına ve en az 4 masalı servis alanına sahibim.</span>
+          </label>
+          <label>
+            <input type="checkbox" name="eligibility" id="chk-el-9">
+            <span>Jüri Aday Listesine kalmam hâlinde çevrim içi jüri görüşmesine katılmayı kabul ediyorum.</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="step-pane" id="step-2">
+        <header>
+          <h2>Adım 2 — Kimlik ve İletişim Bilgileri</h2>
+          <p>Resmî tebligatlar ve yaş doğrulaması bu bilgiler üzerinden yürütülür.</p>
+        </header>
+
+        <div class="form-grid">
+          <div class="field">
+            <label for="inp-fullname">Ad Soyad</label>
+            <input type="text" id="inp-fullname" placeholder="Adınız ve Soyadınız" maxlength="127">
+            <span class="error">Ad Soyad alanı zorunludur.</span>
+          </div>
+
+          <div class="field">
+            <label for="inp-birthdate">Doğum Tarihi <small>(18–30 yaş kontrolü yapılır)</small></label>
+            <input type="date" id="inp-birthdate">
+            <span class="error" id="birth-error">Başvuru tarihinde 18 yaşını doldurmuş ve 31 Aralık 2026'ya kadar 30 yaşını doldurmamış olmalısınız.</span>
+          </div>
+
+          <div class="field">
+            <label for="inp-phone">Cep Telefonu</label>
+            <input type="tel" id="inp-phone" placeholder="05XX XXX XX XX" maxlength="31" autocomplete="tel">
+            <input type="hidden" id="inp-email">
+            <span class="error">Geçerli bir telefon numarası giriniz.</span>
+          </div>
+
+          <div class="field">
+            <label for="inp-city">İşletmenin Bulunduğu İl</label>
+            <select id="inp-city"><option value="">İl seçiniz</option><option>Adana</option><option>Adıyaman</option><option>Afyonkarahisar</option><option>Ağrı</option><option>Aksaray</option><option>Amasya</option><option>Ankara</option><option>Antalya</option><option>Ardahan</option><option>Artvin</option><option>Aydın</option><option>Balıkesir</option><option>Bartın</option><option>Batman</option><option>Bayburt</option><option>Bilecik</option><option>Bingöl</option><option>Bitlis</option><option>Bolu</option><option>Burdur</option><option>Bursa</option><option>Çanakkale</option><option>Çankırı</option><option>Çorum</option><option>Denizli</option><option>Diyarbakır</option><option>Düzce</option><option>Edirne</option><option>Elazığ</option><option>Erzincan</option><option>Erzurum</option><option>Eskişehir</option><option>Gaziantep</option><option>Giresun</option><option>Gümüşhane</option><option>Hakkari</option><option>Hatay</option><option>Iğdır</option><option>Isparta</option><option>İstanbul</option><option>İzmir</option><option>Kahramanmaraş</option><option>Karabük</option><option>Karaman</option><option>Kars</option><option>Kastamonu</option><option>Kayseri</option><option>Kilis</option><option>Kırıkkale</option><option>Kırklareli</option><option>Kırşehir</option><option>Kocaeli</option><option>Konya</option><option>Kütahya</option><option>Malatya</option><option>Manisa</option><option>Mardin</option><option>Mersin</option><option>Muğla</option><option>Muş</option><option>Nevşehir</option><option>Niğde</option><option>Ordu</option><option>Osmaniye</option><option>Rize</option><option>Sakarya</option><option>Samsun</option><option>Siirt</option><option>Sinop</option><option>Sivas</option><option>Şanlıurfa</option><option>Şırnak</option><option>Tekirdağ</option><option>Tokat</option><option>Trabzon</option><option>Tunceli</option><option>Uşak</option><option>Van</option><option>Yalova</option><option>Yozgat</option><option>Zonguldak</option></select>
+            <span class="error">Lütfen listeden bir il seçiniz.</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="step-pane" id="step-3">
+        <header>
+          <h2>Adım 3 — İşletme Bilgileri</h2>
+          <p>İşletmenizin yasal ve sicil kayıtlarını giriniz.</p>
+        </header>
+
+        <div class="form-grid full">
+          <div class="field">
+            <label>İşletme Yapısı</label>
+            <div class="radio-group">
+              <label>
+                <input type="radio" name="biz-type" value="sahis">
+                <span>Şahıs İşletmesi</span>
+              </label>
+              <label>
+                <input type="radio" name="biz-type" value="sirket">
+                <span>Şirket (Ltd. / A.Ş.)</span>
+              </label>
+              <label>
+                <input type="radio" name="biz-type" value="kooperatif">
+                <span>Kadın Kooperatifi</span>
+              </label>
+            </div>
+            <span class="error">Lütfen işletme yapınızı seçiniz.</span>
+          </div>
+        </div>
+
+        <div class="form-grid">
+          <div class="field">
+            <label for="inp-bizname">İşletme Unvanı <small>(Ticari sicildeki adı)</small></label>
+            <input type="text" id="inp-bizname" placeholder="Ticari unvanı giriniz" maxlength="127">
+            <span class="error">İşletme unvanı zorunludur.</span>
+          </div>
+
+          <div class="field">
+            <label for="inp-taxno">Vergi Kimlik Numarası</label>
+            <input type="text" id="inp-taxno" placeholder="10 haneli VKN veya 11 haneli TCKN" maxlength="31" pattern="\d*" inputmode="numeric">
+            <span class="error">Geçerli bir vergi kimlik numarası giriniz.</span>
+          </div>
+
+          <div class="field">
+            <label for="inp-bizyear">Faaliyete Başlama Yılı <small>(En az 2 yıllık olmalı)</small></label>
+            <input type="number" id="inp-bizyear" placeholder="Örn: 2021" min="1950">
+            <span class="error" id="bizyear-error">İşletme en az 2 yıldır faaliyette olmalıdır.</span>
+          </div>
+
+          <div class="field">
+            <label for="inp-instagram">Instagram Hesabı <small>(İsteğe bağlı)</small></label>
+            <input type="text" id="inp-instagram" placeholder="@isletmeadi" maxlength="63">
+          </div>
+        </div>
+
+        <div class="form-grid full">
+          <div class="field">
+            <label for="inp-address">İşletme Adresi</label>
+            <textarea id="inp-address" placeholder="İşletmenin açık adresi" maxlength="255"></textarea>
+            <span class="error">Adres alanı zorunludur.</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="step-pane" id="step-4">
+        <header>
+          <h2>Adım 4 — MSA Sertifikası Yükleme</h2>
+          <p>Program kapsamında sunulan MSA eğitimine ait sertifikayı almak için ücretsiz eğitimi tamamlayabilirsiniz. Eğitim sonundaki değerlendirmeden en az 70 puan alınması ve geçerli sertifikanın başvuru sırasında yüklenmesi zorunludur. Sistem sertifika doğruluğunu teyit etmez; doğrulama Program Yöneticileri tarafından yapılır.</p>
+          <p><a href="msa-egitim.html" class="btn btn-outline" target="_blank" rel="noopener">MSA Sertifikası Almak İçin Tıklayın <span aria-hidden="true">➔</span></a></p>
+        </header>
+
+        <div class="dropzone" id="dropzone" tabindex="0" role="button" aria-label="MSA sertifikası dosyası seç">
+          <input type="file" id="inp-file" accept=".pdf,.jpg,.jpeg,.png">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+            <line x1="12" y1="18" x2="12" y2="12"></line>
+            <line x1="9" y1="15" x2="12" y2="12"></line>
+            <line x1="15" y1="15" x2="12" y2="12"></line>
+          </svg>
+          <h3>Sertifika Belgenizi Yükleyin (PDF / JPG / PNG)</h3>
+          <p>Dosyayı buraya sürükleyip bırakabilir veya tıklayarak cihazınızdan seçebilirsiniz (Maks. 10MB)</p>
+        </div>
+
+        <div class="file-preview" id="file-preview">
+          <span id="file-name">belge.pdf</span>
+          <button type="button" id="btn-remove-file">Kaldır</button>
+        </div>
+
+        <div class="gate-notice" id="file-error">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="8" x2="12" y2="12"></line>
+          </svg>
+          <span id="file-error-text">Lütfen geçerli bir MSA sertifikası dosyası yükleyiniz.</span>
+        </div>
+      </div>
+
+      <div class="step-pane" id="step-5">
+        <header>
+          <h2>Adım 5 — Değerlendirme Soruları</h2>
+          <p>Tüm beyanlarınız SGK hizmet dökümü ile doğrulanacaktır (Kendinizi dahil etmeyiniz).</p>
+        </header>
+
+        <div class="question-box">
+          <h3>Bölüm 1: İstihdam ve Ekip (50 Puan)</h3>
+          <p>Kooperatiflerde yalnızca SGK'lı çalışanlar sayılır, aktif ortaklar dahil edilmez.</p>
+
+          <div class="warning-callout-box">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+              <line x1="12" y1="9" x2="12" y2="13"></line>
+              <line x1="12" y1="17" x2="12.01" y2="17"></line>
+            </svg>
+            <div>
+              <strong>Kritik Kural:</strong> Kendinizi ve kooperatif ortaklarını çalışan sayısına kesinlikle dahil etmeyiniz. Yalnızca SGK hizmet listesinde kayıtlı bordrolu çalışan sayısını yazınız. SGK belgesiyle uyuşmayan beyanlar elenme sebebidir.
+            </div>
+          </div>
+
+          <div class="form-grid">
+            <div class="field">
+              <label for="inp-q11">Şu anda toplam kaç SGK'lı çalışanınız var?</label>
+              <input type="number" id="inp-q11" min="2" placeholder="Kendiniz hariç (En az 2)">
+              <span class="error">Kendiniz hariç en az 2 SGK'lı çalışan olmalıdır.</span>
+            </div>
+
+            <div class="field">
+              <label for="inp-q12">Bu çalışanların kaçı kadın?</label>
+              <input type="number" id="inp-q12" min="0" placeholder="Kadın çalışan sayısı">
+              <span class="error">Kadın çalışan sayısı toplam çalışandan fazla olamaz.</span>
+            </div>
+
+            <div class="field">
+              <label for="inp-q13">Bir yıl önce toplam kaç SGK'lı çalışanınız vardı?</label>
+              <input type="number" id="inp-q13" min="0" placeholder="1 yıl önceki toplam sayı">
+              <span class="error">Lütfen geçerli bir sayı giriniz.</span>
+            </div>
+
+            <div class="field" id="field-q14-pre">
+              <label>Geçen yıl işletmenize yeni personel girişi oldu mu?</label>
+              <div class="radio-group">
+                <label>
+                  <input type="radio" name="q14_hired" value="no">
+                  <span>Hayır (Alınmadı)</span>
+                </label>
+                <label>
+                  <input type="radio" name="q14_hired" value="yes">
+                  <span>Evet (Alındı)</span>
+                </label>
+              </div>
+              <span class="error">Lütfen bir seçenek belirleyiniz.</span>
+            </div>
+
+            <div class="field" id="field-q14-detail" hidden>
+              <label for="inp-q14">Geçen yıl işe başlayanlardan kaçı hâlâ çalışıyor?</label>
+              <select id="inp-q14">
+                <option value="">Seçiniz</option>
+                <option value="zero">Oldu, kimse kalmadı (0 Puan)</option>
+                <option value="less_half">Yarıdan azı (5 Puan)</option>
+                <option value="half_more">Yarısı ve fazlası (7 Puan)</option>
+                <option value="all">Tamamı (10 Puan)</option>
+              </select>
+              <span class="error">Lütfen bir seçenek belirleyiniz.</span>
+            </div>
+          </div>
+
+          <div class="field">
+            <label>Hibe alırsanız yeni kişi işe alır mısınız?</label>
+            <div class="radio-group">
+              <label>
+                <input type="radio" name="q15" value="yes">
+                <span>Evet</span>
+              </label>
+              <label>
+                <input type="radio" name="q15" value="no">
+                <span>Hayır</span>
+              </label>
+            </div>
+            <span class="error">Lütfen bir seçenek belirleyiniz.</span>
+          </div>
+        </div>
+
+        <div class="question-box">
+          <h3>Bölüm 2: İhtiyaç ve Hazırlık (20 Puan)</h3>
+
+          <div class="field">
+            <label>Bu iş ailenizin tek geçim kaynağı mı? <small>(Kooperatiflere doğrudan puan verilir)</small></label>
+            <div class="radio-group">
+              <label>
+                <input type="radio" name="q21" value="yes">
+                <span>Evet</span>
+              </label>
+              <label>
+                <input type="radio" name="q21" value="no">
+                <span>Hayır</span>
+              </label>
+            </div>
+            <span class="error">Lütfen bir seçenek belirleyiniz.</span>
+          </div>
+
+          <div class="field">
+            <label>Hibe ile ne yapacaksınız? <small id="q22-counter-label">(Tam 2 seçim yapınız — Seçilen: 0 / 2)</small></label>
+            <div class="checkbox-choices">
+              <label>
+                <input type="checkbox" name="q22" value="mutfak">
+                <span>Mutfak imkânlarımı artıracağım</span>
+              </label>
+              <label>
+                <input type="checkbox" name="q22" value="masa">
+                <span>Masa-sandalye sayımı artıracağım</span>
+              </label>
+              <label>
+                <input type="checkbox" name="q22" value="istihdam">
+                <span>İstihdam artıracağım</span>
+              </label>
+              <label>
+                <input type="checkbox" name="q22" value="dekorasyon">
+                <span>Dekorasyona yatırım yapacağım</span>
+              </label>
+              <label>
+                <input type="checkbox" name="q22" value="tanitim">
+                <span>Tanıtım ve reklama harcayacağım</span>
+              </label>
+              <label>
+                <input type="checkbox" name="q22" value="borc">
+                <span>Borçlarımı ödeyeceğim</span>
+              </label>
+            </div>
+            <span class="error" id="q22-error">Şartname gereği tam 2 hibe kullanım alanı seçmeniz gerekmektedir.</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="step-pane" id="step-6">
+        <header>
+          <h2>Adım 6 — Başvuru Özeti ve Onay</h2>
+          <p>Lütfen bilgilerinizi gözden geçiriniz ve doğruluk beyanını onaylayarak başvurunuzu tamamlayınız.</p>
+        </header>
+
+        <div class="summary-accordion">
+          <div class="open">
+            <button type="button" aria-expanded="true" aria-controls="acc-body-1">
+              <span>Kimlik & İletişim Bilgileri</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </button>
+            <div id="acc-body-1">
+              <table>
+                <tr><td>Ad Soyad</td><td id="sum-name">-</td></tr>
+                <tr><td>Doğum Tarihi</td><td id="sum-birth">-</td></tr>
+                <tr><td>Telefon</td><td id="sum-phone">-</td></tr>
+                <tr><td>E-posta</td><td id="sum-email">-</td></tr>
+                <tr><td>İl</td><td id="sum-city">-</td></tr>
+              </table>
+            </div>
+          </div>
+
+          <div>
+            <button type="button" aria-expanded="false" aria-controls="acc-body-2">
+              <span>İşletme Bilgileri</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </button>
+            <div id="acc-body-2">
+              <table>
+                <tr><td>Unvan</td><td id="sum-bizname">-</td></tr>
+                <tr><td>İşletme Yapısı</td><td id="sum-biztype">-</td></tr>
+                <tr><td>Vergi No</td><td id="sum-taxno">-</td></tr>
+                <tr><td>Faaliyet Yılı</td><td id="sum-bizyear">-</td></tr>
+                <tr><td>Adres</td><td id="sum-address">-</td></tr>
+              </table>
+            </div>
+          </div>
+
+          <div>
+            <button type="button" aria-expanded="false" aria-controls="acc-body-3">
+              <span>MSA Sertifikası & İstihdam Beyanları</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </button>
+            <div id="acc-body-3">
+              <table>
+                <tr><td>MSA Sertifikası</td><td id="sum-msa">-</td></tr>
+                <tr><td>Toplam SGK'lı</td><td id="sum-emp-total">-</td></tr>
+                <tr><td>Kadın Çalışan</td><td id="sum-emp-female">-</td></tr>
+                <tr><td>1 Yıl Önceki Sayı</td><td id="sum-emp-prev">-</td></tr>
+                <tr><td>İstihdam Kalıcılığı</td><td id="sum-emp-stay">-</td></tr>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div class="checklist">
+          <label>
+            <input type="checkbox" id="chk-doc-5">
+            <span>Bu formda verdiğim tüm bilgilerin doğru ve eksiksiz olduğunu kabul ve beyan ederim. SGK hizmet dökümü ve resmî kayıtlarla teyit edileceğini biliyorum.</span>
+          </label>
+        </div>
+
+        <div class="gate-notice" id="final-error">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="8" x2="12" y2="12"></line>
+          </svg>
+          <span>Başvurunuzu göndermek için lütfen onay kutusunu işaretleyiniz.</span>
+        </div>
+      </div>
+
+      <div class="wizard-footer">
+        <div id="draft-save-status" class="draft-save-status" style="display:none; font-size:0.88rem; margin-right:auto; align-items:center; gap:6px;"></div>
+        <button type="button" class="btn btn-outline hidden" id="btn-prev">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+          </svg>
+          <span>Önceki Adım</span>
+        </button>
+
+        <button type="button" class="btn" id="btn-next">
+          <span>Devam Et</span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+            <polyline points="12 5 19 12 12 19"></polyline>
+          </svg>
+        </button>
+      </div>
+
+      <p class="legal-link"><a href="hibe-aydinlatma.html" target="_blank" rel="noopener">Hibe Süreci KVKK Aydınlatma Metni</a></p>
+
+    </div>
+  </main><!-- /.content-right.wizard-content -->
+</div><!-- /.split-container -->
+
+</body>
+</html>

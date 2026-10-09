@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <!-- @include head title="Başvuru Takip Paneli | Mutfaktan Yarına" description="Mutfaktan Yarına - Başvuru Takip ve Katılımcı Paneli." css="base panel" scripts="ui config api panel" robots=noindex -->
+  <!-- DÜZENLEME: partials/head.html dosyasını değiştirin, sonra ./build.sh çalıştırın -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Başvuru Takip Paneli | Mutfaktan Yarına</title>
+  <meta name="description" content="Mutfaktan Yarına - Başvuru Takip ve Katılımcı Paneli.">
+  <meta name="theme-color" content="#F40009">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; connect-src 'self' http://127.0.0.1:4666 http://localhost:4666 https://api.mutfaktanyarina.com; base-uri 'self';">
+  <meta name="robots" content="noindex">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Başvuru Takip Paneli | Mutfaktan Yarına">
+  <meta property="og:description" content="Mutfaktan Yarına - Başvuru Takip ve Katılımcı Paneli.">
+  <meta property="og:image" content="https://mutfaktanyarina.com/assets/og-image.jpg">
+  <meta property="og:image:type" content="image/jpeg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta property="og:locale" content="tr_TR">
+  <link rel="icon" href="favicon.ico" sizes="any">
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+  <link rel="preload" href="fonts/TCCC-UnityText-Regular.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="fonts/TCCC-UnityText-Bold.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="fonts/TCCC-UnityHeadline-Black.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="forms.css">
+  <link rel="stylesheet" href="base.css">
+  <link rel="stylesheet" href="panel.css">
+  <link rel="stylesheet" href="print.css" media="print">
+  <link rel="stylesheet" href="cerez.css">
+  <script src="cerez.js" defer></script>
+  <script src="ui.js" defer></script>
+  <script src="config.js" defer></script>
+  <script src="api.js" defer></script>
+  <script src="panel.js" defer></script>
+  <!-- @end head -->
+</head>
+<body>
+  <!-- @include skip-link -->
+  <!-- DÜZENLEME: partials/skip-link.html dosyasını değiştirin, sonra ./build.sh çalıştırın -->
+  <a href="#main">İçeriğe geç</a>
+  <!-- @end skip-link -->
+
+  <!-- @include header-app userid=panel-username -->
+  <!-- DÜZENLEME: partials/header-app.html dosyasını değiştirin, sonra ./build.sh çalıştırın -->
+  <header class="panel-header">
+    <div>
+      <a href="index.html" class="brand">
+        <div>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M6 13.87A4 4 0 0 1 7.41 6a5.11 5.11 0 0 1 1.05-1.54 5 5 0 0 1 7.08 0A5.11 5.11 0 0 1 16.59 6 4 4 0 0 1 18 13.87V21H6Z"/>
+            <line x1="6" y1="17" x2="18" y2="17"/>
+          </svg>
+        </div>
+        <div>
+          <strong>Mutfaktan Yarına</strong>
+          <span>Katılımcı Takip Paneli</span>
+        </div>
+      </a>
+
+      <div class="header-actions">
+        <div class="user-badge">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg>
+          <span id="panel-username">Başvuru Sahibi</span>
+        </div>
+        <a href="giris.html" class="btn-logout" id="btn-logout">Çıkış Yap</a>
+      </div>
+    </div>
+  </header>
+  <!-- @end header-app -->
+
+  <main class="panel-main" id="main">
+
+    <section class="status-card">
+      <div>
+        <h1>
+          <span>Başvuru Durumu</span>
+          <span class="status-badge">
+            <span class="dot"></span>
+            <span id="status-text">-</span>
+          </span>
+        </h1>
+        <div class="status-meta">
+          <span>Başvuru No: <strong id="val-refno">-</strong></span>
+          <span>Tarih: <strong id="val-date">-</strong></span>
+          <span>Program: <strong>Mutfaktan Yarına 2026</strong></span>
+        </div>
+        <p id="draft-note" hidden>Başvurunuz henüz değerlendirmeye alınmadı. Formu tamamlayıp son adımda <strong>Gönder</strong>'e basmalısınız; gönderilene kadar başvurunuz değerlendirilmez. Son tarih: 20 Kasım 2026, 23:59.</p>
+      </div>
+
+    <div class="deadline-banner" id="deadline-banner-panel" style="display: none;">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+        <circle cx="12" cy="12" r="10"></circle>
+        <polyline points="12 6 12 12 16 14"></polyline>
+      </svg>
+      <span>Başvuru son tarihi: <strong>20 Kasım 2026 saat 23:59 (Türkiye Saati / UTC+3)</strong></span>
+    </div>
+
+      <div class="status-actions">
+        <button type="button" class="btn-panel-edit" id="btn-open-edit">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+          </svg>
+          <span>Başvurumu Düzenle</span>
+        </button>
+
+        <button type="button" class="btn-panel-outline" id="btn-open-pw-change">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+          </svg>
+          <span>Şifre Değiştir</span>
+        </button>
+
+        <button type="button" class="btn-panel-outline" id="btn-print">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="6 9 6 2 18 2 18 9"></polyline>
+            <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+            <rect x="6" y="14" width="12" height="8"></rect>
+          </svg>
+          <span>Özeti Yazdır / İndir</span>
+        </button>
+      </div>
+    </section>
+
+    <div class="pre-eval-action-banner" id="banner-preeval" hidden>
+      <div>
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"></circle>
+          <polyline points="12 6 12 12 14 14"></polyline>
+        </svg>
+        <div>
+          <h2 id="preeval-banner-title">Ön Değerlendirme Aşamanız Açıldı</h2>
+          <p id="preeval-banner-desc">Doğrulama belgelerinizi yükledikten sonra Ön Değerlendirme soruları açılır. Belge yükleme ve soruları yanıtlama için ilan edilen süre içinde (25 Kasım – 2 Aralık 2026) 6 yazılı soruyu yanıtlayınız. Bölümün açılması belgelerin doğrulandığı anlamına gelmez.</p>
+        </div>
+      </div>
+      <a href="on-degerlendirme-formu.html" id="btn-preeval-link">
+        <span id="btn-preeval-text">Soruları Yanıtla</span>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+          <polyline points="12 5 19 12 12 19"></polyline>
+        </svg>
+      </a>
+    </div>
+
+    <section class="review-section" id="section-verify-docs" hidden>
+      <div class="review-header">
+        <h2>Doğrulama Belgeleri (Ön Değerlendirme İçin Zorunlu)</h2>
+        <span class="status-badge" id="badge-verify-status">Belge Bekleniyor</span>
+      </div>
+      <p style="font-size: 0.9rem; color: var(--gray-600); margin: 0; line-height: 1.5;">
+        Ön değerlendirme sorularına erişebilmek için Program Yöneticileri tarafından talep edilen resmî belgelerinizi (SGK Hizmet Dökümü, Vergi Levhası / Kooperatif Kayıtları, Borcu Yoktur Belgeleri, Kimlik Fotokopisi ve Faaliyet/Üretim Alanı Görselleri) yüklemeniz gerekmektedir. Görsellerin işlenmesine ilişkin bilgi için <a href="gorsel-isitsel-aydinlatma.html" target="_blank" rel="noopener">Görsel ve İşitsel Veri Aydınlatma Metni</a>'ni inceleyebilirsiniz.
+      </p>
+      
+      <p style="font-size: 0.85rem; color: var(--gray-700); margin: 0;">Her belge türü için tek dosya yüklenir (PDF, JPG, PNG — en fazla 10 MB). Yeni bir dosya yüklerseniz öncekinin yerine geçer; yükleme başarısız olursa mevcut belgeniz korunur.</p>
+      <ul id="verify-doc-list" style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.75rem;"></ul>
+      <span id="verify-error" style="display: none; font-size: 0.85rem; color: var(--primary); font-weight: 600;"></span>
+
+      <div id="verify-uploaded-success" style="display: none; padding: 0.75rem 1rem; background: var(--success-light); border: 1px solid var(--success-border); border-radius: var(--radius-sm); font-size: 0.88rem; color: var(--success); font-weight: 500;">
+        ✓ Doğrulama belgeleriniz sisteme yüklendi. Ön Değerlendirme sorularını yanıtlayabilirsiniz. (Bölümün açılması belgelerin henüz nihai olarak doğrulandığı anlamına gelmez; kontroller Program Takviminde ilan edilen tarihlerde yapılacaktır.)
+      </div>
+    </section>
+
+    <section class="timeline-card">
+      <h2>Süreç Takip Çizelgesi</h2>
+
+      <div class="timeline-steps">
+        <div class="completed">
+          <div>✓</div>
+          <h3>1. Başvuru Alındı</h3>
+          <p>Beyanlar ve form sisteme kaydedildi.</p>
+        </div>
+
+        <div class="current">
+          <div>2</div>
+          <h3>2. Sistem Puanı & Doğrulama</h3>
+          <p>70 puanlık sistem sıralaması ve SGK/MSA kontrolü sürüyor.</p>
+        </div>
+
+        <div class="locked">
+          <div>3</div>
+          <h3>3. Ön Değerlendirme</h3>
+          <p>Doğrulama belgelerini yükleyen adaylara 6 yazılı soru açılır.</p>
+        </div>
+
+        <div class="locked">
+          <div>4</div>
+          <h3>4. Çevrim İçi Jüri</h3>
+          <p>İlk 25 aday ve eşit puanlılar çevrim içi jüri görüşmesine alınır.</p>
+        </div>
+
+        <div class="locked">
+          <div>5</div>
+          <h3>5. Nihai Hibe İlanı</h3>
+          <p>Nihai sıralama yalnızca Jüri Toplam Puanına göre belirlenir.</p>
+        </div>
+      </div>
+    </section>
+
+    <div class="info-banner">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="10"></circle>
+        <line x1="12" y1="16" x2="12" y2="12"></line>
+        <line x1="12" y1="8" x2="12.01" y2="8"></line>
+      </svg>
+      <div>
+        <h2>Değerlendirme Süreci Hakkında Bilgilendirme</h2>
+        <p>
+          Adaylara anlık puan gösterilmemektedir. Sistem Puanı sıralamasında yer alan adaylardan Program Yöneticileri SGK hizmet dökümü, vergi levhası, kimlik ve MSA Sertifikası gibi doğrulama belgelerini isteyecektir. Belirlenen adaylara e-posta ile bildirim yapılır. Belgelerini yükleyen adaylar için bu panel üzerinden 6 soruluk <strong>Ön Değerlendirme</strong> bölümü açılır; belgelerini yüklemeyen adaylar sorulara erişemez. Belge ve beyan doğrulaması ile Ön Değerlendirme belge yükleme süresi tamamlandıktan sonra, aynı dönemde yapılır.
+        </p>
+      </div>
+    </div>
+
+    <section class="review-section">
+      <div class="review-header">
+        <h2>Kayıtlı Başvuru Bilgileriniz</h2>
+        <span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+          </svg>
+          Salt Okunur (İnceleme Modu)
+        </span>
+      </div>
+
+      <div class="accordion-group">
+        <div class="open">
+          <button type="button" aria-expanded="true" aria-controls="acc-content-1">
+            <span>Kimlik ve İletişim Bilgileri</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </button>
+          <div id="acc-content-1">
+            <table>
+              <tr><td>Ad Soyad:</td><td id="tbl-name">-</td></tr>
+              <tr><td>Doğum Tarihi:</td><td id="tbl-birth">-</td></tr>
+              <tr><td>Telefon:</td><td id="tbl-phone">-</td></tr>
+              <tr><td>E-posta:</td><td id="tbl-email">-</td></tr>
+              <tr><td>İl:</td><td id="tbl-city">-</td></tr>
+            </table>
+          </div>
+        </div>
+
+        <div>
+          <button type="button" aria-expanded="false" aria-controls="acc-content-2">
+            <span>İşletme Bilgileri</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </button>
+          <div id="acc-content-2">
+            <table>
+              <tr><td>İşletme Unvanı:</td><td id="tbl-bizname">-</td></tr>
+              <tr><td>İşletme Yapısı:</td><td id="tbl-biztype">-</td></tr>
+              <tr><td>Vergi Numarası:</td><td id="tbl-taxno">-</td></tr>
+              <tr><td>Faaliyet Yılı:</td><td id="tbl-bizyear">-</td></tr>
+              <tr><td>Adres:</td><td id="tbl-address">-</td></tr>
+            </table>
+          </div>
+        </div>
+
+        <div>
+          <button type="button" aria-expanded="false" aria-controls="acc-content-3">
+            <span>MSA Sertifikası & İstihdam Beyanları</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </button>
+          <div id="acc-content-3">
+            <table>
+              <tr><td>MSA Sertifikası:</td><td id="tbl-msa">-</td></tr>
+              <tr><td>Toplam SGK'lı Çalışan:</td><td id="tbl-q11">-</td></tr>
+              <tr><td>Kadın Çalışan Sayısı:</td><td id="tbl-q12">-</td></tr>
+              <tr><td>1 Yıl Önceki Çalışan:</td><td id="tbl-q13">-</td></tr>
+              <tr><td>İstihdam Kalıcılığı:</td><td id="tbl-q14">-</td></tr>
+              <tr><td>Hibe ile Yeni İşe Alım:</td><td id="tbl-q15">-</td></tr>
+              <tr><td>Ailenin Tek Geçim Kaynağı:</td><td id="tbl-q21">-</td></tr>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- @include footer variant=short -->
+  <!-- DÜZENLEME: partials/footer.html dosyasını değiştirin, sonra ./build.sh çalıştırın -->
+  <footer class="site-footer">
+    <p><a href="index.html">Ana Sayfa</a> · <a href="sss.html">Sıkça Sorulan Sorular</a> · <a href="iletisim.html">İletişim</a> · <a href="aydinlatma-metni.html">Aday Aydınlatma Metni</a> · <a href="hibe-aydinlatma.html">Hibe Aydınlatma Metni</a> · <a href="cerez-politikasi.html">Çerez Aydınlatma Metni ve Politikası</a> · <a href="kvkk-basvuru.html">KVKK Başvuru Formu</a> · <a href="#" data-cerez-ac>Çerez Tercihleri</a> · &copy; 2026 Mutfaktan Yarına. Tüm hakları saklıdır.</p>
+  </footer>
+  <!-- @end footer -->
+
+  <div class="modal" id="modal-edit-confirm" role="dialog" aria-modal="true" aria-labelledby="modal-edit-title">
+    <div>
+      <header>
+        <h3 id="modal-edit-title">Başvuruyu Düzenleme Onayı</h3>
+        <button type="button" data-close="modal-edit-confirm" aria-label="Kapat">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </header>
+      <article>
+        <p>
+          Başvurunuzu düzenleme moduna aldığınızda form adımları tekrar açılacaktır.
+        </p>
+        <div>
+          ⚠️ <strong>Önemli Kural:</strong> Başvurunuzu düzenlemeye açtığınızda mevcut başvurunuz taslak durumuna düşecek ve sıralamadan geçici olarak çıkarılacaktır. Değişiklikleri tamamladıktan sonra son adımdan <strong>tekrar onaylayıp göndermeniz zorunludur</strong>.
+        </div>
+      </article>
+      <footer>
+        <button type="button" class="secondary" data-close="modal-edit-confirm">Vazgeç</button>
+        <button type="button" class="primary" id="btn-confirm-edit">Evet, Düzenlemeye Başla</button>
+      </footer>
+    </div>
+  </div>
+
+  <div class="modal" id="modal-change-password" role="dialog" aria-modal="true" aria-labelledby="modal-pw-title">
+    <div>
+      <header>
+        <h3 id="modal-pw-title">Şifre Değiştir</h3>
+        <button type="button" data-close="modal-change-password" aria-label="Kapat">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </header>
+      <article>
+        <div class="field" id="f-old-pw">
+          <label for="inp-old-pw">Mevcut Şifre</label>
+          <input type="password" id="inp-old-pw" placeholder="Mevcut şifrenizi giriniz" autocomplete="current-password">
+          <span class="error" id="err-old-pw" style="display:none; color:var(--danger,#dc2626); font-size:0.85rem; margin-top:0.35rem;">Mevcut şifre hatalı.</span>
+        </div>
+        <div class="field" id="f-new-pw" style="margin-top: 1rem;">
+          <label for="inp-new-pw">Yeni Şifre (En az 8 karakter)</label>
+          <input type="password" id="inp-new-pw" placeholder="Yeni şifrenizi giriniz" autocomplete="new-password">
+          <span class="error" id="err-new-pw" style="display:none; color:var(--danger,#dc2626); font-size:0.85rem; margin-top:0.35rem;">Yeni şifre en az 8 karakter olmalıdır.</span>
+        </div>
+        <p id="msg-pw-success" style="display:none; color:var(--success,#16a34a); font-weight:600; margin-top:0.75rem;">Şifreniz başarıyla değiştirildi.</p>
+      </article>
+      <footer>
+        <button type="button" class="secondary" data-close="modal-change-password">Kapat</button>
+        <button type="button" class="primary" id="btn-submit-pw-change">Şifreyi Güncelle</button>
+      </footer>
+    </div>
+  </div>
+
+</body>
+</html>

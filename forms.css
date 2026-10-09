@@ -1,0 +1,585 @@
+/*============================================================================================
+  Mutfaktan Yarına — Ortak Form Katmanı (forms.css)
+  Tek kaynak: alan (.field), giriş/select/textarea, ikonlu giriş (.input-box), hata/invalid, seçim kartları, düğme (.btn).
+  Değerler base.css :root token'larından gelir (--control-*, --focus-ring). Sayfa CSS'leri yalnızca yerleşim ekler.
+  Yükleme sırası: partials/head.html bu dosyayı base.css ve sayfa CSS'lerinden ÖNCE bağlar; bu yüzden aşağıdaki
+  kuralların hiçbiri sıfır özgüllükte değildir (base.css'in `*` sıfırlaması onları ezmesin).
+============================================================================================*/
+
+button, input, select, textarea {
+  font-family: inherit;
+  font-size: inherit;
+}
+
+/*-------- Alan: etiket + ipucu (small) + denetim + hata --------*/
+.field {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.field > label {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  column-gap: 0.5rem;
+  font-family: var(--font-body);
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--dark);
+}
+
+.field > label small {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--gray-600);
+}
+
+/* Hata iletisi: .invalid alanda ya da JS'in .show eklediği yerde görünür */
+.error {
+  display: none;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  line-height: 1.4;
+  color: var(--danger);
+}
+
+.invalid > .error,
+.error.show {
+  display: block;
+}
+
+/*-------- Denetimler: input (onay/radyo/dosya hariç), select, textarea --------*/
+:is(input:not([type="checkbox"], [type="radio"], [type="file"]), select, textarea) {
+  width: 100%;
+  font-size: var(--control-font);
+  line-height: 1.4;
+  color: var(--dark);
+  background: var(--control-bg);
+  border: var(--control-border);
+  border-radius: var(--control-radius);
+  outline: 2px solid transparent; /* zorunlu renk kipinde odak görünür kalsın */
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+
+input:not([type="checkbox"], [type="radio"], [type="file"]),
+select {
+  height: var(--control-h);
+  padding: 0 1rem;
+}
+
+select {
+  cursor: pointer;
+}
+
+textarea {
+  min-height: 6.5rem;
+  padding: 0.75rem 1rem;
+  line-height: 1.5;
+  resize: vertical;
+}
+
+:is(input:not([type="checkbox"], [type="radio"], [type="file"]), select, textarea)::placeholder {
+  color: var(--gray-400);
+  opacity: 1;
+}
+
+:is(input:not([type="checkbox"], [type="radio"], [type="file"]), select, textarea):hover {
+  border-color: var(--gray-400);
+}
+
+:is(input:not([type="checkbox"], [type="radio"], [type="file"]), select, textarea)[readonly] {
+  color: var(--gray-700);
+  background: var(--gray-50);
+  border-color: var(--gray-200);
+}
+
+:is(input:not([type="checkbox"], [type="radio"], [type="file"]), select, textarea):disabled {
+  color: var(--gray-500);
+  background: var(--gray-100);
+  border-color: var(--gray-200);
+  cursor: not-allowed;
+}
+
+:is(input:not([type="checkbox"], [type="radio"], [type="file"]), select, textarea):focus-visible {
+  border-color: var(--primary);
+  box-shadow: var(--focus-ring);
+}
+
+/* Hatalı alan */
+.field.invalid :is(input:not([type="checkbox"], [type="radio"], [type="file"]), select, textarea) {
+  background: var(--danger-light);
+  border-color: var(--danger);
+}
+
+.field.invalid :is(input:not([type="checkbox"], [type="radio"], [type="file"]), select, textarea):focus-visible {
+  box-shadow: 0 0 0 3px var(--danger-glow);
+}
+
+/*-------- İkonlu giriş: ikon solda, parola göster/gizle düğmesi sağda --------*/
+.input-box {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-box > svg {
+  position: absolute;
+  left: 1rem;
+  width: 19px;
+  height: 19px;
+  color: var(--gray-400);
+  pointer-events: none;
+  transition: color 0.2s ease;
+}
+
+.input-box:has(> svg) > input {
+  padding-left: 2.85rem;
+}
+
+.input-box:has(> button) > input {
+  padding-right: 3rem;
+}
+
+.input-box > input:focus-visible ~ svg {
+  color: var(--primary);
+}
+
+.input-box > button {
+  position: absolute;
+  right: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.4rem;
+  color: var(--gray-500);
+  background: none;
+  border: 0;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.input-box > button:hover {
+  color: var(--dark);
+}
+
+.input-box > button:focus-visible {
+  color: var(--dark);
+  box-shadow: var(--focus-ring);
+  outline: 0;
+}
+
+.input-box > button > svg {
+  width: 20px;
+  height: 20px;
+}
+
+/*-------- Seçim kartları: onay kutusu ve radyo tek desen (etiket = kart, sol dairede beyaz tik) --------
+  Kapsayıcı yalnızca yerleşimi seçer: .checklist (sütun), .radio-group (sıra), .checkbox-choices (2 sütun).
+  Seçili durum: :has(input:checked); JS'in verdiği .checked/.selected sınıfı :has'ı bilmeyen tarayıcılar için yedek. */
+:is(.checklist, .radio-group, .checkbox-choices) {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.radio-group {
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 0.85rem;
+}
+
+.radio-group > label {
+  flex: 1;
+  min-width: 160px;
+}
+
+.checkbox-choices {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+}
+
+:is(.checklist, .radio-group, .checkbox-choices) > label {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-height: 3.25rem;
+  padding: 0.8125rem 1.25rem 0.8125rem 3.5rem; /* sol boşluk: 24px daire + hizalama */
+  font-size: 0.9375rem;
+  font-weight: 500;
+  line-height: 1.45;
+  color: var(--gray-800);
+  background: var(--control-bg);
+  border: var(--control-border);
+  border-radius: var(--control-radius);
+  cursor: pointer;
+  user-select: none;
+  transition: border-color 0.25s ease, background-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+/* Yerel onay/radyo ekrandan gizli ama klavye ve ekran okuyucuya açık */
+:is(.checklist, .radio-group, .checkbox-choices) > label > input {
+  position: absolute;
+  width: 0;
+  height: 0;
+  margin: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+:is(.checklist, .radio-group, .checkbox-choices) > label > span {
+  display: block;
+  width: 100%;
+}
+
+:is(.checklist, .radio-group, .checkbox-choices) > label a {
+  color: var(--primary);
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+:is(.checklist, .radio-group, .checkbox-choices) > label a:hover {
+  color: var(--primary-hover);
+  text-decoration-thickness: 2px;
+}
+
+/* Seçilmemiş işaret (varsayılan daire) */
+:is(.checklist, .radio-group, .checkbox-choices) > label::before {
+  content: "";
+  position: absolute;
+  left: 18px;
+  top: 50%;
+  width: 24px;
+  height: 24px;
+  background: var(--white);
+  border: 1.5px solid var(--gray-300);
+  border-radius: 50%;
+  transform: translateY(-50%);
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+/* Onay kutuları (input[type=checkbox]) kare işaretli; radyo düğmeleri (kapsayıcı .checklist olsa da) daire kalır */
+:is(.checklist, .radio-group, .checkbox-choices) > label:has(> input[type="checkbox"])::before {
+  border-radius: var(--radius-sm);
+}
+
+/* Beyaz tik (seçilince görünür) */
+:is(.checklist, .radio-group, .checkbox-choices) > label::after {
+  content: "";
+  position: absolute;
+  left: 27px;
+  top: 50%;
+  width: 5px;
+  height: 10px;
+  border: solid var(--white);
+  border-width: 0 2px 2px 0;
+  opacity: 0;
+  transform: translateY(-60%) rotate(45deg);
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+
+:is(.checklist, .radio-group, .checkbox-choices) > label:hover {
+  border-color: var(--primary);
+}
+
+:is(.checklist, .radio-group, .checkbox-choices) > label:hover::before {
+  border-color: var(--primary);
+}
+
+:is(.checklist, .radio-group, .checkbox-choices) > :is(label:has(input:checked), .checked, .selected) {
+  border-color: var(--primary);
+}
+
+:is(.checklist, .radio-group, .checkbox-choices) > :is(label:has(input:checked), .checked, .selected)::before {
+  background: var(--primary);
+  border-color: var(--primary);
+}
+
+:is(.checklist, .radio-group, .checkbox-choices) > :is(label:has(input:checked), .checked, .selected)::after {
+  opacity: 1;
+}
+
+:is(.checklist, .radio-group, .checkbox-choices) > label:has(input:focus-visible) {
+  border-color: var(--primary);
+  box-shadow: var(--focus-ring);
+}
+
+:is(.checklist, .radio-group, .checkbox-choices) > label:has(input:disabled) {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.checklist > .error {
+  margin-top: -0.4rem;
+}
+
+@media (max-width: 900px) {
+  .checkbox-choices {
+    grid-template-columns: 1fr;
+  }
+}
+
+/*-------- Düğme: tek bileşen (.btn birincil, .btn-outline ikincil; .btn-sm / .btn-lg boyut) --------
+  Form gönder düğmesi sınıfsız: `form > button[type="submit"]` doğrudan çocuğu .btn gibi görünür ve satırı doldurur. */
+.btn,
+form > button[type="submit"] {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  min-height: var(--control-h);
+  padding: 0 1.5rem;
+  font-family: var(--font-body);
+  font-size: 0.9375rem;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: 0.01em;
+  text-align: center;
+  text-decoration: none;
+  color: var(--white);
+  background: var(--primary);
+  border: 1.5px solid var(--primary);
+  border-radius: var(--control-radius);
+  box-shadow: var(--shadow-btn);
+  cursor: pointer;
+  transition: var(--btn-transition), border-color 0.25s ease;
+}
+
+form > button[type="submit"] {
+  width: 100%;
+  padding-inline: 1rem;
+}
+
+.btn > svg,
+form > button[type="submit"] > svg {
+  flex-shrink: 0;
+  width: 1.125rem;
+  height: 1.125rem;
+  transition: transform 0.2s ease;
+}
+
+.btn:not(:disabled):hover,
+form > button[type="submit"]:not(:disabled):hover {
+  color: var(--white);
+  background: var(--primary-hover);
+  border-color: var(--primary-hover);
+  box-shadow: var(--shadow-btn-hover);
+  transform: translateY(-1px);
+}
+
+.btn:not(:disabled):hover > svg,
+form > button[type="submit"]:not(:disabled):hover > svg {
+  transform: translateX(3px);
+}
+
+.btn:not(:disabled):active,
+form > button[type="submit"]:not(:disabled):active {
+  transform: none;
+}
+
+.btn:focus-visible,
+form > button[type="submit"]:focus-visible {
+  outline: 3px solid var(--primary);
+  outline-offset: 3px;
+}
+
+.btn:disabled,
+form > button[type="submit"]:disabled {
+  opacity: 0.5;
+  box-shadow: none;
+  cursor: not-allowed;
+}
+
+.btn-outline {
+  color: var(--gray-800);
+  background: var(--white);
+  border-color: var(--gray-300);
+  box-shadow: none;
+}
+
+.btn-outline:not(:disabled):hover {
+  color: var(--primary);
+  background: var(--white);
+  border-color: var(--primary);
+  box-shadow: none;
+  transform: none;
+}
+
+.btn-sm {
+  min-height: 2.5rem;
+  padding: 0 1.25rem;
+  font-size: 0.875rem;
+}
+
+.btn-sm > svg {
+  width: 1rem;
+  height: 1rem;
+}
+
+.btn-lg {
+  min-height: 3.25rem;
+  padding: 0 2rem;
+  font-size: 1rem;
+}
+
+/*-------- Mobil (≤768px) ve dokunmatik cihazlar (pointer: coarse): dokunma hedefi ≥44px --------*/
+@media (max-width: 768px), (pointer: coarse) {
+  .btn-sm {
+    min-height: 2.75rem;
+  }
+
+  /* Parola göster/gizle: görsel boyut aynı kalır, hedef 44×44 (giriş sağ iç boşluğu 3rem içinde) */
+  .input-box > button {
+    right: 0.25rem;
+    min-width: 44px;
+    min-height: 44px;
+  }
+}
+
+/*============================================================================================
+  Ortak Modal Katmanı
+============================================================================================*/
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(4px);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+}
+
+.modal.active {
+  display: flex;
+}
+
+.modal > div {
+  background: var(--white);
+  border-radius: var(--radius-md);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+  width: 100%;
+  max-width: 600px;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  animation: modalIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes modalIn {
+  from { opacity: 0; transform: scale(0.96); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.modal header {
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid var(--border-light);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.modal header h3 {
+  font-family: var(--font-body);
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--dark);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.modal h3 svg {
+  color: var(--primary);
+}
+
+.modal header button {
+  background: none;
+  border: none;
+  color: var(--gray-400);
+  cursor: pointer;
+  padding: 0.3rem;
+  border-radius: 4px;
+}
+
+.modal header button:hover {
+  color: var(--dark);
+}
+
+.modal header svg {
+  width: 20px;
+  height: 20px;
+}
+
+.modal article {
+  padding: 1.5rem;
+  overflow-y: auto;
+  font-size: 0.9rem;
+  line-height: 1.65;
+  color: var(--gray-700);
+}
+
+.modal h4 {
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--dark);
+  margin: 1rem 0 0.4rem;
+}
+
+.modal h4:first-child {
+  margin-top: 0;
+}
+
+.modal ul {
+  padding-left: 1.25rem;
+  margin: 0.5rem 0;
+}
+
+.modal footer {
+  padding: 1rem 1.5rem;
+  border-top: 1px solid var(--border-light);
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  background: var(--bg-muted);
+}
+
+.modal footer button {
+  padding: 0.65rem 1.25rem;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.modal footer .secondary {
+  background: var(--white);
+  border: 1px solid var(--border-color);
+  color: var(--gray-700);
+}
+
+.modal footer .secondary:hover {
+  border-color: var(--gray-400);
+  background: var(--gray-50);
+}
+
+.modal footer .primary {
+  background: var(--primary);
+  border: 1px solid var(--primary);
+  color: var(--white);
+}
+
+.modal footer .primary:hover {
+  background: var(--primary-hover);
+}

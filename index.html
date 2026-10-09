@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <!-- @include head title="Mutfaktan Yarına | Eğitim ve Destek Programı 2026" description="Mutfaktan Yarına Eğitim ve Destek Programı. Coca-Cola Akademi ve ÖSGD iş birliğiyle kadın işletmecilere ve kadın kooperatiflerine ücretsiz MSA eğitimi ve 4 Milyon TL hibe desteği." css="base site-chrome index" scripts="site-chrome index" -->
+  <!-- DÜZENLEME: partials/head.html dosyasını değiştirin, sonra ./build.sh çalıştırın -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mutfaktan Yarına | Eğitim ve Destek Programı 2026</title>
+  <meta name="description" content="Mutfaktan Yarına Eğitim ve Destek Programı. Coca-Cola Akademi ve ÖSGD iş birliğiyle kadın işletmecilere ve kadın kooperatiflerine ücretsiz MSA eğitimi ve 4 Milyon TL hibe desteği.">
+  <meta name="theme-color" content="#F40009">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; connect-src 'self' http://127.0.0.1:4666 http://localhost:4666 https://api.mutfaktanyarina.com; base-uri 'self';">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Mutfaktan Yarına | Eğitim ve Destek Programı 2026">
+  <meta property="og:description" content="Mutfaktan Yarına Eğitim ve Destek Programı. Coca-Cola Akademi ve ÖSGD iş birliğiyle kadın işletmecilere ve kadın kooperatiflerine ücretsiz MSA eğitimi ve 4 Milyon TL hibe desteği.">
+  <meta property="og:image" content="https://mutfaktanyarina.com/assets/og-image.jpg">
+  <meta property="og:image:type" content="image/jpeg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta property="og:locale" content="tr_TR">
+  <link rel="icon" href="favicon.ico" sizes="any">
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+  <link rel="preload" href="fonts/TCCC-UnityText-Regular.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="fonts/TCCC-UnityText-Bold.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="fonts/TCCC-UnityHeadline-Black.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="forms.css">
+  <link rel="stylesheet" href="base.css">
+  <link rel="stylesheet" href="site-chrome.css">
+  <link rel="stylesheet" href="index.css">
+  <link rel="stylesheet" href="print.css" media="print">
+  <link rel="stylesheet" href="cerez.css">
+  <script src="cerez.js" defer></script>
+  <script src="site-chrome.js" defer></script>
+  <script src="index.js" defer></script>
+  <!-- @end head -->
+  <!-- LCP: hero görseli. <picture> kaynaklarıyla aynı ölçüt sırası; yalnızca eşleşen önyüklenir, yüksek öncelikle -->
+  <link rel="preload" as="image" type="image/webp" href="assets/brand-collage-lg.webp" media="(min-width: 1024px)" fetchpriority="high">
+  <link rel="preload" as="image" type="image/webp" href="assets/brand-collage-md.webp" media="(min-width: 600px) and (max-width: 1023px)" fetchpriority="high">
+  <link rel="preload" as="image" type="image/webp" href="assets/brand-collage-portrait.webp" media="(max-width: 599px)" fetchpriority="high">
+</head>
+<body>
+  <!-- @include skip-link -->
+  <!-- DÜZENLEME: partials/skip-link.html dosyasını değiştirin, sonra ./build.sh çalıştırın -->
+  <a href="#main">İçeriğe geç</a>
+  <!-- @end skip-link -->
+
+  <!-- @include header-public active=ana-sayfa -->
+  <!-- DÜZENLEME: partials/header-public.html dosyasını değiştirin, sonra ./build.sh çalıştırın -->
+  <header class="main-header" id="top-header">
+    <div>
+      <a href="index.html" aria-label="Mutfaktan Yarına Ana Sayfa">
+        <img class="brand-logo" src="assets/mutfaktan-clean-mark-opt.png" alt="Mutfaktan Yarına" width="128" height="50" decoding="async">
+      </a>
+      <nav id="nav-menu" aria-label="Ana Menü">
+        <ul>
+          <li><a href="index.html" aria-current="page">ANA SAYFA</a></li>
+          <li><a href="msa-egitim.html">ÜCRETSİZ EĞİTİM</a></li>
+          <li>
+            <a href="hibe-sartlari.html">HİBE DESTEĞİ</a>
+            <ul>
+              <li><a href="hibe-sartlari.html">Başvuru Şartları</a></li>
+              <li><a href="hibe-yonergesi.html">Hibe Yönergesi</a></li>
+            </ul>
+          </li>
+          <li><a href="index.html#program-takvimi">TAKVİM</a></li>
+          <li><a href="sss.html">SSS</a></li>
+          <li><a href="iletisim.html">İLETİŞİM</a></li>
+          <li><a href="giris.html">GİRİŞ</a></li>
+        </ul>
+      </nav>
+      <a href="kayit.html" class="btn btn-sm">BAŞVURU YAP
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+          <polyline points="12 5 19 12 12 19"></polyline>
+        </svg>
+      </a>
+      <button type="button" id="mobile-toggle" aria-label="Menüyü Aç/Kapat" aria-expanded="false" aria-controls="nav-menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+  <!-- @end header-public -->
+
+  <aside class="promo-banner" aria-label="Duyuru">
+    <p><strong>Eğitim programıyla birlikte 1 Milyon TL'ye varan hibe desteği kazanma fırsatı!</strong> Başvurular 12 Ekim'de başlıyor.</p>
+  </aside>
+
+  <!-- =====================================================================
+       2. HERO BÖLÜMÜ
+       ===================================================================== -->
+  <section class="hero-section" id="hero">
+    <div class="hero-bg-layer">
+      <picture>
+        <source srcset="assets/brand-collage-lg.webp" media="(min-width: 1024px)" type="image/webp">
+        <source srcset="assets/brand-collage-md.webp" media="(min-width: 600px)" type="image/webp">
+        <source srcset="assets/brand-collage-portrait.webp" type="image/webp">
+        <img src="assets/brand-collage.jpg" alt="Mutfaktan Yarına Eğitim ve Destek Programı" width="1600" height="898" decoding="async" fetchpriority="high">
+      </picture>
+      <div></div>
+    </div>
+
+    <div class="hero-content-wrapper">
+      <h1>
+        İşletmeni Eğitimle Geliştir, Hibeyle Güçlendir
+      </h1>
+
+      <p>
+
+Gastronomi (yeme-içme) alanındaki kadın işletmeciler ve kadın kooperatifleri için ücretsiz ve sertifikalı MSA eğitimi. Eğitimi başarıyla tamamlayan ve başvuru koşullarını sağlayan 18–30 yaş aralığındaki kadın işletmeciler ile kadın kooperatiflerinden 25 aday için toplam 4 milyon TL hibe desteği.
+ </p>
+
+      <div class="hero-buttons">
+        <a href="msa-egitim.html" class="btn btn-lg">
+          <span>Ücretsiz Eğitime Başla</span>
+        </a>
+        <a href="basvuru.html" class="btn-hero-secondary">
+          <span>Hibeye Başvur</span>
+        </a>
+      </div>
+
+      <!-- Hero Hızlı Özet Rakamları -->
+      <div class="hero-stats-bar">
+        <div>
+          <div class="stat-number">Ücretsiz</div>
+          <div>MSA Eğitimi</div>
+        </div>
+        <div class="stat-divider"></div>
+        <div>
+          <div class="stat-number">4 Milyon TL</div>
+          <div>Toplam Hibe</div>
+        </div>
+        <div class="stat-divider"></div>
+        <div>
+          <div class="stat-number">25</div>
+          <div>Hibe Alacak İşletme</div>
+        </div>
+        <div class="stat-divider"></div>
+        <div>
+          <div class="stat-number">1 Milyon TL’ye Varan</div>
+          <div>Destek</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =====================================================================
+       3. YAN MENÜ VE İÇERİK DÜZENİ
+       "YAN MENÜ (Ana Sayfada sekmeler arasında gezinmek için)"
+       ===================================================================== -->
+  <!-- Mobil ve Tablet için Üst Sekme Barı (1024px altında aktif) -->
+  <nav class="subnav-sticky" id="subnav-bar" aria-label="Mobil Sayfa Sekmeleri">
+    <div class="subnav-container">
+      <ul>
+        <li>
+          <a href="#proje-hakkinda" class="active" data-target="proje-hakkinda">
+            <span class="tab-arrow">➔</span>
+            <span>PROGRAM HAKKINDA</span>
+          </a>
+        </li>
+        <li>
+          <a href="#msa-egitimi" data-target="msa-egitimi">
+            <span class="tab-arrow">➔</span>
+            <span>MSA EĞİTİMİ</span>
+          </a>
+        </li>
+        <li>
+          <a href="#hibe-destegi" data-target="hibe-destegi">
+            <span class="tab-arrow">➔</span>
+            <span>HİBE DESTEĞİ</span>
+          </a>
+        </li>
+        <li>
+          <a href="#program-takvimi" data-target="program-takvimi">
+            <span class="tab-arrow">➔</span>
+            <span>PROGRAM TAKVİMİ</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Masaüstünde YAN MENÜ (Sol) ve ANA İÇERİK (Sağ) Düzeni -->
+  <div class="page-layout-wrapper">
+
+    <!-- SOL YAN MENÜ (Masaüstünde Yanda Sabit Kalan Kurumsal Menü) -->
+    <aside class="desktop-side-nav" aria-label="Yan Menü">
+      <div>
+        <nav aria-label="Sayfa Sekmeleri">
+          <ul>
+            <li>
+              <a href="#proje-hakkinda" class="active" data-target="proje-hakkinda">
+                <span class="side-arrow">➔</span>
+                <span>PROGRAM HAKKINDA</span>
+              </a>
+            </li>
+            <li>
+              <a href="#msa-egitimi" data-target="msa-egitimi">
+                <span class="side-arrow">➔</span>
+                <span>MSA EĞİTİMİ</span>
+              </a>
+            </li>
+            <li>
+              <a href="#hibe-destegi" data-target="hibe-destegi">
+                <span class="side-arrow">➔</span>
+                <span>HİBE DESTEĞİ</span>
+              </a>
+            </li>
+            <li>
+              <a href="#program-takvimi" data-target="program-takvimi">
+                <span class="side-arrow">➔</span>
+                <span>PROGRAM TAKVİMİ</span>
+              </a>
+            </li>
+          </ul>
+        </nav>
+
+        <div class="side-nav-promo-box">
+          <div class="side-promo-sum">Başvurular 12 Ekim'de Başlıyor</div>
+          <p>Gastronomideki kadın girişimcilere ücretsiz eğitim ve hibe desteği.</p>
+          <a href="kayit.html">
+            <span>Hemen Başvur</span>
+            <span class="btn-arrow">➔</span>
+          </a>
+        </div>
+      </div>
+    </aside>
+
+    <!-- SAĞ ANA İÇERİK ALANI -->
+    <main class="page-content-area" id="main">
+
+    <!-- Program adımları: ayraç bölüm -->
+    <section class="process-band" aria-label="Program adımları">
+      <ol class="process-steps">
+        <li>Önce Eğitimi Tamamla</li>
+        <li>Sertifikanı Al</li>
+        <li>Şartları Sağlıyorsan Hibeye Başvur</li>
+      </ol>
+      <p><strong>Not:</strong> Eğitim herkese açıktır. Hibe desteğine ise gastronomi (yeme-içme) alanında faaliyet gösteren, 18–30 yaş kriterini ve diğer başvuru koşullarını sağlayan kadın işletmeciler ile kadın kooperatifleri başvurabilir.</p>
+    </section>
+
+    <!-- -----------------------------------------------------------------
+         BÖLÜM 1: PROGRAM HAKKINDA
+         ----------------------------------------------------------------- -->
+    <section class="content-section" id="proje-hakkinda">
+      <h2 class="section-heading">PROGRAM HAKKINDA</h2>
+
+      <div class="text-body-flow">
+
+
+      <p>
+      Coca-Cola Akademi tarafından ÖSGD iş birliğiyle hayata geçirilen Mutfaktan Yarına Eğitim ve Destek Programı, gastronomi (yeme-içme) sektöründe faaliyet gösteren kadın işletmecilerin ve kadın kooperatiflerinin bilgi ve becerilerini geliştirmeyi, uygunluk koşullarını sağlayan kadın işletmecileri ve kadın kooperatiflerini hibe desteğiyle güçlendirmeyi amaçlıyor.
+</p><p>
+      Programın ilk adımı, Mutfak Sanatları Akademisi (MSA) tarafından Mutfaktan Yarına’ya özel hazırlanan ücretsiz çevrim içi program eğitimini tamamlamak. Eğitimde işletme yönetiminden maliyet kontrolüne, menü verimliliğinden müşteri deneyimine kadar işin günlük yönetiminde kullanılabilecek temel başlıklar ele alınıyor.
+</p><p>
+Hibe desteğine başvurmak isteyen katılımcıların program eğitimini tamamlaması, eğitim sonundaki değerlendirmeden en az 70 puan alarak sertifikaya hak kazanması ve diğer başvuru koşullarını sağlaması gerekiyor.
+</p>
+
+
+      </div>
+
+      <div class="cta-direct-buttons">
+        <a href="msa-egitim.html" class="btn-guide-primary" id="btn-egitime-basla">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path d="M22 10L12 5 2 10l10 5 10-5z"></path>
+            <path d="M6 12v5c3 2 9 2 12 0v-5"></path>
+          </svg>
+          <span>Ücretsiz Eğitim</span>
+        </a>
+        <a href="hibe-sartlari.html" class="btn-guide-secondary">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path d="M9 11l3 3L22 4"></path>
+            <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+          </svg>
+          <span>Hibe Başvuru Şartları</span>
+        </a>
+        <a href="hibe-yonergesi.html" class="btn-guide-secondary" id="btn-open-yonerge">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+            <line x1="16" y1="13" x2="8" y2="13"></line>
+            <line x1="16" y1="17" x2="8" y2="17"></line>
+          </svg>
+          <span>Hibe Yönergesi</span>
+        </a>
+      </div>
+    </section>
+
+    <!-- -----------------------------------------------------------------
+         BÖLÜM 2: MUTFAKTAN YARINA PROGRAMI’NA ÖZEL MSA EĞİTİMİ
+         ----------------------------------------------------------------- -->
+    <section class="content-section" id="msa-egitimi">
+      <h2 class="section-heading">EĞİTİM HAKKINDA</h2>
+
+      <div class="text-body-flow">
+      <img src="assets/msa-logo.webp" alt="Mutfak Sanatları Akademisi (MSA) logosu" width="746" height="507" decoding="async">
+      <p>
+     Mutfak Sanatları Akademisi (MSA) tarafından hazırlanan ücretsiz ve sertifikalı çevrim içi program eğitimi, işletmelerin daha verimli, sürdürülebilir ve güçlü bir yapıyla yönetilmesine katkı sağlamayı amaçlıyor.
+</p><p>
+      Eğitim herkese açıktır. Hibe desteğine başvurmak isteyen adayların ise program eğitimini tamamlaması, eğitim başarı puanı olarak en az 70 puan alarak sertifikaya hak kazanması ve sertifikayı hibe başvuru formuna yüklemesi zorunludur.
+</p>
+
+
+      </div>
+
+      <!-- MSA Eğitim Modülleri Kartları -->
+      <h3>Eğitimde Neler Var?</h3>
+      <div class="modules-grid">
+        <div>
+          <div>
+            <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M8 3v13a5 5 0 0 0 5 5h1"></path>
+              <path d="M6 10l10-4"></path>
+              <path d="M6 14l10-4"></path>
+            </svg>
+          </div>
+          <h3>Müşteri ve Maliyet Yönetimi</h3>
+          <p>Müşteri ihtiyaçlarını daha iyi anlamaya ve işletme maliyetlerini daha kontrollü yönetmeye yönelik temel yaklaşımlar.</p>
+        </div>
+
+        <div>
+          <div>
+            <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
+              <polyline points="17 6 23 6 23 12"></polyline>
+            </svg>
+          </div>
+          <h3>Sürdürülebilir Büyüme</h3>
+          <p>İşletmenin mevcut kaynaklarını daha verimli kullanarak uzun vadeli ve dengeli büyümeyi destekleyen yöntemler.</p>
+        </div>
+
+        <div>
+          <div>
+            <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <line x1="16" y1="13" x2="8" y2="13"></line>
+              <line x1="16" y1="17" x2="8" y2="17"></line>
+            </svg>
+          </div>
+          <h3>Menü Verimliliği</h3>
+          <p>Menünün maliyet, satış ve operasyon açısından daha verimli yönetilmesine yardımcı olacak temel bakış açıları.</p>
+        </div>
+
+        <div>
+          <div>
+            <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+              <circle cx="9" cy="7" r="4"></circle>
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+              <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+            </svg>
+          </div>
+          <h3>Ekip ve Operasyon Yönetimi</h3>
+          <p>Günlük iş akışını, görev dağılımını ve ekip koordinasyonunu daha düzenli yürütmeye yönelik uygulamalar.</p>
+        </div>
+
+        <div>
+          <div>
+            <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+            </svg>
+          </div>
+          <h3>Kalite ve Müşteri Deneyimi</h3>
+          <p>Ürün ve hizmet kalitesini korurken müşterinin işletmeyle yaşadığı deneyimi güçlendirmeye yönelik yaklaşımlar.</p>
+        </div>
+
+        <div>
+          <div>
+            <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="3"></circle>
+              <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+            </svg>
+          </div>
+          <h3>Dijital Görünürlük ve Yapay Zeka Destekli Araçlar</h3>
+          <p>İşletmenin dijital kanallarda daha görünür olmasına ve günlük işlerde yapay zeka destekli araçlardan yararlanılmasına yönelik temel bilgiler.</p>
+        </div>
+      </div>
+
+      <!-- Sertifika Zorunluluğu Bilgi Kartı -->
+      <div class="mandatory-card">
+        <div class="mandatory-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+          </svg>
+        </div>
+        <div>
+          <p class="bigger-warn">
+
+
+          <b>Eğitimin başlangıç tarihi: 12 Ekim 2026</b><br/>
+Hibe başvurusu yapacak adayların program eğitimini tamamlayarak sertifikalarını başvuru formunu göndermeden önce almaları gerekir. <u>Hibe başvuruları için son tarih 20 Kasım 2026’dır. Eğitimin bu tarihten önce başarıyla tamamlanması gerekmektedir. </u>
+          </p>
+        </div>
+      </div>
+
+      <div class="cta-direct-buttons">
+        <a href="msa-egitim.html" class="btn-guide-primary">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path d="M22 10L12 5 2 10l10 5 10-5z"></path>
+            <path d="M6 12v5c3 2 9 2 12 0v-5"></path>
+          </svg>
+          <span>Ücretsiz Eğitim</span>
+        </a>
+      </div>
+    </section>
+
+    <!-- -----------------------------------------------------------------
+         BÖLÜM 3: HİBE DESTEĞİ & HİBE TUTARLARI (Modern Estetik Tasarım)
+         ----------------------------------------------------------------- -->
+    <section class="content-section" id="hibe-destegi">
+      <h2 class="section-heading">HİBE DESTEĞİ</h2>
+
+      <div class="text-body-flow">
+        <p>
+          Program eğitimini başarıyla tamamlayan ve Hibe Yönergesindeki koşulları sağlayan adaylar hibe desteğine başvurabilir. Jüri değerlendirmesi sonucunda toplam 25 aday hibe desteğinden yararlanacaktır.
+        </p>
+      </div>
+
+      <!-- Hibe Başvuru Şartları ve Yönerge Butonları -->
+      <div class="cta-direct-buttons" id="hibe-sartlari">
+        <a href="hibe-sartlari.html" class="btn-guide-secondary" id="btn-sartlar-modal">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M9 11l3 3L22 4"></path>
+            <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+          </svg>
+          <span>Hibe Başvuru Şartları</span>
+        </a>
+
+        <a href="hibe-yonergesi.html" class="btn-guide-secondary" id="btn-yonerge-modal">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+            <line x1="16" y1="13" x2="8" y2="13"></line>
+            <line x1="16" y1="17" x2="8" y2="17"></line>
+          </svg>
+          <span>Hibe Yönergesi</span>
+        </a>
+
+        <a href="kayit.html" class="btn-guide-primary" id="btn-hibe-basvur">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="22" y1="2" x2="11" y2="13"></line>
+            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+          </svg>
+          <span>Hibeye Başvur</span>
+        </a>
+      </div>
+
+      <!-- ESTETİK HİBE TUTARLARI VİTRİNİ (Modern Kademeli Kartlar) -->
+      <div class="grants-showcase">
+        <div class="showcase-header">
+          <div>
+            <h3>HİBE TUTARLARI</h3>
+          </div>
+        </div>
+
+        <p>
+          Program kapsamında toplam 25 aday hibe desteğinden yararlanacaktır. Hibe dağılımı aşağıdaki gibidir:
+        </p>
+
+        <!-- Kademeli Ödül Kartları Grubu -->
+        <div class="award-cards-grid">
+          
+          <!-- 1. Sıra (Öne Çıkan Baş Kart) -->
+          <div class="award-rank-1">
+            <div class="award-card-header">
+              <span class="award-rank-badge gold">1. Sıra</span>
+              <span>1 İşletme/Kooperatif</span>
+            </div>
+            <div class="award-amount">1.000.000 TL</div>
+          </div>
+
+          <!-- 2. Sıra -->
+          <div>
+            <div class="award-card-header">
+              <span class="award-rank-badge silver">2. Sıra</span>
+              <span>1 İşletme/Kooperatif</span>
+            </div>
+            <div class="award-amount">500.000 TL</div></div>
+
+          <!-- 3. Sıra -->
+          <div>
+            <div class="award-card-header">
+              <span class="award-rank-badge bronze">3. Sıra</span>
+              <span>1 İşletme/Kooperatif</span>
+            </div>
+            <div class="award-amount">300.000 TL</div>
+          </div>
+
+          <!-- 4.–25. Sıralar (22 Kişi) -->
+          <div class="award-rank-rest">
+            <div class="award-card-header">
+              <span class="award-rank-badge standard">4. – 25. Sıra</span>
+              <span>22 İşletme/Kooperatif</span>
+            </div>
+            <div class="award-amount">100.000 TL <small>/ İşletme/Kooperatif Başı</small></div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Hukuki ve Usul Şartları Kartları -->
+      <div class="terms-grid">
+        <div>
+          <div>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"></circle>
+              <path d="M12 6v6l4 2"></path>
+            </svg>
+            <h4>Hibe Hakkının Kesinleşmesi</h4>
+          </div>
+          <p>
+          Hibe hakkı; talep edilen tüm bilgi ve belgelerin eksiksiz sunulması, beyanların doğrulanması, işletmenin/kooperatifin ödeme tarihinde de faal olması, tasfiye, iflas, konkordato veya kapanma sürecinde bulunmaması ve ödeme tarihinde vadesi geçmiş ve yapılandırılmamış vergi veya SGK prim borcu bulunmadığının güncel resmî belgelerle teyit edilmesi ile Program Yöneticilerinin nihai onayı sonrasında kesinleşir.
+          </p>
+        </div>
+
+        <div>
+          <div>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <line x1="16" y1="13" x2="8" y2="13"></line>
+              <line x1="16" y1="17" x2="8" y2="17"></line>
+            </svg>
+            <h4>Hibe Kullanım Esasları</h4>
+          </div>
+          <p>
+            Hibe almaya hak kazanan adaylar ödeme öncesinde Hibe Ödeme Tutanağı imzalar. Hibe Desteğinin, başvuru ve jüri değerlendirmesinde beyan edilen kullanım amacıyla uyumlu şekilde kullanılması esastır. Hibe kapsamında vergi ve SGK prim borçları ile bunlara ilişkin gecikme zammı/faizi ve benzeri kamu borçları finanse edilemez.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- -----------------------------------------------------------------
+         BÖLÜM 4: PROGRAM TAKVİMİ (Estetik Dikey Akış & Zaman Çizelgesi)
+         ----------------------------------------------------------------- -->
+    <section class="content-section" id="program-takvimi">
+      <h2 class="section-heading">PROGRAM TAKVİMİ</h2>
+
+      <p class="section-subtext">
+        Program başvuru, puanlama, doğrulama, ön değerlendirme ve jüri süreci takvimi:
+      </p>
+
+      <ol class="program-takvimi">
+        <li>
+          <h3><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg><time>12 Ekim 2026</time></h3>
+          <div><h4>Sizin yapacaklarınız</h4><p>Ücretsiz program eğitimine başla.</p></div>
+          <div><h4>Bizim yapacaklarımız</h4><p>Program eğitimini erişime açarız.</p></div>
+        </li>
+        <li>
+          <h3><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg><time>12 Ekim 2026</time></h3>
+          <div><h4>Sizin yapacaklarınız</h4><p>Program eğitimini tamamladıysanız ve koşulları sağlıyorsanız hibe başvurunu yapabilirsiniz.</p></div>
+          <div><h4>Bizim yapacaklarımız</h4><p>Hibe başvurularını almaya başlarız.</p></div>
+        </li>
+        <li class="son">
+          <h3><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg><time>20 Kasım 2026</time></h3>
+          <div><h4>Sizin yapacaklarınız</h4><p>Hibe başvurunuzu en geç bu tarihte tamamlayın. Sertifikanız başvuru sırasında sisteme yüklenmiş olmalı.</p></div>
+          <div><h4>Bizim yapacaklarımız</h4><p>Hibe başvurularını kapatırız.</p></div>
+        </li>
+        <li>
+          <h3><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg><time>24 Kasım 2026</time></h3>
+          <div><h4>Sizin yapacaklarınız</h4><p>E-posta ve kullanıcı hesabınızı kontrol etmelisiniz.</p></div>
+          <div><h4>Bizim yapacaklarımız</h4><p>Başvuru Formu Puanı (Sistem Puanı) sıralamasını oluşturur ve bir sonraki aşamaya geçen adayları bilgilendiririz.</p></div>
+        </li>
+        <li>
+          <h3><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg><time>25 Kasım – 2 Aralık 2026</time></h3>
+          <div><h4>Sizin yapacaklarınız</h4><p>Bildirim aldıysanız doğrulama belgelerini yüklemeli ve 6 Ön Değerlendirme sorusunu yanıtlamalısınız.</p></div>
+          <div><h4>Bizim yapacaklarımız</h4><p>Adayların belge yükleme ve Ön Değerlendirme sürecini yürütürüz.</p></div>
+        </li>
+        <li>
+          <h3><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg><time>3 – 10 Aralık 2026</time></h3>
+          <div><h4>Sizin yapacaklarınız</h4><p>Gerekirse ek belge/açıklama taleplerini takip etmelisiniz.</p></div>
+          <div><h4>Bizim yapacaklarımız</h4><p>Belge ve beyanları doğrular, Ön Değerlendirme cevaplarını puanlarız.</p></div>
+        </li>
+        <li>
+          <h3><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg><time>11 Aralık 2026</time></h3>
+          <div><h4>Sizin yapacaklarınız</h4><p>Jüri aşamasına kaldıysanız yapılacak bilgilendirmeyi takip etmelisiniz.</p></div>
+          <div><h4>Bizim yapacaklarımız</h4><p>Toplam Ön Sıralama Puanını oluşturur ve Jüri Aday Listesini belirleriz.</p></div>
+        </li>
+        <li>
+          <h3><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg><time>11 – 23 Aralık 2026</time></h3>
+          <div><h4>Sizin yapacaklarınız</h4><p>Jüri Aday Listesindeyseniz çevrim içi jüri görüşmesine katılmalısınız.</p></div>
+          <div><h4>Bizim yapacaklarımız</h4><p>Jüri değerlendirme sürecini yürütürüz.</p></div>
+        </li>
+        <li class="final">
+          <h3><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg><time>25 Aralık 2026</time></h3>
+          <div><h4>Sizin yapacaklarınız</h4><p>Sonuçları programın resmî kanallarından takip etmelisiniz.</p></div>
+          <div><h4>Bizim yapacaklarımız</h4><p>Nihai sonuçları duyururuz.</p></div>
+        </li>
+      </ol>
+
+      <!-- Resmî Takvim Uyarısı -->
+      <div class="disclaimer-box">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="8" x2="12" y2="12"></line>
+          <line x1="12" y1="16" x2="12.01" y2="16"></line>
+        </svg>
+        <p>
+          <strong>Önemli Bilgilendirme:</strong> Program Yöneticileri; operasyonel gereklilikler, başvuru yoğunluğu, doğrulama süreçleri veya benzeri nedenlerle program takviminde değişiklik yapabilir. Takvim değişiklikleri programın resmî internet sitesi ve/veya ilan edilen iletişim kanalları üzerinden duyurulur.
+        </p>
+      </div>
+
+    </section>
+
+    <section class="content-section" id="sss">
+      <h2 class="section-heading">ADAYLARIN EN ÇOK SORDUĞU SORULAR</h2>
+
+      <div class="faq-preview">
+        <details>
+          <summary>Ücretsiz eğitime kimler katılabilir?</summary>
+          <p>Mutfaktan Yarına kapsamında sunulan çevrim içi program eğitimi herkese açıktır ve ücretsizdir.</p>
+        </details>
+
+        <details>
+          <summary>Hibe desteğine başvurmak için eğitimi tamamlamak zorunlu mu?</summary>
+          <p>Evet. Hibe başvurusu için program eğitimini tamamlamak, eğitim başarı puanı olarak en az 70 almak, sertifikaya hak kazanmak ve sertifikayı başvuru formuna yüklemek zorunludur.</p>
+        </details>
+
+        <details>
+          <summary>Kimler hibe desteğine başvurabilir?</summary>
+          <p>Gastronomi/yeme-içme sektöründe faaliyet gösteren ve Hibe Yönergesinde belirtilen tüm koşulları sağlayan kadın işletmeciler ile kadın kooperatifleri başvurabilir.</p>
+        </details>
+
+        <details>
+          <summary>Hibe desteği ne kadar?</summary>
+          <p>Toplam 25 aday hibe desteğinden yararlanacaktır. Birinci 1.000.000 TL, ikinci 500.000 TL, üçüncü 300.000 TL; 4.–25. sıradaki 22 yararlanıcı ise işletme/kooperatif başı 100.000 TL hibe alacaktır.</p>
+        </details>
+
+        <details>
+          <summary>Hibe başvurusu için son tarih nedir?</summary>
+          <p>Hibe başvuruları 12 Ekim 2026’da başlayacak ve 20 Kasım 2026’da sona erecektir.</p>
+        </details>
+      </div>
+
+      <div class="faq-more">
+        <p>Daha fazla sorunuz mu var?</p>
+        <a href="sss.html" class="btn btn-outline">Tüm Soruları İncele
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+            <polyline points="12 5 19 12 12 19"></polyline>
+          </svg>
+        </a>
+      </div>
+    </section>
+
+    <!--
+    <section class="content-section">
+      <div class="final-cta-banner">
+        <div>
+          <h3>Mutfaktaki Vizyonunuzu Birlikte Büyütelim.</h3>
+          <p>Ücretsiz MSA eğitimi ve 4 Milyon TL hibe fonundan yararlanmak için hemen başvurunuzu başlatın. Başvurular 12 Ekim – 12 Kasım 2026 tarihleri arasındadır.</p>
+        </div>
+        <div>
+          <a href="kayit.html" class="btn btn-lg">
+            <span>Hemen Başvur</span>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+              <polyline points="12 5 19 12 12 19"></polyline>
+            </svg>
+          </a>
+        </div>
+      </div>
+
+    </section>
+    -->
+
+    </main>
+  </div>
+
+  <section class="partners" aria-labelledby="partners-title">
+    <h2 id="partners-title">PAYDAŞLAR</h2>
+    <img src="assets/paydaslar-sm.webp" srcset="assets/paydaslar-sm.webp 1000w, assets/paydaslar.webp 2134w" sizes="(min-width: 1100px) 1000px, 100vw" alt="Paydaşlar: Coca-Cola, ÖSGD, The Coca-Cola Foundation, Anadolu Vakfı" width="1000" height="136" decoding="async">
+  </section>
+
+  <!-- @include footer -->
+  <!-- DÜZENLEME: partials/footer.html dosyasını değiştirin, sonra ./build.sh çalıştırın -->
+  <footer class="main-footer">
+    <div>
+      <div class="footer-top">
+        <div>
+          <a href="index.html" class="brand-logo-card" aria-label="Mutfaktan Yarına Ana Sayfa">
+            <img class="brand-logo" src="assets/logo-full-opt.png" alt="Coca-Cola Akademi, Mutfaktan Yarına, Eğitim ve Destek Programı" width="160" height="125" loading="lazy" decoding="async">
+          </a>
+          <p>Coca-Cola Akademi tarafından ÖSGD iş birliğiyle ve Mutfak Sanatları Akademisi (MSA) uzmanlığıyla hayata geçirilen kadın işletmecileri destekleme programı.</p>
+        </div>
+
+        <nav aria-label="Alt Menü">
+          <h2>Menü</h2>
+          <ul>
+            <li><a href="index.html">Ana Sayfa</a></li>
+            <li><a href="msa-egitim.html">Ücretsiz Eğitim</a></li>
+            <li><a href="hibe-sartlari.html">Hibe Başvuru Şartları</a></li>
+            <li><a href="hibe-yonergesi.html">Hibe Yönergesi</a></li>
+            <li><a href="sss.html">Sıkça Sorulan Sorular</a></li>
+            <li><a href="kayit.html">Başvuru Yap</a></li>
+          </ul>
+        </nav>
+
+        <nav aria-label="Program Bölümleri">
+          <h2>Program Bölümleri</h2>
+          <ul>
+            <li><a href="index.html#proje-hakkinda">Program Hakkında</a></li>
+            <li><a href="index.html#msa-egitimi">MSA Eğitimi</a></li>
+            <li><a href="index.html#hibe-destegi">Hibe Desteği &amp; Tutarlar</a></li>
+            <li><a href="index.html#program-takvimi">Program Takvimi</a></li>
+          </ul>
+        </nav>
+
+        <div>
+          <h2>Destek ve İletişim</h2>
+          <p>Sorularınız için SSS sayfamızı ziyaret edebilir veya bizimle iletişime geçebilirsiniz.</p>
+          <a href="iletisim.html">İletişime Geç</a>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>&copy; 2026 Mutfaktan Yarına. Coca-Cola Akademi, ÖSGD ve MSA ortaklığıyla yürütülmektedir. Tüm hakları saklıdır.</p>
+        <nav aria-label="Yasal">
+          <a href="aydinlatma-metni.html">Aday Aydınlatma Metni</a>
+          <a href="hibe-aydinlatma.html">Hibe Aydınlatma Metni</a>
+          <a href="cerez-politikasi.html">Çerez Aydınlatma Metni ve Politikası</a>
+          <a href="kvkk-basvuru.html">KVKK Başvuru Formu</a>
+          <a href="#" data-cerez-ac>Çerez Tercihleri</a>
+        </nav>
+      </div>
+    </div>
+  </footer>
+  <nav class="mobile-cta" aria-label="Hızlı Eylemler">
+    <a href="msa-egitim.html" class="btn btn-outline">Eğitime Başla</a>
+    <a href="kayit.html" class="btn">Hibeye Başvur</a>
+  </nav>
+  <!-- @end footer -->
+
+</body>
+</html>

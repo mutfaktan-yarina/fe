@@ -1,0 +1,102 @@
+/*============================================================================================
+  Mutfaktan Yarına — Hibe Başvuru Şartları ve Hibe Yönergesi sayfaları (hibe.css)
+  Bileşenler index.css'ten (.grants-showcase, .terms-grid, .lead-text-box…) ve site-chrome.css'ten (.content-section, .section-badge, .section-heading) gelir;
+  kapsayıcı ve ortalı okuma sütunu site-chrome.css'te (.hibe-page); burada yalnızca hibe sayfalarına özel kurallar bulunur (başvuru şartları listesi dahil).
+  base.css, site-chrome.css ve index.css'ten sonra yüklenir.
+============================================================================================*/
+
+/* Başvuru şartları listesi (hibe-sartlari.html: sayfadaki tek <ol>) */
+.hibe-page ul {
+  list-style: none;
+}
+
+.hibe-page ol {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.hibe-page li {
+  padding-left: 1.25rem;
+  position: relative;
+}
+
+.hibe-page li::before {
+  content: '✓';
+  position: absolute;
+  left: 0;
+  top: 1px;
+  color: var(--primary);
+  font-weight: 800;
+}
+
+/* Satır içi vurgu */
+.hibe-page li strong {
+  font-family: var(--font-body);
+  color: var(--dark);
+}
+
+/* Yönerge ve şartlar metni: boşluk ritmi site-chrome.css'teki .content-section kuralından gelir; burada yalnızca başlık ve tablo biçimi */
+.hibe-page .content-section > :is(h2, h3) {
+  font-family: var(--font-headline);
+  color: var(--dark);
+}
+
+.hibe-page .content-section > h2 {
+  font-size: 1.25rem;
+}
+
+.hibe-page .content-section > h3 {
+  font-size: 1.05rem;
+}
+
+.hibe-page p {
+  overflow-wrap: anywhere;   /* form satırları için uzun ____ dizileri mobilde taşmasın */
+}
+
+.hibe-page table {
+  display: block;
+  width: 100%;
+  overflow-x: auto;
+  border-collapse: collapse;
+  font-size: 0.92rem;
+}
+
+.hibe-page :is(th, td) {
+  border: 1px solid var(--border-color);
+  padding: 0.6rem 0.85rem;
+  text-align: left;
+}
+
+.hibe-page th {
+  background: var(--gray-100);
+  font-weight: 700;
+}
+
+/* Metin içi bağlantılar */
+.hibe-page .content-section > p:not(.cta-direct-buttons) > a {
+  color: var(--primary);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.hibe-page .disclaimer-box a {
+  color: var(--primary);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* Program takvimi (hibe-yonergesi.html): genel .hibe-page ol/li (onay işaretli liste) kuralları index.css'teki takvim kartlarını bozmasın */
+.hibe-page .hibe-takvim {
+  gap: 1rem;
+}
+
+.hibe-page .hibe-takvim > li {
+  padding-left: 0;
+  position: static;
+}
+
+.hibe-page .hibe-takvim > li::before {
+  content: none;
+}

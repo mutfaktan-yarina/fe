@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <!-- @include head title="Ön Değerlendirme Formu | Mutfaktan Yarına" description="Mutfaktan Yarına Eğitim ve Destek Programı 2026 6 Soruluk Ön Değerlendirme Formu" css="base panel" scripts="ui scoring config api on-degerlendirme-formu" robots=noindex bold=1 noblack=1 -->
+  <!-- DÜZENLEME: partials/head.html dosyasını değiştirin, sonra ./build.sh çalıştırın -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ön Değerlendirme Formu | Mutfaktan Yarına</title>
+  <meta name="description" content="Mutfaktan Yarına Eğitim ve Destek Programı 2026 6 Soruluk Ön Değerlendirme Formu">
+  <meta name="theme-color" content="#F40009">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; connect-src 'self' http://127.0.0.1:4666 http://localhost:4666 https://api.mutfaktanyarina.com; base-uri 'self';">
+  <meta name="robots" content="noindex">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Ön Değerlendirme Formu | Mutfaktan Yarına">
+  <meta property="og:description" content="Mutfaktan Yarına Eğitim ve Destek Programı 2026 6 Soruluk Ön Değerlendirme Formu">
+  <meta property="og:image" content="https://mutfaktanyarina.com/assets/og-image.jpg">
+  <meta property="og:image:type" content="image/jpeg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta property="og:locale" content="tr_TR">
+  <link rel="icon" href="favicon.ico" sizes="any">
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+  <link rel="preload" href="fonts/TCCC-UnityText-Regular.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="fonts/TCCC-UnityText-Bold.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="fonts/TCCC-UnityHeadline-Bold.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="forms.css">
+  <link rel="stylesheet" href="base.css">
+  <link rel="stylesheet" href="panel.css">
+  <link rel="stylesheet" href="print.css" media="print">
+  <link rel="stylesheet" href="cerez.css">
+  <script src="cerez.js" defer></script>
+  <script src="ui.js" defer></script>
+  <script src="scoring.js" defer></script>
+  <script src="config.js" defer></script>
+  <script src="api.js" defer></script>
+  <script src="on-degerlendirme-formu.js" defer></script>
+  <!-- @end head -->
+</head>
+<body>
+  <!-- @include skip-link -->
+  <!-- DÜZENLEME: partials/skip-link.html dosyasını değiştirin, sonra ./build.sh çalıştırın -->
+  <a href="#main">İçeriğe geç</a>
+  <!-- @end skip-link -->
+  <!-- @include header-app href=panel.html icon=back sub="← Başvuru Takip Paneline Dön" userid=preeval-username -->
+  <!-- DÜZENLEME: partials/header-app.html dosyasını değiştirin, sonra ./build.sh çalıştırın -->
+  <header class="panel-header">
+    <div>
+      <a href="panel.html" class="brand">
+        <div>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <line x1="19" y1="12" x2="5" y2="12"/>
+            <polyline points="12 19 5 12 12 5"/>
+          </svg>
+        </div>
+        <div>
+          <strong>Mutfaktan Yarına</strong>
+          <span>← Başvuru Takip Paneline Dön</span>
+        </div>
+      </a>
+
+      <div class="header-actions">
+        <div class="user-badge">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg>
+          <span id="preeval-username">Başvuru Sahibi</span>
+        </div>
+        <a href="giris.html" class="btn-logout" id="btn-logout">Çıkış Yap</a>
+      </div>
+    </div>
+  </header>
+  <!-- @end header-app -->
+
+  <main class="preeval-container" id="main">
+    <div class="preeval-card">
+      <div>
+        <h1>
+          <span>6 Soruluk Ön Değerlendirme</span>
+          <span class="status-badge" id="preeval-status-badge">
+            <span class="dot"></span>
+            30 Puanlık Aşama
+          </span>
+        </h1>
+        <p class="preeval-q-sub">
+          Aşağıdaki soruları en fazla 1000 karakter olacak şekilde yanıtlayınız. Cevapları size bildirilen süre içinde (takvim: 25 Kasım – 2 Aralık 2026) tamamlamalısınız; tamamlanmayan başvurular değerlendirme dışı kalır.
+        </p>
+        <details>
+          <summary>Puanlama nasıl yapılır?</summary>
+          <p class="preeval-q-sub">
+            Yanıtlarınız program ekibi tarafından soru başına 0–5 puan üzerinden değerlendirilir. Sistem Puanı (70) ve Ön Değerlendirme Puanı (30) toplanarak Toplam Ön Sıralama Puanı (100) oluşturulur; ilk 25 aday ve 25. sıradaki adayla eşit puanlılar Jüri Aday Listesine alınır.
+          </p>
+        </details>
+      </div>
+    </div>
+
+    <div id="preeval-feedback" class="info-banner" role="status" aria-live="polite" hidden></div>
+
+    <form id="preeval-form" novalidate>
+      <div class="preeval-card">
+        <div class="preeval-q-header">
+          <span>Ö1</span>
+          <div>
+            <h2>İşletmeniz son iki yılda herhangi bir kurumdan geri ödemesiz hibe veya ayni destek aldı mı?</h2>
+            <p class="preeval-q-sub">Destek aldıysanız hangi kurumdan ne zaman ve ne tutarda aldınız?</p>
+          </div>
+        </div>
+        <textarea id="ans-q1" maxlength="1000" placeholder="Yanıtınızı buraya yazınız..." required></textarea>
+        <span><span id="count-q1">0</span> / 1000 karakter</span>
+      </div>
+
+      <div class="preeval-card">
+        <div class="preeval-q-header">
+          <span>Ö2</span>
+          <div>
+            <h2>İşletme tamamen size mi ait, yoksa başka ortaklarınız da var mı?</h2>
+            <p class="preeval-q-sub">Varsa işletmedeki payınız yüzde kaç?</p>
+          </div>
+        </div>
+        <div id="q2-field">
+          <textarea id="ans-q2" maxlength="1000" placeholder="Yanıtınızı buraya yazınız..." required></textarea>
+          <span><span id="count-q2">0</span> / 1000 karakter</span>
+        </div>
+        <p class="preeval-q-sub" id="q2-note" hidden>Bu soru şahıs işletmeleri ve kadın kooperatifleri için sorulmaz (doğrudan 5 puan).</p>
+      </div>
+
+      <div class="preeval-card">
+        <div class="preeval-q-header">
+          <span>Ö3</span>
+          <div>
+            <h2>Düzenli olarak ürün veya hizmet aldığınız kadın girişimci, kadın üretici ya da kadın kooperatifi var mı?</h2>
+          </div>
+        </div>
+        <textarea id="ans-q3" maxlength="1000" placeholder="Yanıtınızı buraya yazınız..." required></textarea>
+        <span><span id="count-q3">0</span> / 1000 karakter</span>
+      </div>
+
+      <div class="preeval-card">
+        <div class="preeval-q-header">
+          <span>Ö4</span>
+          <div>
+            <h2>İşletmenizin menüsünde/üretiminde öne çıkan, coğrafi işaretli, yerel veya reçetesi size özel bir ürün var mı?</h2>
+          </div>
+        </div>
+        <textarea id="ans-q4" maxlength="1000" placeholder="Yanıtınızı buraya yazınız..." required></textarea>
+        <span><span id="count-q4">0</span> / 1000 karakter</span>
+      </div>
+
+      <div class="preeval-card">
+        <div class="preeval-q-header">
+          <span>Ö5</span>
+          <div>
+            <h2>Gıda güvenliği, hijyen ve sıfır atık / gıda israfını önleme konusunda işletmenizde uyguladığınız özel bir yöntem veya belgeniz var mı?</h2>
+          </div>
+        </div>
+        <textarea id="ans-q5" maxlength="1000" placeholder="Yanıtınızı buraya yazınız..." required></textarea>
+        <span><span id="count-q5">0</span> / 1000 karakter</span>
+      </div>
+
+      <div class="preeval-card">
+        <div class="preeval-q-header">
+          <span>Ö6</span>
+          <div>
+            <h2>Yaptığınız işe katkı sağlamak ve kendinizi geliştirmek amacıyla bugüne kadar katıldığınız eğitim, kurs veya sertifika programları var mı?</h2>
+            <p class="preeval-q-sub">Varsa eğitim/sertifika adı, düzenleyen kurum ve yılıyla birlikte belirtiniz.</p>
+          </div>
+        </div>
+        <textarea id="ans-q6" maxlength="1000" placeholder="Yanıtınızı buraya yazınız..." required></textarea>
+        <span><span id="count-q6">0</span> / 1000 karakter</span>
+      </div>
+
+      <div class="checklist">
+        <label>
+          <input type="checkbox" id="preeval-confirm" required>
+          <span>Ön değerlendirme formunda verdiğim tüm bilgilerin ve açıklamaların doğru, eksiksiz ve işletmeme ait olduğunu kabul ve beyan ederim. Gerçeğe aykırı, yanıltıcı veya eksik beyan halinde değerlendirme dışı bırakılacağımı biliyorum.</span>
+        </label>
+      </div>
+
+      <button type="submit" id="btn-submit-preeval">
+        <span>Ön Değerlendirme Cevaplarını Gönder</span>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+          <polyline points="12 5 19 12 12 19"></polyline>
+        </svg>
+      </button>
+    </form>
+  </main>
+
+  <!-- @include footer variant=short -->
+  <!-- DÜZENLEME: partials/footer.html dosyasını değiştirin, sonra ./build.sh çalıştırın -->
+  <footer class="site-footer">
+    <p><a href="index.html">Ana Sayfa</a> · <a href="sss.html">Sıkça Sorulan Sorular</a> · <a href="iletisim.html">İletişim</a> · <a href="aydinlatma-metni.html">Aday Aydınlatma Metni</a> · <a href="hibe-aydinlatma.html">Hibe Aydınlatma Metni</a> · <a href="cerez-politikasi.html">Çerez Aydınlatma Metni ve Politikası</a> · <a href="kvkk-basvuru.html">KVKK Başvuru Formu</a> · <a href="#" data-cerez-ac>Çerez Tercihleri</a> · &copy; 2026 Mutfaktan Yarına. Tüm hakları saklıdır.</p>
+  </footer>
+  <!-- @end footer -->
+
+</body>
+</html>

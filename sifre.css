@@ -1,0 +1,207 @@
+/*============================================================================================
+  Mutfaktan Yarına — Şifre Sıfırlama & Yenileme Stilleri
+  Theme: Potenza Split-Screen Modeli (base.css, forms.css ve layout-split.css üzerine kurulu)
+============================================================================================*/
+
+/* Şifre Sıfırlama & Yenileme Özel Stilleri */
+.form-header > div {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: var(--primary-light);
+  color: var(--primary);
+  margin-bottom: 1rem;
+}
+
+.form-header svg {
+  width: 24px;
+  height: 24px;
+}
+
+.success-card {
+  display: none;
+  background: var(--success-light);
+  border: 1px solid var(--success-border);
+  border-radius: var(--radius-md);
+  padding: 1.75rem;
+  text-align: center;
+  margin-top: 1rem;
+}
+
+.success-card.active {
+  display: block;
+}
+
+.success-icon {
+  font-family: var(--font-headline);
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--success);
+  color: white;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.success-card h2 {
+  font-family: var(--font-headline);
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--success);
+  margin-bottom: 0.5rem;
+}
+
+.success-card p {
+  color: var(--success-dark);
+  font-size: 0.92rem;
+  line-height: 1.55;
+  margin-bottom: 1.25rem;
+}
+
+.sim-box {
+  background: white;
+  border: 1px dashed var(--success-border);
+  border-radius: var(--radius-sm);
+  padding: 1rem;
+  text-align: left;
+  margin-top: 1rem;
+}
+
+.sim-box h3 {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--success-dark);
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-bottom: 0.35rem;
+}
+
+.sim-box p {
+  font-size: 0.82rem;
+  color: var(--gray-800);
+  margin-bottom: 0.75rem;
+}
+
+.sim-box > a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--success);
+  color: white;
+  font-size: 0.82rem;
+  font-weight: 600;
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-sm);
+  text-decoration: none;
+  transition: var(--transition);
+}
+
+.sim-box > a:hover {
+  background: var(--success-dark);
+}
+
+/* Şifre Güç Göstergesi */
+.strength-meter {
+  margin-top: 0.5rem;
+}
+
+.strength-meter > div {
+  height: 5px;
+  background: var(--gray-200);
+  border-radius: var(--radius-pill);
+  overflow: hidden;
+  margin-bottom: 0.35rem;
+}
+
+.strength-meter > div > div {
+  height: 100%;
+  width: 0;
+  transition: all 0.3s ease;
+  border-radius: var(--radius-pill);
+}
+
+.strength-meter > div > .weak {
+  width: 30%;
+  background: var(--danger);
+}
+
+.strength-meter > div > .medium {
+  width: 65%;
+  background: var(--warning);
+}
+
+.strength-meter > div > .strong {
+  width: 100%;
+  background: var(--success);
+}
+
+.strength-meter > p {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.75rem;
+  color: var(--gray-500);
+}
+
+.strength-meter strong {
+  color: var(--gray-700);
+}
+
+.form-box > p {
+  text-align: center;
+  font-size: 0.88rem;
+  color: var(--gray-500);
+  margin-top: 1.5rem;
+}
+
+.form-box > p a {
+  color: var(--primary);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.form-box > p a:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 768px), (pointer: coarse) {
+  .sim-box > a,
+  .form-box > p > a:only-child {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+}
+
+/* Kodu yeniden gönder (şifre sıfırlama onay kartı) */
+.sim-box > button {
+  margin: 0.5rem 0 1rem;
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+  font-weight: 700;
+  color: var(--primary);
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.sim-box > button:disabled {
+  color: var(--gray-500);
+  cursor: not-allowed;
+  text-decoration: none;
+}
+
+.field > small {
+  display: block;
+  margin-top: 0.4rem;
+  font-size: 0.8rem;
+  color: var(--gray-500);
+}

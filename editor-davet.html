@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <!-- @include head title="Editör Davet Kabulü | Mutfaktan Yarına" description="Mutfaktan Yarına Eğitim ve Destek Programı 2026 Değerlendirme Kurulu Editör Davet Kabul ve Hesap Aktivasyonu" css="base editor" scripts="ui config api editor-davet" robots=noindex bold=1 noblack=1 -->
+  <!-- DÜZENLEME: partials/head.html dosyasını değiştirin, sonra ./build.sh çalıştırın -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Editör Davet Kabulü | Mutfaktan Yarına</title>
+  <meta name="description" content="Mutfaktan Yarına Eğitim ve Destek Programı 2026 Değerlendirme Kurulu Editör Davet Kabul ve Hesap Aktivasyonu">
+  <meta name="theme-color" content="#F40009">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; connect-src 'self' http://127.0.0.1:4666 http://localhost:4666 https://api.mutfaktanyarina.com; base-uri 'self';">
+  <meta name="robots" content="noindex">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Editör Davet Kabulü | Mutfaktan Yarına">
+  <meta property="og:description" content="Mutfaktan Yarına Eğitim ve Destek Programı 2026 Değerlendirme Kurulu Editör Davet Kabul ve Hesap Aktivasyonu">
+  <meta property="og:image" content="https://mutfaktanyarina.com/assets/og-image.jpg">
+  <meta property="og:image:type" content="image/jpeg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta property="og:locale" content="tr_TR">
+  <link rel="icon" href="favicon.ico" sizes="any">
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+  <link rel="preload" href="fonts/TCCC-UnityText-Regular.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="fonts/TCCC-UnityText-Bold.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="fonts/TCCC-UnityHeadline-Bold.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="forms.css">
+  <link rel="stylesheet" href="base.css">
+  <link rel="stylesheet" href="editor.css">
+  <link rel="stylesheet" href="print.css" media="print">
+  <link rel="stylesheet" href="cerez.css">
+  <script src="cerez.js" defer></script>
+  <script src="ui.js" defer></script>
+  <script src="config.js" defer></script>
+  <script src="api.js" defer></script>
+  <script src="editor-davet.js" defer></script>
+  <!-- @end head -->
+</head>
+<body>
+  <!-- @include skip-link -->
+  <!-- DÜZENLEME: partials/skip-link.html dosyasını değiştirin, sonra ./build.sh çalıştırın -->
+  <a href="#main">İçeriğe geç</a>
+  <!-- @end skip-link -->
+  <!-- @include header-editor sub="Değerlendirme Kurulu Portalı" badge="Değerlendirme Kurulu" -->
+  <!-- DÜZENLEME: partials/header-editor.html dosyasını değiştirin, sonra ./build.sh çalıştırın -->
+  <header class="topbar">
+    <a href="index.html" class="brand">
+      <div class="brand-icon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M6 13.87A4 4 0 0 1 7.41 6a5.11 5.11 0 0 1 1.05-1.54 5 5 0 0 1 7.08 0A5.11 5.11 0 0 1 16.59 6 4 4 0 0 1 18 13.87V21H6Z"/>
+          <line x1="6" y1="17" x2="18" y2="17"/>
+        </svg>
+      </div>
+      <div>
+        <div class="brand-title">Mutfaktan Yarına</div>
+        <div class="brand-sub">Değerlendirme Kurulu Portalı</div>
+      </div>
+    </a>
+    <div class="editor-identity">
+      <span class="role-badge">Değerlendirme Kurulu</span>
+    </div>
+  </header>
+  <!-- @end header-editor -->
+
+  <main class="activation-container" id="main">
+    <div class="activation-card">
+      <div class="invitation-badge-banner">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"/>
+          <line x1="12" y1="16" x2="12" y2="12"/>
+          <line x1="12" y1="8" x2="12.01" y2="8"/>
+        </svg>
+        <div>
+          <strong>Program Koordinatörlüğü Daveti</strong>
+          <p>Mutfaktan Yarına Eğitim ve Destek Programı 2026 Hibe Değerlendirme Kurulu'na editör olarak davet edildiniz. Başvuruları incelemek ve puanlamak için lütfen şifrenizi belirleyin.</p>
+        </div>
+      </div>
+
+      <div class="card-heading">
+        <h1>Hesabınızı Aktifleştirin</h1>
+        <p>Aşağıdaki bilgileri tamamlayarak değerlendirme masanıza erişebilirsiniz.</p>
+      </div>
+
+      <div id="feedbackBox" class="feedback-banner" hidden></div>
+
+      <form id="activationForm" novalidate>
+        <div class="field">
+          <label for="editorEmail">Davet Edilen E-posta Adresi</label>
+          <div class="input-box">
+            <input type="email" id="editorEmail" name="email" placeholder="Davet e-postası yükleniyor..." readonly>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="editorName">Adınız ve Soyadınız</label>
+          <div class="input-box">
+            <input type="text" id="editorName" name="name" placeholder="Örn: Dr. Elif Kaya" required>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="password">Yeni Şifre</label>
+          <div class="input-box">
+            <input type="password" id="password" name="password" placeholder="En az 8 karakter, harf ve rakam" required autocomplete="new-password">
+            <button type="button" id="togglePw" aria-label="Şifreyi Göster">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                <circle cx="12" cy="12" r="3"/>
+              </svg>
+            </button>
+          </div>
+          <div class="pw-strength-bar">
+            <div id="pwStrengthFill"></div>
+          </div>
+          <span id="pwStrengthText">Şifre güvenliği</span>
+        </div>
+
+        <div class="field">
+          <label for="confirmPassword">Yeni Şifre (Tekrar)</label>
+          <div class="input-box">
+            <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Şifrenizi tekrar girin" required autocomplete="new-password">
+          </div>
+        </div>
+
+        <div class="ethics-box">
+          <strong>Değerlendirici Prensibi:</strong> Başvuruların incelenmesinde tarafsızlık, adil puanlama, çıkar çatışması bildirme ve girişimci ticari sırlarını koruma yükümlülüğü esastır.
+        </div>
+
+        <div class="checklist">
+          <label>
+            <input type="checkbox" id="ethicsCheck" required>
+            <span><a href="#" id="openEthicsModal">Değerlendirici Etik İlkeleri, Tarafsızlık ve Gizlilik Taahhütnamesi</a>'ni okudum, şartları kabul ediyorum.</span>
+          </label>
+        </div>
+
+        <button type="submit" class="btn" id="btnSubmitActivation" style="width: 100%;">
+          <span>Daveti Kabul Et ve Giriş Yap</span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="5" y1="12" x2="19" y2="12"/>
+            <polyline points="12 5 19 12 12 19"/>
+          </svg>
+        </button>
+      </form>
+    </div>
+  </main>
+
+  <div class="modal-backdrop" id="ethicsModal" hidden>
+    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="ethicsTitle">
+      <div class="modal-head">
+        <h3 id="ethicsTitle">Değerlendirici Etik İlkeleri ve Gizlilik Taahhütnamesi</h3>
+        <button type="button" class="modal-close-btn" id="closeEthicsModal" aria-label="Kapat">&times;</button>
+      </div>
+      <div class="modal-body-text">
+        <p><strong>1. Gizlilik ve Veri Koruma:</strong> Değerlendirme sürecinde erişilen tüm işletme bilgileri, SGK dökümleri, ticari sırlar, finansal ve istihdam verileri gizlidir. Üçüncü şahıslarla paylaşılamaz.</p>
+        <p><strong>2. Tarafsızlık ve Eşitlik:</strong> Tüm adaylara şartnamede belirtilen kriterler ve puan anahtarı çerçevesinde eşit ve objektif muamele edilir.</p>
+        <p><strong>3. Çıkar Çatışması:</strong> Ortaklık, birinci derece akrabalık veya doğrudan ticari menfaat bağı olan bir başvuru tespit edildiğinde derhal Program Yöneticilerine bildirilerek inceleme çekincesi verilir.</p>
+        <p><strong>4. Şartnameye Bağlılık:</strong> Puanlamalar keyfî değil, 70 puanlık Sistem Puanı ve 6 soruluk resmi Ön Değerlendirme puan anahtarına göre yapılır.</p>
+      </div>
+      <div class="card-box-header">
+        <button type="button" class="btn btn-outline" id="confirmEthicsModal">Okudum ve Anladım</button>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

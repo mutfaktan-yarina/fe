@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <!-- @include head title="Hibe Yönergesi | Mutfaktan Yarına" description="Mutfaktan Yarına Eğitim ve Destek Programı hibe tutarları, hibe hakkının kesinleşmesi, Hibe Ödeme Tutanağı ve kullanım esasları." css="base site-chrome index hibe" scripts="site-chrome" -->
+  <!-- DÜZENLEME: partials/head.html dosyasını değiştirin, sonra ./build.sh çalıştırın -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hibe Yönergesi | Mutfaktan Yarına</title>
+  <meta name="description" content="Mutfaktan Yarına Eğitim ve Destek Programı hibe tutarları, hibe hakkının kesinleşmesi, Hibe Ödeme Tutanağı ve kullanım esasları.">
+  <meta name="theme-color" content="#F40009">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; connect-src 'self' http://127.0.0.1:4666 http://localhost:4666 https://api.mutfaktanyarina.com; base-uri 'self';">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Hibe Yönergesi | Mutfaktan Yarına">
+  <meta property="og:description" content="Mutfaktan Yarına Eğitim ve Destek Programı hibe tutarları, hibe hakkının kesinleşmesi, Hibe Ödeme Tutanağı ve kullanım esasları.">
+  <meta property="og:image" content="https://mutfaktanyarina.com/assets/og-image.jpg">
+  <meta property="og:image:type" content="image/jpeg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta property="og:locale" content="tr_TR">
+  <link rel="icon" href="favicon.ico" sizes="any">
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+  <link rel="preload" href="fonts/TCCC-UnityText-Regular.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="fonts/TCCC-UnityText-Bold.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="fonts/TCCC-UnityHeadline-Black.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="forms.css">
+  <link rel="stylesheet" href="base.css">
+  <link rel="stylesheet" href="site-chrome.css">
+  <link rel="stylesheet" href="index.css">
+  <link rel="stylesheet" href="hibe.css">
+  <link rel="stylesheet" href="print.css" media="print">
+  <link rel="stylesheet" href="cerez.css">
+  <script src="cerez.js" defer></script>
+  <script src="site-chrome.js" defer></script>
+  <!-- @end head -->
+</head>
+<body>
+  <!-- @include skip-link -->
+  <!-- DÜZENLEME: partials/skip-link.html dosyasını değiştirin, sonra ./build.sh çalıştırın -->
+  <a href="#main">İçeriğe geç</a>
+  <!-- @end skip-link -->
+
+  <!-- @include header-public active=hibe-yonergesi -->
+  <!-- DÜZENLEME: partials/header-public.html dosyasını değiştirin, sonra ./build.sh çalıştırın -->
+  <header class="main-header" id="top-header">
+    <div>
+      <a href="index.html" aria-label="Mutfaktan Yarına Ana Sayfa">
+        <img class="brand-logo" src="assets/mutfaktan-clean-mark-opt.png" alt="Mutfaktan Yarına" width="128" height="50" decoding="async">
+      </a>
+      <nav id="nav-menu" aria-label="Ana Menü">
+        <ul>
+          <li><a href="index.html">ANA SAYFA</a></li>
+          <li><a href="msa-egitim.html">ÜCRETSİZ EĞİTİM</a></li>
+          <li>
+            <a href="hibe-sartlari.html">HİBE DESTEĞİ</a>
+            <ul>
+              <li><a href="hibe-sartlari.html">Başvuru Şartları</a></li>
+              <li><a href="hibe-yonergesi.html" aria-current="page">Hibe Yönergesi</a></li>
+            </ul>
+          </li>
+          <li><a href="index.html#program-takvimi">TAKVİM</a></li>
+          <li><a href="sss.html">SSS</a></li>
+          <li><a href="iletisim.html">İLETİŞİM</a></li>
+          <li><a href="giris.html">GİRİŞ</a></li>
+        </ul>
+      </nav>
+      <a href="kayit.html" class="btn btn-sm">BAŞVURU YAP
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+          <polyline points="12 5 19 12 12 19"></polyline>
+        </svg>
+      </a>
+      <button type="button" id="mobile-toggle" aria-label="Menüyü Aç/Kapat" aria-expanded="false" aria-controls="nav-menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+  <!-- @end header-public -->
+
+  <main class="hibe-page" id="main">
+    <section class="content-section">
+      <div class="section-badge">
+        <span class="badge-red-dash"></span>
+        <span>HİBE DESTEĞİ</span>
+      </div>
+
+      <h1 class="section-heading">HİBE YÖNERGESİ</h1>
+
+      <p class="section-subtext">HİBE DESTEĞİ TASLAK YÖNERGE</p>
+
+      <h2>1. Amaç</h2>
+
+      <p>Bu Yönergenin amacı, Mutfaktan Yarına Eğitim ve Destek Programı kapsamında gastronomi (yeme-içme) sektöründe faaliyet gösteren kadın işletmeciler ve kadın kooperatiflerine yönelik Hibe Desteğinin başvuru, uygunluk, puanlama, doğrulama, ön değerlendirme, jüri değerlendirmesi, hibe tahsisi, belge teslimi, Hibe Ödeme Tutanağı, ödeme ve izleme esaslarını açık, eşit, şeffaf ve uygulanabilir bir çerçevede düzenlemektir.</p>
+
+      <h2>2. Kapsam</h2>
+
+      <p>Bu Yönerge, Hibe Desteğine başvuracak adayları, başvuruların alınması ve değerlendirilmesinden sorumlu Program Yöneticilerini, sistem puanlamasını, belge ve beyan doğrulamasını, ön değerlendirme sürecini, jüri değerlendirmesini, hibe almaya hak kazanan adayları ve hibe sonrası Hibe Ödeme Tutanağı, ödeme ve izleme süreçlerini kapsar.</p>
+
+      <h2>3. Temel İlkeler</h2>
+
+      <p><strong>Eşitlik:</strong> Benzer durumdaki başvurular aynı kriterler ve aynı değerlendirme usulleri çerçevesinde ele alınır.</p>
+
+      <p><strong>Şeffaflık:</strong> Başvuru koşulları, değerlendirme aşamaları, aday yükümlülükleri ve program takvimi ilan edilen iletişim kanallarında duyurulur.</p>
+
+      <p><strong>Doğrulanabilirlik:</strong> Başvuru ve ön değerlendirme aşamalarında verilen bilgi ve beyanlar resmî belge, kayıt, ek belge, görsel veya gerektiğinde yerinde inceleme yoluyla doğrulanabilir.</p>
+
+      <p><strong>Objektif değerlendirme:</strong> Sistem puanlaması ve ön değerlendirme, önceden belirlenmiş soru, puan ve değerlendirme esaslarına göre yürütülür.</p>
+
+      <p><strong>Kişisel verilerin korunması:</strong> Süreçte elde edilen kişisel veriler ilgili mevzuat ve Program için hazırlanan Aydınlatma Metni çerçevesinde işlenir.</p>
+
+      <h2>4. Tanımlar</h2>
+
+      <p><strong>Program:</strong> Mutfaktan Yarına Eğitim ve Destek Programını ifade eder.</p>
+
+      <p><strong>Hibe Desteği:</strong> Program kapsamında uygun bulunan adaylara sağlanacak geri ödemesiz mali desteği ifade eder.</p>
+
+      <p><strong>Başvuru Sahibi/Aday:</strong> Hibe Desteğine başvuran gastronomi/yeme-içme sektöründe faaliyet gösteren kadın işletmeciyi veya kadın kooperatifi adına başvuru yapan temsile yetkili temsilciyi ifade eder.</p>
+
+      <p><strong>Program Yöneticileri:</strong> Programın uygulanması, takvimi, başvuru, doğrulama ve değerlendirme süreçlerinin koordinasyonundan sorumlu program ekibini ifade eder.</p>
+
+      <p><strong>MSA Tarafından Mutfaktan Yarına Programı’na Özel Olarak Hazırlanan Eğitim:</strong> Mutfak Sanatları Akademisi (MSA) tarafından Mutfaktan Yarına Programı’na özel olarak hazırlanan ve Program kapsamında sunulan çevrim içi eğitimi ifade eder.</p>
+
+     <p><strong> MSA Sertifikası:</strong> MSA tarafından Mutfaktan Yarına Programı’na özel olarak hazırlanan eğitimi tamamlayıp eğitim sonunda yapılan değerlendirmeden eğitim başarı puanı olarak en az 70 puan alan katılımcıya verilen sertifikayı ifade eder.</p>
+
+<p><strong>Başvuru Formu Puanı (Sistem Puanı):</strong> Hibe Desteği için Programın resmî web sitesi üzerinden yapılan ilk başvuruda, puanlanan sorulara verilen yanıtlar doğrultusunda sistem tarafından 70 puan üzerinden hesaplanan puanı ifade eder. Bu puan, program eğitimindeki 70 puanlık eğitim başarı puanından farklıdır.</p>
+
+      <p><strong>Doğrulama:</strong> 70 puanlık Sistem Puanı sıralamasında ilk 25 sırada yer alan adaylar, 25. sıradaki adayla aynı puana sahip diğer adaylar, bunların ardından belirlenen ilk 10 yedek aday ve 10. yedek adayla aynı Sistem Puanına sahip diğer adaylardan oluşan grubun; başvuru aşamasında sunduğu bilgi ve beyanların, adayların belge yükleme ve Ön Değerlendirme süresi tamamlandıktan sonra resmî belgeler, kayıtlar ve gerekli görülmesi halinde diğer doğrulama yöntemleri üzerinden kontrol edildiği süreci ifade eder.</p>
+
+      <p><strong>Ön Değerlendirme:</strong> 70 puanlık Sistem Puanı sıralamasında ilk 25 sırada yer alan adaylar, 25. sıradaki adayla aynı puana sahip diğer adaylar, bunların ardından belirlenen ilk 10 yedek aday ve 10. yedek adayla aynı Sistem Puanına sahip diğer adayların; Program Takviminde ilan edilen belge yükleme ve Ön Değerlendirme süresi içinde talep edilen doğrulama belgelerini sisteme yüklemelerinin ardından erişebildikleri 6 soruyu yanıtladığı ve cevapların daha sonra toplam 30 puan üzerinden değerlendirildiği süreci ifade eder.</p>
+
+      <p><strong>Toplam Ön Sıralama Puanı:</strong> Sistem Puanı ile Ön Değerlendirme Puanının toplamından oluşan 100 puanlık puanı ifade eder.</p>
+
+      <p><strong>Jüri Aday Listesi:</strong> Belge ve beyan doğrulaması uygun bulunan ve Ön Değerlendirmesi puanlanan adaylar arasından, Toplam Ön Sıralama Puanına göre ilk 25 sırada yer alan adaylar ile 25. sıradaki adayla aynı puana sahip diğer adaylardan oluşan listeyi ifade eder. Puan eşitliği nedeniyle liste 25 kişiden fazla olabilir.</p>
+
+      <p><strong>Jüri Değerlendirmesi:</strong> Jüri Aday Listesinde yer alan adayların çevrim içi jüri görüşmesinde kendilerine yöneltilen 3 soru üzerinden jüri üyeleri tarafından değerlendirildiği ve jüri puanlarına göre nihai sıralamanın oluşturulduğu aşamayı ifade eder.</p>
+
+      <h3>Hibe Başvuru ve Değerlendirme Süreci Özeti</h3>
+
+      <p>Program kapsamındaki hibe başvuru ve değerlendirme süreci özetle aşağıdaki şekilde yürütülür:</p>
+
+      <ol>
+        <li>Başvuru sahibi çevrim içi başvuru formunu doldurur.</li>
+        <li>	MSA tarafından Mutfaktan Yarına Programı’na özel olarak hazırlanan eğitimin tamamlanması, eğitim sonundaki değerlendirmeden eğitim başarı puanı olarak en az 70 puan alınması ve geçerli MSA Sertifikasının başvuru formuna yüklenmesi zorunludur.</li>
+·      <li> Uygun başvurular, başvuru formundaki puanlanan sorular üzerinden sistem tarafından 70 puanlık Başvuru Formu Puanı (Sistem Puanı) ile değerlendirilir ve yüksekten düşüğe sıralanır.
+</li>
+
+        <li>İlk 25 aday, 25. sıradaki adayla aynı puana sahip diğer adaylar ve bunların ardından Sistem Puanı sıralamasında yer alan ilk 10 yedek aday doğrulama ve Ön Değerlendirme sürecine alınır. 10. yedek adayla aynı Sistem Puanına sahip diğer adayların bulunması halinde bu adayların tamamı da yedek aday grubuna dahil edilir.</li>
+        <li>Puanlama, istihdam ve çalışan yapısı ile ihtiyaç ve hazırlık başlıklarından oluşur. Kadın istihdamı puanlamada avantaj sağlayan unsurlardan biridir.</li>
+        <li>Belirlenen adaylara sisteme kaydoldukları e-posta üzerinden bilgilendirme yapılır. Adaylar Program Takviminde ilan edilen süre içinde kullanıcı hesaplarına giriş yaparak talep edilen doğrulama belgelerini yükler.</li>
+        <li>Adayın gerekli doğrulama belgelerini yüklemeyi tamamlamasının ardından Ön Değerlendirme bölümü açılır. Belgelerini yüklemeyen adaylar Ön Değerlendirme sorularına erişemez.</li>
+        <li>Adaylar, Program Takviminde belge yükleme ve Ön Değerlendirme için ilan edilen aynı süre içinde 6 Ön Değerlendirme sorusunu yanıtlar.</li>
+        <li>Adayların belge yükleme ve Ön Değerlendirme süresi tamamlandıktan sonra, Program Takviminde ilan edilen kontrol ve puanlama süresi içinde belge ve beyan doğrulaması yapılır ve Ön Değerlendirme cevapları her soru için 0–5 puan üzerinden, toplam 30 puan olacak şekilde değerlendirilir.</li>
+        <li>Belge ve beyan doğrulaması uygun bulunmayan adaylar değerlendirme dışı bırakılır ve Ön Değerlendirme puanları Toplam Ön Sıralama Puanına dahil edilmez.</li>
+        <li>Doğrulaması uygun bulunan adayların 70 puanlık Sistem Puanı ile 30 puanlık Ön Değerlendirme Puanı toplanarak 100 puanlık Toplam Ön Sıralama Puanı oluşturulur. İlk 25 aday ve 25. sıradaki adayla aynı puana sahip diğer adaylar Jüri Aday Listesine alınır.</li>
+        <li>Jüri Aday Listesindeki adaylarla çevrim içi jüri görüşmesi yapılır. Jüri değerlendirmesi önceki 100 puandan bağımsızdır ve nihai sıralama yalnızca Jüri Toplam Puanına göre oluşturulur.</li>
+        <li>Jüri sıralaması sonucunda ilk 25 aday hibe almaya hak kazanır.</li>
+      </ol>
+
+      <h2>5. Başvuru Koşulları</h2>
+
+      <p>Başvuru sahibinin başvuru tarihinde aşağıdaki koşulların tamamını sağlaması gerekir:</p>
+
+      <ol>
+        <li>Gastronomi/yeme-içme sektöründe faaliyet gösteren kadın işletmeci olmak veya gastronomi/yeme-içme sektöründe faaliyet gösteren kadın kooperatifi adına temsile yetkili temsilci olarak başvurmak.</li>
+        <li>Kadın işletmecinin veya kadın kooperatifi adına başvuru yapan temsile yetkili temsilcinin başvuru tarihinde 18 yaşını doldurmuş olması ve 31 Aralık 2026 tarihi itibarıyla 30 yaşını doldurmamış olması.</li>
+        <li>Başvuru sahibinin işletmesinin veya kooperatifinin en az 2 yıldır faaliyette olması; başvuru ve ödeme tarihinde faal olması ve tasfiye, iflas, konkordato veya kapanma sürecinde bulunmaması.</li>
+        <li>Başvuru tarihi itibarıyla, başvuru sahibinin işletmesinde kendisi hariç en az 2 aktif SGK'lı çalışan bulunması. (Kooperatifler için de aynı şart geçerlidir; aktif ortaklar çalışan sayılmaz.)</li>
+        <li>İşletmeler için geçerli vergi levhasına; kadın kooperatifleri için vergi kaydını, kuruluşunu ve faal olduğunu gösteren ilgili resmî belgelere sahip olmak.</li>
+        <li>Başvuru ve ödeme tarihinde vadesi geçmiş ve yapılandırılmamış vergi veya SGK prim borcu bulunmaması; bu durumu gösteren güncel vergi borcu yoktur ve SGK borcu yoktur belgelerinin Program Yöneticilerine sunulması.</li>
+        <li>Başka bir markaya ait franchise/bayilik işletmesi olarak faaliyet göstermemek.</li>
+        <li>Mevcut bir üretim alanı ve en az 4 masalı servis alanına sahip olmak.</li>
+        <li>MSA tarafından Mutfaktan Yarına Programı’na özel olarak hazırlanan eğitimi tamamlamak, eğitim sonundaki değerlendirmeden eğitim başarı puanı olarak en az 70 puan almak ve bu eğitime ait MSA Sertifikasını almaya hak kazanmak.</li>
+        <li>MSA tarafından Mutfaktan Yarına Programı’na özel olarak hazırlanan eğitime ait geçerli MSA Sertifikasını hibe başvuru formuna yüklemek.</li>
+        <li>Başvuru formunu eksiksiz ve doğru şekilde doldurmak.</li>
+        <li>Program Yöneticileri tarafından talep edilen bilgi ve belgeleri belirtilen süre içinde iletmek.</li>
+        <li>Doğrulama ve Ön Değerlendirme sürecine alınması halinde, talep edilen doğrulama belgelerini Program Takviminde ilan edilen süre içinde sisteme yüklemek; gerekli belgelerin yüklenmesinin ardından açılan Ön Değerlendirme sorularını aynı süre içinde yanıtlamak ve beyan doğruluğu onayını vermek.</li>
+        <li>Jüri Aday Listesine kalınması halinde jüri görüşmesine katılmak.</li>
+        <li>Başvuru ve değerlendirme sürecinde SGK dökümü, işletmeler için vergi levhası, kadın kooperatifleri için vergi kaydını, kuruluşunu ve faal olduğunu gösteren ilgili resmî belgeler ile Program kapsamında talep edilen diğer belgeleri paylaşmak; verilen belge, bilgi ve beyanların resmî belge, kayıt, ek belge, görsel veya gerektiğinde yerinde inceleme yoluyla doğrulanacağını kabul etmek.</li>
+        <li>Program kapsamında ilan edilen takvim, bildirim ve duyuruları düzenli olarak takip etmek.</li>
+        <li>Programın sponsor, yürütücü ve proje paydaşı kuruluşlarının çalışanları ile bunların eşleri, anne ve babaları ve çocukları; ayrıca Program Yöneticileri, değerlendirme sürecinde görev alan kişiler ve jüri üyeleri ile bunların eşleri, anne ve babaları ve çocukları Hibe Desteğine başvuramaz.</li>
+        <li>Her kadın işletmeci veya kadın kooperatifi adına yalnızca bir başvuru yapılabilir. Aynı işletme veya kooperatif adına birden fazla başvuru yapılamaz.</li>
+        <li>Hibe kapsamında finanse edilen giderler, başka bir kamu, özel sektör veya uluslararası destek programı tarafından ayrıca finanse edilemez</li>
+      </ol>
+
+      <p>Gerçeğe aykırı, yanıltıcı veya eksik beyan tespit edilmesi halinde başvuru değerlendirme dışı bırakılacaktır.</p>
+
+      <h2>6. MSA Tarafından Mutfaktan Yarına Programı’na Özel Olarak Hazırlanan Eğitim ve Sertifika Zorunluluğu</h2>
+
+      <ol>
+        <li>Program eğitimi herkese açıktır. Hibe Desteğine başvuracak adayların MSA tarafından Mutfaktan Yarına Programı’na özel olarak hazırlanan çevrim içi eğitimi tamamlaması zorunludur.</li>
+        <li>Eğitim sonunda yapılan değerlendirmeden eğitim başarı puanı olarak en az 70 puan alınması gerekir.</li>
+        <li>Başarı koşulunu sağlayan katılımcı, MSA tarafından Mutfaktan Yarına Programı’na özel olarak hazırlanan eğitime ait MSA Sertifikasını almaya hak kazanır.</li>
+        <li>MSA tarafından Mutfaktan Yarına Programı’na özel olarak hazırlanan eğitime ait geçerli MSA Sertifikasının başvuru sırasında sisteme yüklenmesi zorunludur.</li>
+        <li>Kadın kooperatifi başvurularında MSA tarafından Mutfaktan Yarına Programı’na özel olarak hazırlanan eğitimin tamamlanması, başarı puanı ve sertifika koşulu, kooperatif adına başvuruyu yapan temsile yetkili temsilci tarafından sağlanır.</li>
+        <li>MSA tarafından Mutfaktan Yarına Programı’na özel olarak hazırlanan eğitimi tamamlamayan, gerekli başarı puanını alamayan veya geçerli MSA Sertifikasını yüklemeyen adayların başvurusu değerlendirmeye alınmaz.</li>
+      </ol>
+
+      <h2>7. Başvuru Usulü ve Alınacak Bilgiler</h2>
+
+      <p>Hibe Desteği başvuruları Programın ilan edilen internet sitesi üzerinden çevrim içi olarak alınır. Başvuru formunda aşağıdaki bilgi ve belgeler istenir:</p>
+
+      <ol>
+        <li>Kimlik ve iletişim bilgileri;</li>
+        <li>İşletmenin/kooperatifin unvanı, yapısı, adresi ve faaliyete başlama yılı; işletmeler için vergi bilgileri, kadın kooperatifleri için vergi kaydını, kuruluşunu ve faal olduğunu gösteren ilgili resmî belge bilgileri;</li>
+        <li>MSA Sertifikası;</li>
+        <li>Mevcut ve geçmiş dönem istihdam bilgileri;</li>
+        <li>Kadın çalışan sayısı ve kadın istihdamına ilişkin bilgiler;</li>
+        <li>Çalışan devamlılığı ve yeni istihdam planları;</li>
+        <li>Hibe kullanım amacı, ihtiyaç ve hazırlık bilgileri;</li>
+        <li>Program kapsamında ilan edilen diğer uygunluk ve değerlendirme bilgileri.</li>
+      </ol>
+
+      <p>Başvuru sahibi, formu gönderirken verdiği bilgilerin doğru, güncel ve eksiksiz olduğunu beyan eder.</p>
+
+      <h2>8. Başvuru Formu Puanı (Sistem Puanı) 70 Puan</h2>
+
+      <p>Başvuru koşullarını sağlayan başvurular, başvuru formundaki puanlanan sorular üzerinden sistem tarafından 70 puanlık Başvuru Formu Puanı (Sistem Puanı) ile değerlendirilir. Başvuru Formu Puanı, başvuru formundaki yanıtlar üzerinden otomatik olarak hesaplanır ve program eğitimindeki 70 puanlık eğitim başarı puanından farklıdır.</p>
+
+      <p>Puanlama, istihdam ve çalışan yapısı ile ihtiyaç ve hazırlık başlıklarından oluşur. Kadın istihdamı puanlamada avantaj sağlayan unsurlardan biridir.</p>
+
+      <p>Başvurular Sistem Puanına göre yüksekten düşüğe sıralanır. Uygunluk koşullarını karşılamayan başvurular puanlamaya dahil edilmez. Sistem Puanı sıralamasında ilk 25 aday ve 25. sıradaki adayla aynı puana sahip diğer adaylar belirlenir; bu adayların ardından Sistem Puanı sıralamasında yer alan ilk 10 aday ise yedek aday olarak belirlenir. 10. yedek adayla aynı Sistem Puanına sahip başka adayların bulunması halinde, eşit puanlı adayların tamamı yedek listeye dahil edilir.</p>
+
+      <h2>9. Belge ve Beyan Doğrulama Süreci</h2>
+
+      <ol>
+        <li>70 puanlık Başvuru Formu Puanı (Sistem Puanı) sıralaması oluşturulduktan sonra belirlenen adaylara, Program Takviminde ilan edilen bildirim aşamasında başvuru sırasında bildirdikleri e-posta adresleri üzerinden bilgi verilir.</li>
+        <li>Adaylar, Program Takviminde ilan edilen süre içinde Programın resmî web sitesindeki kullanıcı hesaplarına giriş yaparak SGK belgeleri ve Program kapsamında talep edilen diğer doğrulama belgelerini sisteme yükler.</li>
+        <li>Belge ve beyan doğrulama kapsamında; başvuru tarihi itibarıyla en az 2 aktif SGK'lı çalışan bulunduğunu ve başvuru formundaki istihdam beyanlarını gösteren SGK hizmet dökümleri; işletmeler için vergi levhası; kadın kooperatifleri için vergi kaydını, kuruluşunu ve faal olduğunu gösteren ilgili resmî belgeler; güncel vergi borcu yoktur ve SGK borcu yoktur belgeleri; kimlik belgesi, MSA Sertifikası, faaliyet ve üretim/servis alanına ilişkin belgeler ile gerekli görülmesi halinde ek belge, fotoğraf veya diğer görsel kayıtlar talep edilebilir.</li>
+        <li>Başvuru aşamasında verilen bilgi ve beyanlar, adayların belge yükleme ve Ön Değerlendirme süresi tamamlandıktan sonra Program Takviminde ilan edilen kontrol ve puanlama süresi içinde yüklenen belgeler üzerinden Program Yöneticileri tarafından kontrol edilir. Gerekli görülmesi halinde ek belge veya açıklama istenebilir ya da yerinde inceleme yapılabilir.</li>
+        <li>Talep edilen belgelerin belirtilen süre içinde eksiksiz sunulmaması veya verilen bilgi ve beyanlarla belgeler arasında gerçeğe aykırı, yanıltıcı, eksik ya da değerlendirmeyi etkileyebilecek bir uyumsuzluk bulunması halinde aday değerlendirme dışı bırakılır.</li>
+        <li>Adayın talep edilen doğrulama belgelerini sisteme yüklemesini tamamlamasının ardından Ön Değerlendirme bölümü açılır. Gerekli belgeleri yüklemeyen adaylar Ön Değerlendirme sorularına erişemez.</li>
+        <li>Ön Değerlendirme bölümünün açılması, belge ve beyan doğrulamasının tamamlandığı veya adayın doğrulamadan geçtiği anlamına gelmez.</li>
+        <li>Belge ve beyan doğrulaması uygun bulunmayan adaylar, Ön Değerlendirme sorularını yanıtlamış olsalar dahi değerlendirme dışı bırakılır ve Ön Değerlendirme puanları Toplam Ön Sıralama Puanına dahil edilmez.</li>
+      </ol>
+
+      <h2>10. Ön Değerlendirme- 30 Puan ve 100 Puan Üzerinden Ön Sıralama</h2>
+
+      <ol>
+        <li>Talep edilen doğrulama belgelerini sisteme yüklemeyi tamamlayan adaylar, Program Takviminde belge yükleme ve Ön Değerlendirme için ilan edilen aynı süre içinde kendilerine açılan Ön Değerlendirme bölümündeki 6 soruyu yanıtlar.</li>
+        <li>Ön Değerlendirme 6 sorudan oluşur ve toplam 30 puandır. Her soru 5 puan üzerinden değerlendirilir. Sorular; işletmenin yapısı, kadınların ekonomik güçlenmesine katkısı, daha önce alınan destekler, özgünlük, sürdürülebilirlik/gıda güvenliği ve mesleki gelişim gibi başlıklardan oluşur.</li>
+        <li>Ön Değerlendirme sorularının sonunda adaydan, verdiği tüm yanıtların doğru ve eksiksiz olduğuna ilişkin ayrıca elektronik beyan/onay alınır.</li>
+        <li>Program Takviminde ilan edilen kontrol ve puanlama süresi içinde Ön Değerlendirme cevapları Program ekibi tarafından her soru için 0-5 puan üzerinden değerlendirilir ve aynı dönemde belge ve beyan doğrulaması tamamlanır.</li>
+        <li>Belge ve beyan doğrulaması uygun bulunan adayların Sistem Puanı (70 puan) ile Ön Değerlendirme Puanı (30 puan) toplanarak 100 puan üzerinden Toplam Ön Sıralama Puanı hesaplanır. Adaylar bu puana göre yüksekten düşüğe yeniden sıralanır.</li>
+        <li>Toplam Ön Sıralama Puanına göre ilk 25 sırada yer alan adaylar ile 25. sıradaki adayla aynı puana sahip diğer adaylar Jüri Aday Listesine alınır.</li>
+      </ol>
+
+      <h2>11. Jüri Aday Listesi</h2>
+
+      <p>Jüri Aday Listesi, belge ve beyan doğrulaması uygun bulunan ve Ön Değerlendirmesi puanlanan adaylar arasından, 100 puanlık Toplam Ön Sıralama Puanına göre ilk 25 sırada yer alan adaylar ile 25. sıradaki adayla aynı puana sahip diğer adaylardan oluşur.</p>
+
+      <p>Puan eşitliği nedeniyle Jüri Aday Listesi 25 kişiden fazla olabilir.</p>
+
+      <p>Jüri Aday Listesine alınan adaylara jüri görüşmesine ilişkin bilgiler ve sonuçlar web sitesi, e-posta veya telefon aracılığıyla bildirilir.</p>
+
+      <h2>12. Jüri Değerlendirmesi</h2>
+
+      <p>Jüri Aday Listesinde yer alan adaylar çevrim içi jüri görüşmesine katılır. Jüri 4 üyeden oluşur. Her jüri üyesi tüm adaylarla çevrim içi olarak görüşür ve her adaya aynı 3 soru yöneltilir. Jüri sorularıhibenin nasıl kullanılacağı, desteğe neden ihtiyaç duyulduğu ve hibenin işletmede yaratması beklenen bir yıllık sonuç/etki başlıklarına odaklanır. Her jüri üyesi her soru için 0–10 arasında puan verir ve bir aday için en fazla 30 puan verebilir.</p>
+
+      <p>Adayın hitabet veya sunum becerisi Jüri değerlendirmesinde önemli olmakla birlikte tek başına puanlama kriteri olarak kullanılmaz. Değerlendirmede hibe kullanım planının içeriği, desteğe duyulan ihtiyacın gerekçesi, planın uygulanabilirliği ve bir yıl sonraki başarının nasıl ölçüleceğine ilişkin yaklaşım dikkate alınır.</p>
+
+      <p>Jüri üyelerinin adaylara verdikleri puanlar toplanarak her aday için Jüri Toplam Puanı hesaplanır. Jüri değerlendirmesi yeni ve bağımsız bir değerlendirme aşamasıdır; daha önce hesaplanan 100 puanlık Toplam Ön Sıralama Puanı jüri puanına eklenmez ve nihai sıralamada kullanılmaz. Adaylar yalnızca Jüri Toplam Puanına göre yüksekten düşüğe sıralanır. Jüri sıralaması sonucunda ilk üç hibe sırası ile hibe almaya hak kazanacak toplam 25 aday belirlenir. Jüri değerlendirmesi sonucunda eşit puan oluşması halinde nihai sıralama jüri tarafından yapılacak değerlendirme ile belirlenir.</p>
+
+      <h2>13. Hibe Dağılımı</h2>
+
+      <p>Jüri değerlendirmesi sonucunda oluşturulan nihai sıralamada ilk 25 sırada yer alan adaylar hibe desteğinden yararlanır. İlk üç sıradaki adaylar farklı hibe tutarlarından, 4.-25. sıradaki 22 aday ise kişi başı 100.000 TL hibe desteğinden yararlanır. Jüri Aday Listesinin puan eşitliği nedeniyle 25 kişiden fazla olması halinde 26. sıra ve sonrasında yer alan adaylar hibe desteğine hak kazanmaz.</p>
+
+      <table>
+        <thead><tr><th>Sıralama</th><th>İşletme / Kooperatif Sayısı</th><th>Hibe Tutarı</th></tr></thead>
+        <tbody>
+          <tr><td>1.</td><td>1</td><td>1.000.000 TL</td></tr>
+          <tr><td>2.</td><td>1</td><td>500.000 TL</td></tr>
+          <tr><td>3.</td><td>1</td><td>300.000 TL</td></tr>
+          <tr><td>4.-25. sıradaki hibe yararlanıcıları</td><td>22</td><td>100.000 TL</td></tr>
+        </tbody>
+      </table>
+
+      <h2>14. Hibe Ödeme Tutanağı</h2>
+
+      <p>Hibe hakkı; talep edilen tüm bilgi ve belgelerin eksiksiz sunulması, beyanların doğrulanması, işletmenin/kooperatifin ödeme tarihinde de faal olması, tasfiye, iflas, konkordato veya kapanma sürecinde bulunmaması ve ödeme tarihinde vadesi geçmiş vergi ve SGK prim borcu bulunmadığının güncel resmî belgelerle teyit edilmesi ile Program Yöneticilerinin nihai onayı sonrasında kesinleşir.</p>
+
+      <p>Hibe almaya hak kazanan adaylar ödeme öncesinde Hibe Ödeme Tutanağı imzalar. Tutanakta hibe yararlanıcısına ilişkin bilgiler, hak kazanılan hibe tutarı, ödeme bilgileri ve ödemenin Program kapsamında gerçekleştirildiğine ilişkin kayıtlar yer alır. Hibe ödemesi bu tutanakla kayıt altına alınır.</p>
+
+      <p>Hibe Desteğinin, başvuru ve jüri değerlendirmesinde beyan edilen kullanım amacıyla uyumlu şekilde kullanılması esastır. Hibe kapsamında vergi ve SGK prim borçları ile bunlara ilişkin gecikme zammı/faizi ve benzeri kamu borçları finanse edilemez. Hibe kapsamında finanse edilen giderler başka bir kamu, özel sektör veya uluslararası destek programı tarafından ayrıca finanse edilemez. Program kapsamında gerekli görülen izleme, bilgi ve belge talepleri hibe yararlanıcısına ayrıca bildirilir.</p>
+
+      <h2>15. Program Takvimi</h2>
+<p>      <strong>Eğitim Takvimi</strong><br/>
+Eğitimin açılış tarihi: (12 Ekim 2026)</p>
+<p>Hibe başvurusu yapacak adayların program eğitimini tamamlayarak sertifikalarını başvuru formunu göndermeden önce almaları gerekir. Hibe başvuruları için son tarih 20 Kasım 2026’dır.
+</p>
+
+<section>
+  <ol class="program-takvimi hibe-takvim">
+        <li>
+          <h3><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg><time>12 Ekim 2026</time></h3>
+          <div><h4>Sizin yapacaklarınız</h4><p>Ücretsiz program eğitimine başla.</p></div>
+          <div><h4>Bizim yapacaklarımız</h4><p>Program eğitimini erişime açarız.</p></div>
+        </li>
+        <li>
+          <h3><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg><time>12 Ekim 2026</time></h3>
+          <div><h4>Sizin yapacaklarınız</h4><p>Program eğitimini tamamladıysanız ve koşulları sağlıyorsanız hibe başvurunu yapabilirsiniz.</p></div>
+          <div><h4>Bizim yapacaklarımız</h4><p>Hibe başvurularını almaya başlarız.</p></div>
+        </li>
+        <li class="son">
+          <h3><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg><time>20 Kasım 2026</time></h3>
+          <div><h4>Sizin yapacaklarınız</h4><p>Hibe başvurunuzu en geç bu tarihte tamamlayın. Sertifikanız başvuru sırasında sisteme yüklenmiş olmalı.</p></div>
+          <div><h4>Bizim yapacaklarımız</h4><p>Hibe başvurularını kapatırız.</p></div>
+        </li>
+        <li>
+          <h3><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg><time>24 Kasım 2026</time></h3>
+          <div><h4>Sizin yapacaklarınız</h4><p>E-posta ve kullanıcı hesabınızı kontrol etmelisiniz.</p></div>
+          <div><h4>Bizim yapacaklarımız</h4><p>Başvuru Formu Puanı (Sistem Puanı) sıralamasını oluşturur ve bir sonraki aşamaya geçen adayları bilgilendiririz.</p></div>
+        </li>
+        <li>
+          <h3><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg><time>25 Kasım – 2 Aralık 2026</time></h3>
+          <div><h4>Sizin yapacaklarınız</h4><p>Bildirim aldıysanız doğrulama belgelerini yüklemeli ve 6 Ön Değerlendirme sorusunu yanıtlamalısınız.</p></div>
+          <div><h4>Bizim yapacaklarımız</h4><p>Adayların belge yükleme ve Ön Değerlendirme sürecini yürütürüz.</p></div>
+        </li>
+        <li>
+          <h3><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg><time>3 – 10 Aralık 2026</time></h3>
+          <div><h4>Sizin yapacaklarınız</h4><p>Gerekirse ek belge/açıklama taleplerini takip etmelisiniz.</p></div>
+          <div><h4>Bizim yapacaklarımız</h4><p>Belge ve beyanları doğrular, Ön Değerlendirme cevaplarını puanlarız.</p></div>
+        </li>
+        <li>
+          <h3><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg><time>11 Aralık 2026</time></h3>
+          <div><h4>Sizin yapacaklarınız</h4><p>Jüri aşamasına kaldıysanız yapılacak bilgilendirmeyi takip etmelisiniz.</p></div>
+          <div><h4>Bizim yapacaklarımız</h4><p>Toplam Ön Sıralama Puanını oluşturur ve Jüri Aday Listesini belirleriz.</p></div>
+        </li>
+        <li>
+          <h3><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg><time>11 – 23 Aralık 2026</time></h3>
+          <div><h4>Sizin yapacaklarınız</h4><p>Jüri Aday Listesindeyseniz çevrim içi jüri görüşmesine katılmalısınız.</p></div>
+          <div><h4>Bizim yapacaklarımız</h4><p>Jüri değerlendirme sürecini yürütürüz.</p></div>
+        </li>
+        <li class="final">
+          <h3><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg><time>25 Aralık 2026</time></h3>
+          <div><h4>Sizin yapacaklarınız</h4><p>Sonuçları programın resmî kanallarından takip etmelisiniz.</p></div>
+          <div><h4>Bizim yapacaklarımız</h4><p>Nihai sonuçları duyururuz.</p></div>
+        </li>
+      </ol>
+
+</section>
+
+      <p>Program Yöneticileri; operasyonel gereklilikler, başvuru yoğunluğu, doğrulama süreçleri veya benzeri nedenlerle program takviminde değişiklik yapabilir. Takvim değişiklikleri Programın resmî internet sitesi ve/veya ilan edilen iletişim kanalları üzerinden duyurulur.</p>
+
+      <h2>16. Bildirimler ve Adayın Takip Yükümlülüğü</h2>
+
+      <p>Başvuru, belge talebi, doğrulama, ön değerlendirme, jüri görüşmesi, sonuç ve takvim değişikliklerine ilişkin bildirimler Programın internet sitesi, kullanıcı hesabı, e-posta, telefon ve/veya Program Yöneticileri tarafından ilan edilen diğer iletişim kanalları üzerinden yapılabilir.</p>
+
+      <p>Başvuru sahibinin iletişim bilgilerinin güncel ve doğru olması; internet sitesindeki kullanıcı hesabını, e-posta adresini ve program duyurularını düzenli olarak takip etmesi kendi sorumluluğundadır.</p>
+
+      <h2>17. Gerçeğe Aykırı Beyan ve Değerlendirme Dışı Bırakılma</h2>
+
+      <p>Başvuru sahibi, başvuru ve değerlendirme sürecinin tüm aşamalarında verdiği bilgi, belge ve beyanların doğru, güncel ve eksiksiz olduğunu kabul ve taahhüt eder.</p>
+
+      <p>Aşağıdaki hallerden birinin tespiti halinde başvuru, sürecin hangi aşamasında olursa olsun değerlendirme dışı bırakılabilir, hibe hakkı doğmuşsa iptal edilebilir:</p>
+
+      <ol>
+        <li>Başvuru koşullarından herhangi birinin sağlanmaması veya sonradan kaybedilmesi,</li>
+        <li>Başvuru veya ödeme tarihinde vadesi geçmiş ve yapılandırılmamış vergi veya SGK prim borcu bulunduğunun tespit edilmesi,</li>
+        <li>MSA tarafından Mutfaktan Yarına Programı’na özel olarak hazırlanan eğitim ve sertifika koşulunun yerine getirilmemesi,</li>
+        <li>Gerçeğe aykırı, yanıltıcı veya eksik beyanda bulunulması,</li>
+        <li>Sahte, geçersiz veya başkasına ait belge sunulması,</li>
+        <li>Talep edilen belge ve bilgilerin bildirilen süre içinde sunulmaması,</li>
+        <li>Belge doğrulama, ön değerlendirme veya jüri sürecinin süresi içinde tamamlanmaması,</li>
+        <li>Hibe kapsamında finanse edilen bir giderin başka bir kamu, özel sektör veya uluslararası destek programı tarafından da finanse edildiğinin tespit edilmesi,</li>
+        <li>Ödeme sonrasında gerçeğe aykırı beyan veya belge tespit edilmesi halinde yasal mevzuat çerçevesinde işlem yapılır.</li>
+      </ol>
+
+      <h2>18. Elektronik Beyan ve Onaylar</h2>
+
+      <p>Başvuru sahibi, ilk başvuruyu tamamlamadan önce bu Yönergeyi okuduğunu, anladığını ve kabul ettiğini elektronik ortamda beyan eder.</p>
+
+      <p>Ön değerlendirme aşamasında da 6 soruya verdiği yanıtların doğru ve eksiksiz olduğuna ilişkin ayrı bir elektronik onay verir. Gerekli onay verilmeden ilgili aşama tamamlanmış sayılmaz.</p>
+
+      <p>KVKK Aydınlatma Metni, Açık Rıza Metni ve diğer hukuki onayların kapsamı ile zorunluluk durumu hukuk biriminin nihai değerlendirmesi doğrultusunda uygulanır.</p>
+
+      <h2>19. Kişisel Verilerin Korunması</h2>
+
+      <p>Program kapsamında elde edilen kişisel veriler, 6698 sayılı Kişisel Verilerin Korunması Kanunu ve ilgili mevzuat kapsamında, Program için hazırlanacak Aydınlatma Metninde belirtilen amaç, hukuki sebep, saklama süresi ve aktarım esasları doğrultusunda işlenir.</p>
+
+      <p>İnternet sitesi üzerinden alınan başvuru ve ön değerlendirme yanıtları ile doğrulama amacıyla sunulan belgeler yalnızca Programın yürütülmesi ve ilgili değerlendirme süreçleri kapsamında kullanılır.</p>
+
+      <h2>20. Hibe Sonrası İzleme</h2>
+
+      <p>Hibe yararlanıcılarından, sağlanan desteğin kullanımına ve işletmede yarattığı etkiye ilişkin bilgi, belge ve/veya kısa rapor talep edilebilir. İzleme sürecinin kapsamı, zamanı ve yöntemi Program kapsamında ayrıca belirlenir ve hibe yararlanıcısına bildirilir.</p>
+
+      <h2>21. Değerlendirme Kriterleri ve Puanlamanın İlanı</h2>
+
+      <p>Başvuru koşulları, ilk başvuruda kullanılacak puanlama kriterleri, ön değerlendirme soruları ve puanlama esasları başvuru ve değerlendirme süreçleri başlamadan önce Program Yöneticileri tarafından kesinleştirilir. Sürecin eşit ve şeffaf yürütülmesi amacıyla tüm adaylara aynı değerlendirme yöntemi uygulanır. Nihai sıralamayı etkileyen puanlama yöntemi başvuru dönemi öncesinde sabitlenir ve süreç başladıktan sonra adaylar arasında farklılaştırılamaz.</p>
+
+      <h2>22. Programda Değişiklik Yapma Yetkisi</h2>
+
+      <p>Program Yöneticileri; takvim, belge talepleri ve Programın uygulanmasına ilişkin operasyonel hususlarda, eşitlik ve şeffaflık ilkelerini korumak ve gerekli hukuk/mali işler onaylarını almak kaydıyla değişiklik yapabilir. Başvuru dönemi başladıktan sonra adayların uygunluğunu veya puanını etkileyen başvuru koşulları ve değerlendirme kriterleri değiştirilemez. Zorunlu mevzuat veya hukuk kaynaklı değişiklikler uygun iletişim kanallarından duyurulur.</p>
+    </section>
+  </main>
+
+  <!-- @include footer -->
+  <!-- DÜZENLEME: partials/footer.html dosyasını değiştirin, sonra ./build.sh çalıştırın -->
+  <footer class="main-footer">
+    <div>
+      <div class="footer-top">
+        <div>
+          <a href="index.html" class="brand-logo-card" aria-label="Mutfaktan Yarına Ana Sayfa">
+            <img class="brand-logo" src="assets/logo-full-opt.png" alt="Coca-Cola Akademi, Mutfaktan Yarına, Eğitim ve Destek Programı" width="160" height="125" loading="lazy" decoding="async">
+          </a>
+          <p>Coca-Cola Akademi tarafından ÖSGD iş birliğiyle ve Mutfak Sanatları Akademisi (MSA) uzmanlığıyla hayata geçirilen kadın işletmecileri destekleme programı.</p>
+        </div>
+
+        <nav aria-label="Alt Menü">
+          <h2>Menü</h2>
+          <ul>
+            <li><a href="index.html">Ana Sayfa</a></li>
+            <li><a href="msa-egitim.html">Ücretsiz Eğitim</a></li>
+            <li><a href="hibe-sartlari.html">Hibe Başvuru Şartları</a></li>
+            <li><a href="hibe-yonergesi.html">Hibe Yönergesi</a></li>
+            <li><a href="sss.html">Sıkça Sorulan Sorular</a></li>
+            <li><a href="kayit.html">Başvuru Yap</a></li>
+          </ul>
+        </nav>
+
+        <nav aria-label="Program Bölümleri">
+          <h2>Program Bölümleri</h2>
+          <ul>
+            <li><a href="index.html#proje-hakkinda">Program Hakkında</a></li>
+            <li><a href="index.html#msa-egitimi">MSA Eğitimi</a></li>
+            <li><a href="index.html#hibe-destegi">Hibe Desteği &amp; Tutarlar</a></li>
+            <li><a href="index.html#program-takvimi">Program Takvimi</a></li>
+          </ul>
+        </nav>
+
+        <div>
+          <h2>Destek ve İletişim</h2>
+          <p>Sorularınız için SSS sayfamızı ziyaret edebilir veya bizimle iletişime geçebilirsiniz.</p>
+          <a href="iletisim.html">İletişime Geç</a>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>&copy; 2026 Mutfaktan Yarına. Coca-Cola Akademi, ÖSGD ve MSA ortaklığıyla yürütülmektedir. Tüm hakları saklıdır.</p>
+        <nav aria-label="Yasal">
+          <a href="aydinlatma-metni.html">Aday Aydınlatma Metni</a>
+          <a href="hibe-aydinlatma.html">Hibe Aydınlatma Metni</a>
+          <a href="cerez-politikasi.html">Çerez Aydınlatma Metni ve Politikası</a>
+          <a href="kvkk-basvuru.html">KVKK Başvuru Formu</a>
+          <a href="#" data-cerez-ac>Çerez Tercihleri</a>
+        </nav>
+      </div>
+    </div>
+  </footer>
+  <nav class="mobile-cta" aria-label="Hızlı Eylemler">
+    <a href="msa-egitim.html" class="btn btn-outline">Eğitime Başla</a>
+    <a href="kayit.html" class="btn">Hibeye Başvur</a>
+  </nav>
+  <!-- @end footer -->
+
+</body>
+</html>

@@ -1,0 +1,468 @@
+/*============================================================================================
+  Mutfaktan Yarına — Kayıt ve Giriş Sayfaları (yalnızca sayfaya özgü kurallar)
+  Ortak düzen: layout-split.css; form bileşenleri: forms.css. Renk ve yazı tipi: base.css (TCCC Unity, marka kırmızısı)
+============================================================================================*/
+
+/* Şifre Gücü Çubuğu */
+.strength {
+  margin-top: 0.35rem;
+  display: none;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.strength.active {
+  display: flex;
+}
+
+.strength > div {
+  height: 4px;
+  width: 100%;
+  background: var(--gray-200);
+  border-radius: 2px;
+  overflow: hidden;
+  display: flex;
+  gap: 3px;
+}
+
+.strength > div > span {
+  flex: 1;
+  height: 100%;
+  background: transparent;
+  transition: var(--transition);
+  border-radius: 2px;
+}
+
+.strength p {
+  font-size: 0.75rem;
+  color: var(--gray-500);
+  display: flex;
+  justify-content: space-between;
+}
+
+.strength[data-score="1"] > div > span:nth-child(1) { background: var(--danger); }
+.strength[data-score="2"] > div > span:nth-child(-n+2) { background: var(--warning); }
+.strength[data-score="3"] > div > span:nth-child(-n+3),
+.strength[data-score="4"] > div > span:nth-child(-n+4) { background: var(--success); }
+
+.strength[data-score="1"] p b { color: var(--danger); }
+.strength[data-score="2"] p b { color: var(--warning); }
+.strength[data-score="3"] p b,
+.strength[data-score="4"] p b { color: var(--success); }
+
+/* Giriş Formu Seçenekleri */
+.form-options {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.85rem;
+}
+
+.form-options a {
+  color: var(--primary);
+  text-decoration: none;
+  font-weight: 700;
+}
+
+.form-options a:hover {
+  text-decoration: underline;
+}
+
+/* Onay Kutuları (kayıt): daha kompakt metin ve bağlantılar */
+.checklist > label {
+  min-height: 3rem;
+  padding-block: 0.7rem;
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
+
+.checklist > label a {
+  font-size: inherit;
+}
+
+/* Gönder düğmesi: üst ve alt boşluk eşit (form gap 1.35rem + 0.15rem = 1.5rem = .notice margin-top) */
+.form-box form > .checklist + button[type="submit"] {
+  margin-top: 0.15rem;
+}
+
+/* Bilgilendirme Kutusu */
+.notice {
+  background: var(--warning-light);
+  border: 1px solid var(--warning-border);
+  border-left: 4px solid var(--warning);
+  border-radius: var(--radius-sm);
+  padding: 1.25rem;
+  margin-top: 1.5rem;
+  display: flex;
+  gap: 0.85rem;
+  align-items: flex-start;
+}
+
+.notice > div {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.65rem;
+}
+
+.notice > svg {
+  width: 20px;
+  height: 20px;
+  color: var(--warning);
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.notice h2 {
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--warning-text);
+  margin: 0;
+  line-height: 1.4;
+}
+
+.notice p {
+  font-size: 0.85rem;
+  line-height: 1.55;
+  color: var(--warning-text);
+  margin: 0;
+}
+
+.notice strong {
+  font-weight: 800;
+}
+
+.notice small {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  background: rgba(180,83,9, 0.2);
+  padding: 0.15rem 0.55rem;
+  border-radius: 4px;
+  color: var(--warning-text);
+}
+
+/* Modal Stilleri */
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: rgba(0,0,0, 0.65);
+  backdrop-filter: blur(4px);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+}
+
+.modal.active {
+  display: flex;
+}
+
+.modal > div {
+  background: var(--white);
+  border-radius: var(--radius-md);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+  width: 100%;
+  max-width: 600px;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  animation: modalIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes modalIn {
+  from { opacity: 0; transform: scale(0.96); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.modal header {
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid var(--border-light);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.modal header h3 {
+  font-family: var(--font-body);
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--dark);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.modal h3 svg {
+  color: var(--primary);
+}
+
+.modal header button {
+  background: none;
+  border: none;
+  color: var(--gray-400);
+  cursor: pointer;
+  padding: 0.3rem;
+  border-radius: 4px;
+}
+
+.modal header button:hover {
+  color: var(--dark);
+}
+
+.modal header svg {
+  width: 20px;
+  height: 20px;
+}
+
+.modal article {
+  padding: 1.5rem;
+  overflow-y: auto;
+  font-size: 0.9rem;
+  line-height: 1.65;
+  color: var(--gray-700);
+}
+
+.modal h4 {
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--dark);
+  margin: 1rem 0 0.4rem;
+}
+
+.modal h4:first-child {
+  margin-top: 0;
+}
+
+.modal ul {
+  padding-left: 1.25rem;
+  margin: 0.5rem 0;
+}
+
+.modal footer {
+  padding: 1rem 1.5rem;
+  border-top: 1px solid var(--border-light);
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  background: var(--bg-muted);
+}
+
+.modal footer button {
+  padding: 0.65rem 1.25rem;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.modal footer .secondary {
+  background: var(--white);
+  border: 1px solid var(--border-color);
+  color: var(--gray-700);
+}
+
+.modal footer .secondary:hover {
+  border-color: var(--gray-400);
+  background: var(--gray-50);
+}
+
+.modal footer .primary {
+  background: var(--primary);
+  border: 1px solid var(--primary);
+  color: var(--white);
+}
+
+.modal footer .primary:hover {
+  background: var(--primary-hover);
+}
+
+/* Başarı Modalı */
+.success-icon {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: var(--success-light);
+  color: var(--success);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0.5rem auto 1.25rem;
+}
+
+.success-icon svg {
+  width: 30px;
+  height: 30px;
+}
+
+.alert-card {
+  background: var(--warning-light);
+  border: 1.5px solid var(--warning-border);
+  border-radius: var(--radius-sm);
+  padding: 1rem 1.25rem;
+  margin: 1.25rem 0;
+  text-align: left;
+}
+
+.modal .alert-card h4 {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--warning-text);
+  font-size: 0.92rem;
+  margin-bottom: 0.35rem;
+}
+
+.alert-card p {
+  color: var(--warning-text);
+  font-size: 0.84rem;
+  margin: 0;
+}
+
+#modal-success > div {
+  text-align: center;
+}
+
+#modal-success article {
+  padding: 2.25rem 2rem 1.5rem;
+}
+
+#modal-success h3 {
+  font-family: var(--font-headline);
+  font-size: 1.45rem;
+  color: var(--dark);
+  font-weight: 800;
+  margin-bottom: 0.5rem;
+}
+
+#modal-success footer button {
+  width: 100%;
+  padding: 0.85rem;
+}
+
+/*-------- Mobil: dokunma hedefi ≥44px, dar ekranda modal düzeni --------*/
+@media (max-width: 768px), (pointer: coarse) {
+  .form-options a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+
+  .modal header button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  .modal footer button {
+    min-height: 44px;
+  }
+
+  /* Uzun metinde yalnızca makale kaydırılır; başlık ve düğmeler sıkışıp 44px'in altına inmez */
+  .modal header,
+  .modal footer {
+    flex-shrink: 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .modal {
+    padding: 1rem;
+  }
+
+  .modal header,
+  .modal article,
+  .modal footer {
+    padding-inline: 1rem;
+  }
+
+  .modal footer {
+    flex-wrap: wrap;
+  }
+
+  .modal footer button {
+    flex: 1 1 auto;
+  }
+}
+
+/* Bilgilendirme kutusu eylem bağlantısı: kutunun sıcak renk paletiyle uyumlu */
+.notice-cta {
+  align-self: stretch;
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  min-height: 44px;
+  margin-top: 0.1rem;
+  padding: 0.55rem 0.9rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--warning-text);
+  text-decoration: none;
+  background: rgba(180, 83, 9, 0.08);
+  border: 1px solid rgba(180, 83, 9, 0.3);
+  border-radius: var(--radius-sm);
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.notice-cta > span {
+  flex: 1;
+}
+
+.notice-cta > svg {
+  flex-shrink: 0;
+  width: 1.1rem;
+  height: 1.1rem;
+  transition: transform 0.2s ease;
+}
+
+.notice-cta:hover {
+  color: var(--white);
+  background: var(--warning);
+  border-color: var(--warning);
+  border-style: solid;
+}
+
+.notice-cta:hover > svg:last-child {
+  transform: translateX(3px);
+}
+
+.notice-cta:focus-visible {
+  outline: 3px solid var(--warning);
+  outline-offset: 2px;
+}
+
+/* E-posta kodu yardımı ve yeniden gönder düğmesi (doğrulama penceresi) */
+#modal-verify article > p:last-child {
+  margin-top: 1rem;
+  font-size: 0.85rem;
+  color: var(--gray-500);
+}
+
+#modal-verify article > p > button {
+  display: inline;
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+  font-weight: 700;
+  color: var(--primary);
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+#modal-verify article > p > button:disabled {
+  color: var(--gray-500);
+  cursor: not-allowed;
+  text-decoration: none;
+}

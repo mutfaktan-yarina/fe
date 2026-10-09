@@ -1,0 +1,398 @@
+/*============================================================================================
+  Mutfaktan Yarına — Bölünmüş (Split-Screen) Düzen (layout-split.css)
+  Ortak: kayit.css, sifre.css, iletisim.css, basvuru.css. Sayfaya özgü kurallar o sayfanın dosyasında kalır.
+  Kullanım: her sayfa CSS'i önce base.css'i, sonra bu dosyayı içe aktarır.
+============================================================================================*/
+
+body {
+  background-color: var(--white);
+  min-height: 100vh;
+}
+
+/*============================================================================================
+  Kurumsal İki Kolonlu Form Düzeni (Split-Screen Form Layout - Potenza Modeli)
+  Kullanan sayfalar: kayit, giris, sifre-sifirla, sifre-yenile, iletisim, basvuru
+============================================================================================*/
+.split-container {
+  display: flex;
+  min-height: 100vh;
+  width: 100%;
+}
+
+/* Sol Kırmızı Panel */
+.content-left {
+  width: 38%;
+  min-width: 380px;
+  max-width: 480px;
+  background: linear-gradient(160deg, var(--primary) 0%, var(--primary-hover) 50%, var(--primary-dark) 100%);
+  color: #ffffff;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+  scrollbar-width: none;
+  z-index: 10;
+}
+
+.content-left::-webkit-scrollbar {
+  display: none;
+}
+
+/* İçerik: partials/aside-brand.html (üst çubuk · orta · alt bilgi) */
+.content-left > div {
+  min-height: 100%;
+  padding: 2.5rem 2rem 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  text-align: center;
+  gap: 1.5rem;
+}
+
+.content-left header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  gap: 0.75rem;
+}
+
+.left-nav-home {
+  background: rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 9999px;
+  padding: 0.45rem 0.9rem;
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.left-nav-home:hover {
+  background: #ffffff;
+  color: var(--primary);
+  border-color: #ffffff;
+}
+
+.content-left > div > div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.content-left figure {
+  width: 100%;
+  max-width: 330px;
+  margin: 0 auto 1.25rem;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  border: 2px solid rgba(255, 255, 255, 0.25);
+  position: relative;
+}
+
+.content-left figure img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  display: block;
+}
+
+.content-left figcaption {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(8px);
+  color: #ffffff;
+  padding: 0.25rem 0.65rem;
+  border-radius: 6px;
+  font-family: var(--font-body);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.content-left figcaption::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--white);
+  box-shadow: 0 0 8px var(--white);
+}
+
+.content-left figure + p {
+  font-family: var(--font-headline);
+  font-size: 1.85rem;
+  font-weight: 800;
+  color: #ffffff;
+  margin-bottom: 0.15rem;
+  line-height: 1.2;
+}
+
+/* Görselden sonra sırayla: marka adı (Headline), slogan, açıklama. Marka adı başlık değil: sayfanın h1'i sağ sütunda */
+.content-left figure + p + p {
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.85);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 0.75rem;
+}
+
+.content-left figure + p + p + p {
+  font-size: 0.86rem;
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: normal;
+  color: rgba(255, 255, 255, 0.92);
+  line-height: 1.55;
+  margin-bottom: 1.25rem;
+  max-width: 340px;
+}
+
+.content-left ul {
+  list-style: none;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.6rem;
+  width: 100%;
+  max-width: 340px;
+  margin-bottom: 1.25rem;
+}
+
+.content-left li {
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 8px;
+  padding: 0.65rem 0.5rem;
+  text-align: center;
+  backdrop-filter: blur(5px);
+}
+
+.content-left li > strong {
+  font-family: var(--font-body);
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: #ffffff;
+  display: block;
+  line-height: 1.2;
+}
+
+.content-left li > span {
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.82);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-top: 0.2rem;
+  display: block;
+}
+
+/* Program ayrıntıları bağlantısı: iç bloğun tek doğrudan <a> çocuğu */
+.content-left div > a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.65rem 1.35rem;
+  background: rgba(255, 255, 255, 0.16);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 8px;
+  color: #ffffff;
+  font-family: var(--font-body);
+  font-size: 0.82rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.content-left div > a:hover {
+  background: #ffffff;
+  color: var(--primary);
+  border-color: #ffffff;
+  transform: translateY(-1px);
+}
+
+.content-left footer {
+  width: 100%;
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+  padding-top: 1rem;
+}
+
+.content-left footer > p {
+  font-size: 0.76rem;
+  color: rgba(255, 255, 255, 0.72);
+  margin: 0;
+}
+
+/* Sağ Form Alanı */
+.content-right {
+  flex: 1;
+  min-height: 100vh;
+  background: #ffffff;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 2.5rem 3rem 4rem;
+}
+
+/* Mobil Üst Bar (≤1024px; işaretleme: partials/topbar-mobile.html): yalnızca Mutfaktan Yarına logosu (≥ 114 px) ve geri bağlantısı */
+.mobile-topbar {
+  display: none;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 1.25rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.mobile-topbar .brand-logo {
+  width: 128px;
+}
+
+.mobile-topbar > a:last-child {
+  font-family: var(--font-body);
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--primary);
+  text-decoration: none;
+}
+
+
+/*============================================================================================
+  Sağ Form Kutusu (alan, denetim, düğme görünümü: forms.css)
+============================================================================================*/
+.form-box {
+  width: 100%;
+  max-width: 520px;
+  margin: auto 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.form-header {
+  margin-bottom: 2rem;
+  text-align: left;
+}
+
+.form-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--primary);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+}
+
+.form-title {
+  font-family: var(--font-headline);
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--dark);
+  margin-bottom: 0.45rem;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+.form-subtitle {
+  font-size: 0.92rem;
+  color: var(--gray-600);
+  line-height: 1.55;
+  margin: 0;
+}
+
+.form-box--wide {
+  max-width: 620px;
+}
+
+/* Form Alanları */
+.form-box form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.35rem;
+}
+
+/* Alan, denetim, hata ve düğme görünümü forms.css'te; burada yalnızca yerleşim */
+.form-box form > button[type="submit"] {
+  margin-top: 0.5rem;
+}
+
+.login-link {
+  margin-top: 1.5rem;
+  text-align: center;
+  font-size: 0.88rem;
+  color: var(--gray-600);
+}
+
+.login-link a {
+  color: var(--primary);
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.login-link a:hover {
+  color: var(--primary-hover);
+  text-decoration-thickness: 2px;
+}
+
+
+@media (max-width: 1024px) {
+  .split-container {
+    flex-direction: column;
+  }
+  /* Mobilde kırmızı marka paneli gizlenir (marka üst çubuktadır); h1 ve ilk alan ilk ekranda görünür */
+  .content-left {
+    display: none;
+  }
+  .content-right {
+    padding: 1.25rem 1.25rem 3rem;
+  }
+  .form-box {
+    margin-block: 0;
+  }
+  .mobile-topbar {
+    display: flex;
+    padding-bottom: 0.75rem;
+    margin-bottom: 1.25rem;
+  }
+}
+
+@media (max-width: 768px), (pointer: coarse) {
+  .form-tag {
+    font-size: 0.75rem;
+  }
+  .mobile-topbar > a:last-child {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+}
+
+@media (max-width: 640px) {
+  .form-header {
+    margin-bottom: 1.5rem;
+  }
+  .form-title {
+    font-size: 1.75rem;
+  }
+}

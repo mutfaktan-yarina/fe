@@ -1,0 +1,94 @@
+/* Çerez tercih paneli (cerez.js): sol altta açılır; mobilde alt çubuğun üstünde tam genişlik */
+#cerez-panel {
+  position: fixed;
+  left: 1rem;
+  bottom: 1rem;
+  z-index: 1100;
+  width: min(26rem, calc(100vw - 2rem));
+  max-height: calc(100vh - 2rem);
+  overflow-y: auto;
+  padding: 1.25rem 1.35rem;
+  background: var(--white);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.18);
+  font-size: 0.88rem;
+  color: var(--gray-700);
+  line-height: 1.55;
+}
+
+#cerez-panel > h2 {
+  font-family: var(--font-headline);
+  font-size: 1.1rem;
+  color: var(--dark);
+  margin-bottom: 0.5rem;
+}
+
+#cerez-panel a {
+  color: var(--primary);
+  font-weight: 700;
+}
+
+#cerez-panel ul {
+  list-style: none;
+  margin: 0.85rem 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+#cerez-panel li label {
+  display: flex;
+  gap: 0.65rem;
+  align-items: flex-start;
+  cursor: pointer;
+}
+
+#cerez-panel li input {
+  margin-top: 0.2rem;
+  accent-color: var(--primary);
+}
+
+#cerez-panel li span {
+  display: flex;
+  flex-direction: column;
+}
+
+#cerez-panel li small {
+  color: var(--gray-600);
+  font-size: 0.8rem;
+}
+
+#cerez-panel > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+#cerez-panel > div > .btn {
+  flex: 1;
+  justify-content: center;
+  min-height: 44px;
+  padding-inline: 0.75rem;
+}
+
+@media (max-width: 760px) {
+  #cerez-panel {
+    left: 0.5rem;
+    bottom: 0.5rem;
+    width: calc(100vw - 1rem);
+    max-height: calc(100vh - 6rem);
+  }
+
+  /* Sabit alt çubuk (site-chrome.css) varsa üstünde dursun */
+  body:has(.mobile-cta) #cerez-panel {
+    bottom: calc(0.5rem + 68px + env(safe-area-inset-bottom));
+  }
+}
+
+@media print {
+  #cerez-panel {
+    display: none;
+  }
+}

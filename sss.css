@@ -1,0 +1,290 @@
+/*============================================================================================
+  Mutfaktan Yarına - Sıkça Sorulan Sorular (sss.css)
+  Kapsayıcı, bölüm başlığı/rozeti ve dikey ritim site-chrome.css'ten gelir (.sss-main > .content-section); burada yalnızca filtre ve soru kartları bulunur (arama kutusu: forms.css .input-box).
+============================================================================================*/
+
+.filter-pills {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.filter-pills > button {
+  background: var(--white);
+  border: 1px solid var(--gray-300);
+  padding: 0.5rem 1.15rem;
+  border-radius: 9999px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--gray-700);
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.filter-pills > button:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+.filter-pills > .active {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: var(--white);
+}
+
+.filter-pills > .active:hover {
+  background: var(--primary-hover);
+  border-color: var(--primary-hover);
+  color: var(--white);
+}
+
+.results-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.88rem;
+  color: var(--gray-500);
+  padding: 0 0.5rem;
+}
+
+.results-meta strong {
+  color: var(--gray-900);
+}
+
+.faq-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--head-gap);
+}
+
+/* Arama sonuç vermediğinde boş liste kendi boşluğunu eklemesin */
+.faq-list:has(+ .no-results.active) {
+  display: none;
+}
+
+.faq-card,
+.ask-banner {
+  background: var(--white);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
+}
+
+.faq-card {
+  overflow: hidden;
+  transition: var(--transition);
+}
+
+/* Soru başlığı: <h2> içinde tek düğme. Izgara: [etiket] [soru] [ok]; dar ekranda etiket üstte */
+.faq-card > h2 {
+  font: inherit;
+}
+
+.faq-question {
+  padding: 1.25rem 1.5rem;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  column-gap: 0.75rem;
+  cursor: pointer;
+  user-select: none;
+  background: none;
+  border: 0;
+  font: inherit;
+  line-height: 1.4;
+  color: inherit;
+  width: 100%;
+  text-align: left;
+}
+
+.faq-question:hover {
+  background: var(--gray-50);
+}
+
+.faq-question:hover b {
+  color: var(--primary);
+}
+
+.faq-question:focus-visible {
+  outline: 3px solid var(--primary);
+  outline-offset: -3px;
+}
+
+.faq-question > b {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--gray-900);
+  line-height: 1.4;
+  transition: var(--transition);
+}
+
+.faq-question > span {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--primary);
+  background: var(--primary-light);
+  padding: 0.2rem 0.6rem;
+  border-radius: 9999px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  flex-shrink: 0;
+}
+
+.faq-question > svg {
+  width: 20px;
+  height: 20px;
+  margin-left: 0.25rem;
+  color: var(--gray-400);
+  transition: transform 0.2s ease;
+}
+
+.faq-card.open .faq-question > svg {
+  transform: rotate(180deg);
+  color: var(--primary);
+}
+
+.faq-card > div {
+  display: none;
+  padding: 1.25rem 1.5rem 1.5rem;
+  border-top: 1px solid var(--gray-100);
+  font-size: 0.95rem;
+  color: var(--gray-600);
+  line-height: 1.7;
+}
+
+.faq-card.open > div {
+  display: block;
+}
+
+.faq-card strong {
+  color: var(--gray-900);
+}
+
+.faq-card :is(ul, ol) {
+  margin: 0.75rem 0 0.75rem 1.25rem;
+}
+
+.faq-card li {
+  margin-bottom: 0.4rem;
+}
+
+.no-results {
+  display: none;
+  background: var(--white);
+  border: 1px dashed var(--gray-300);
+  border-radius: var(--radius-md);
+  padding: 3rem 1.5rem;
+  text-align: center;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.no-results.active {
+  display: flex;
+}
+
+.no-results svg {
+  width: 44px;
+  height: 44px;
+  color: var(--gray-400);
+}
+
+.no-results h2 {
+  font-family: var(--font-body);
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--gray-800);
+}
+
+.no-results p {
+  font-size: 0.9rem;
+  color: var(--gray-500);
+}
+
+.ask-banner {
+  padding: 1.5rem 1.75rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.ask-banner h2 {
+  font-family: var(--font-body);
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--dark);
+  margin-bottom: 0.35rem;
+}
+
+.ask-banner p {
+  font-size: 0.9rem;
+  color: var(--gray-600);
+  line-height: 1.5;
+}
+
+.ask-banner > a {
+  background: var(--primary);
+  color: var(--white);
+  padding: 0.8rem 1.75rem;
+  border-radius: var(--radius-sm);
+  font-weight: 700;
+  font-size: 0.95rem;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  box-shadow: 0 4px 14px var(--primary-glow);
+  transition: var(--transition);
+  white-space: nowrap;
+}
+
+.ask-banner > a:hover {
+  background: var(--primary-hover);
+  color: var(--white);
+}
+
+@media (max-width: 900px) {
+  .faq-question {
+    grid-template-columns: minmax(0, 1fr) auto;
+    row-gap: 0.4rem;
+  }
+  .faq-question > span {
+    justify-self: start;
+  }
+  .faq-question > span,
+  .faq-question > b {
+    grid-column: 1;
+  }
+  .faq-question > svg {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+  }
+  .ask-banner {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+/* Mobil (≤768px): dokunma hedefi ≥44px, okunabilir etiket boyutu */
+@media (max-width: 768px), (pointer: coarse) {
+  .filter-pills > button {
+    min-height: 44px;
+  }
+  .faq-question > span {
+    font-size: 0.75rem;
+  }
+  .ask-banner > a {
+    min-height: 44px;
+  }
+}
+
+@media (max-width: 480px) {
+  .ask-banner > a {
+    width: 100%;
+    justify-content: center;
+    white-space: normal;
+    text-align: center;
+  }
+}

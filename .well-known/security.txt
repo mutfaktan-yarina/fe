@@ -1,0 +1,9 @@
+# Güvenlik açığı bildirimi / Security vulnerability reporting
+# Lütfen açığı iletişim formundan iletin: konu olarak "Diğer Sorular" seçin, mesajı "[GÜVENLİK]" ile başlatın;
+# kişisel veri veya başvuru içeriği eklemeyin.
+# Please report via the contact form: choose topic "Diğer Sorular", start the message with "[SECURITY]";
+# do not include personal data.
+Contact: https://mutfaktanyarina.com/iletisim.html
+Expires: 2027-10-08T00:00:00.000Z
+Preferred-Languages: tr, en
+Canonical: https://mutfaktanyarina.com/.well-known/security.txt

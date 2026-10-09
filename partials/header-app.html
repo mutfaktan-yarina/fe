@@ -1,0 +1,35 @@
+<header class="panel-header">
+  <div>
+    <a href="{{href|index.html}}" class="brand">
+      <div>
+{{#icon=back}}
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <line x1="19" y1="12" x2="5" y2="12"/>
+          <polyline points="12 19 5 12 12 5"/>
+        </svg>
+{{/}}
+{{^icon=back}}
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M6 13.87A4 4 0 0 1 7.41 6a5.11 5.11 0 0 1 1.05-1.54 5 5 0 0 1 7.08 0A5.11 5.11 0 0 1 16.59 6 4 4 0 0 1 18 13.87V21H6Z"/>
+          <line x1="6" y1="17" x2="18" y2="17"/>
+        </svg>
+{{/}}
+      </div>
+      <div>
+        <strong>Mutfaktan Yarına</strong>
+        <span>{{sub|Katılımcı Takip Paneli}}</span>
+      </div>
+    </a>
+
+    <div class="header-actions">
+      <div class="user-badge">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+          <circle cx="12" cy="7" r="4"></circle>
+        </svg>
+        <span{{id:userid}}>Başvuru Sahibi</span>
+      </div>
+      <a href="giris.html" class="btn-logout" id="btn-logout">Çıkış Yap</a>
+    </div>
+  </div>
+</header>

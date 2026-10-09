@@ -1,0 +1,200 @@
+/*============================================================================================
+  Yazdırma (print.css) — partials/head.html <link media="print"> ile her sayfada, sayfa CSS'lerinden sonra yüklenir.
+  İlke: arka plan grafikleri basılmayabilir → zemin beyaz, metin koyu; gezinme ve düğmeler basılmaz; kartlar sayfa ortasında bölünmez.
+  Kabul: Emulation.setEmulatedMedia('print') ile index, panel, hibe-*, sss temiz çıkar (okunmayan beyaz metin ve sabit öğe yok).
+============================================================================================*/
+@page {
+  margin: 14mm;
+}
+
+*,
+*::before,
+*::after {
+  box-shadow: none !important;
+  text-shadow: none !important;
+  transition: none !important;
+  animation: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+html {
+  height: auto;
+}
+
+body {
+  display: block;
+  min-height: 0;
+  background: #fff !important;
+  color: #000;
+  font-size: 11pt;
+}
+
+/* Gezinme, sabit öğeler ve etkileşim: basılmaz */
+body > a[href="#main"],
+.main-header,
+.mobile-topbar,
+.mobile-cta,
+.content-left,
+.desktop-side-nav,
+.subnav-sticky,
+.hero-bg-layer,
+.hero-buttons,
+.final-cta-banner .btn,
+.cta-direct-buttons,
+.filter-pills,
+.sss-main .input-box,
+.results-meta,
+.ask-banner,
+.promo-banner,
+.faq-question > svg,
+.pre-eval-action-banner > a,
+.footer-top,
+.footer-bottom > nav,
+.modal,
+.modal-backdrop,
+form > button[type="submit"],
+.wizard-footer {
+  display: none !important;
+}
+
+/* Tek sütun. Ana sütun flex kalırsa Chrome içindeki kartların break-inside kuralını yok sayıyor → blok + aynı bölüm boşluğu */
+.page-layout-wrapper,
+.page-content-area,
+.split-container {
+  display: block;
+}
+
+.page-content-area > * + * {
+  margin-top: var(--section-gap);
+}
+
+/* Hero: görsel ve koyu zemin yok; metin koyu */
+.hero-section {
+  background: #fff !important;
+  color: #000 !important;
+  padding-block: 0 1.5rem;
+}
+
+.hero-content-wrapper > h1,
+.hero-stats-bar .stat-number,
+.hero-stats-bar > :first-child .stat-number {
+  color: #000 !important;
+}
+
+.hero-content-wrapper > h1 {
+  font-size: 18pt;
+}
+
+.hero-stats-bar > div > div {
+  color: #333 !important;
+}
+
+.hero-stats-bar {
+  background: none !important;
+  border-color: #999 !important;
+}
+
+.hero-stats-bar > .stat-divider {
+  background: #999 !important;
+}
+
+/* Kapanış çağrısı: koyu zemin yok */
+.final-cta-banner {
+  background: none !important;
+  color: #000 !important;
+  border: 1px solid #999;
+}
+
+.final-cta-banner h3,
+.final-cta-banner p,
+.final-cta-banner > div > span {
+  color: #000 !important;
+}
+
+/* Tek sütunlu sayfalar: alttaki büyük boşluk yalnız alt bilgiden oluşan sayfa doğurmasın */
+.hibe-page,
+.sss-main {
+  padding-block: 0 1rem;
+}
+
+/* Koyu/kırmızı zeminli bileşenler: zemin basılmazsa beyaz metin kaybolur → açık zemin, koyu metin, ince çerçeve */
+.mandatory-card,
+.showcase-total-badge,
+.preeval-q-header > span,
+.program-takvimi > li.final > h3,
+.program-takvimi > li.final > h3 > svg {
+  background: none !important;
+  border: 1px solid #666 !important;
+  color: #000 !important;
+}
+
+.mandatory-icon,
+.mandatory-card :is(h4, p, strong) {
+  background: none !important;
+  color: #000 !important;
+}
+
+/* Simge yüzdürülürse (float) kart sayfa ortasında bölünüyor; ızgara ile bütün kalır */
+.mandatory-card {
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr);
+}
+
+/* Alt bilgi: yalnızca telif satırı */
+.main-footer {
+  background: #fff !important;
+  color: #000 !important;
+  border-top: 1px solid #999;
+}
+
+.footer-bottom {
+  color: #333 !important;
+}
+
+/* SSS: tüm yanıtlar açık basılır (süzgeçle gizlenenler basılmaz) */
+.faq-card > div {
+  display: block !important;
+}
+
+/* Katlanmış açıklamalar (details) basılırken açık olur; ::details-content desteklemeyen tarayıcıda kapalı kalır */
+details::details-content {
+  content-visibility: visible;
+  display: block;
+}
+
+/* Panel: etiket–değer tablosunda sütunlar bitişmesin */
+.accordion-group td:first-child {
+  padding-right: 1rem;
+}
+
+/* Bölünme: kartlar ve satırlar sayfa ortasında kesilmez; başlık kendi içeriğinden ayrılmaz */
+.faq-card,
+.modules-grid > div,
+.terms-grid > div,
+.award-cards-grid > *,
+.program-takvimi > li,
+.mandatory-card,
+.lead-text-box,
+.status-card,
+.accordion-group > div,
+.info-banner,
+.pre-eval-action-banner,
+.preeval-card,
+tr {
+  break-inside: avoid;
+  page-break-inside: avoid;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  break-after: avoid;
+}
+
+p,
+li {
+  orphans: 3;
+  widows: 3;
+}
