@@ -260,7 +260,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if (btnVerifyConfirm) {
     btnVerifyConfirm.addEventListener('click', async () => {
-      const code = inpVerifyCode ? inpVerifyCode.value.trim() : '';
+      const code = inpVerifyCode ? inpVerifyCode.value.replace(/\s+/g, '').toUpperCase() : '';   // sunucu yalnız BÜYÜK harf+rakam kabul eder
       if (!code) {
         if (errVerifyCode) {
           errVerifyCode.textContent = 'Lütfen doğrulama kodunu giriniz.';

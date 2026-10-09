@@ -118,7 +118,7 @@
           <div class="field" id="f-code">
             <label for="inp-code">E-postadaki Kod</label>
             <div class="input-box">
-              <input type="text" id="inp-code" placeholder="E-postanıza gelen kodu giriniz" autocomplete="one-time-code" inputmode="numeric">
+              <input type="text" id="inp-code" placeholder="E-postanıza gelen kodu giriniz" autocomplete="one-time-code" autocapitalize="characters" autocorrect="off" spellcheck="false" maxlength="20">
             </div>
             <span class="error" id="err-code">Lütfen e-postanıza gelen kodu giriniz.</span>
             <small>Kod 10 dakika geçerlidir. Gelmediyse gereksiz (spam) klasörüne bakın veya <a href="sifre-sifirla.html">yeni kod isteyin</a>.</small>
@@ -168,6 +168,8 @@
             </div>
             <span class="error" id="err-confirmpass">Şifreler birbiriyle eşleşmiyor.</span>
           </div>
+
+          <p class="error" id="form-error" role="alert"></p>
 
           <button type="submit" id="btn-submit-change">
             <span>Şifreyi Güncelle ve Kaydet</span>

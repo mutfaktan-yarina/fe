@@ -811,6 +811,7 @@ a {
 }
 
 .award-amount small {
+  white-space: normal;
   font-family: var(--font-body);
   font-size: 0.85rem;
   font-weight: 500;
