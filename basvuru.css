@@ -325,10 +325,16 @@
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 1.25rem;
+  align-items: start;
 }
 
 .form-grid.full {
   grid-template-columns: 1fr;
+}
+
+/* q13 tek satır: altındaki "personel girişi" ve "kaçı hâlâ çalışıyor" alanları yan yana oturur */
+#field-q13 {
+  grid-column: 1 / -1;
 }
 
 /*-------- Dosya Yükleme / Dropzone --------*/
