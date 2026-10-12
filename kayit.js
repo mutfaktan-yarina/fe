@@ -30,9 +30,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
   MYUI.bindPasswordToggle(toggleBtn, passInput);
 
+  // Sunucunun reddettiği değer: alan değişmedikçe istemci doğrulaması (blur) bu hatayı silmez.
+  const serverErr = { user: null, pass: null };
+
   function validateUser() {
     const val = userInput.value.trim();
     const errEl = fieldUser.querySelector('.error');
+    if (serverErr.user && serverErr.user.value === val) {
+      fieldUser.classList.add('invalid');
+      errEl.textContent = serverErr.user.text;
+      return false;
+    }
     if (!val) {
       fieldUser.classList.add('invalid');
       errEl.textContent = 'Kullanıcı adı veya e-posta alanı boş bırakılamaz.';
@@ -64,6 +72,11 @@ document.addEventListener('DOMContentLoaded', () => {
   function validatePassword() {
     const val = passInput.value;
     const errEl = fieldPass.querySelector('.error');
+    if (serverErr.pass && serverErr.pass.value === val) {
+      fieldPass.classList.add('invalid');
+      errEl.textContent = serverErr.pass.text;
+      return false;
+    }
     if (!val) {
       fieldPass.classList.add('invalid');
       errEl.textContent = 'Şifre alanı boş bırakılamaz.';
@@ -89,13 +102,15 @@ document.addEventListener('DOMContentLoaded', () => {
       strengthBox.classList.remove('active');
       strengthBox.dataset.score = '0';
     }
-    if (val.length >= 12) {
+    if (serverErr.pass && serverErr.pass.value !== val) serverErr.pass = null;
+    if (val.length >= 12 && !serverErr.pass) {
       fieldPass.classList.remove('invalid');
     }
   });
 
   userInput.addEventListener('input', () => {
-    if (userInput.value.trim().length >= 3) {
+    if (serverErr.user && serverErr.user.value !== userInput.value.trim()) serverErr.user = null;
+    if (userInput.value.trim().length >= 3 && !serverErr.user) {
       fieldUser.classList.remove('invalid');
     }
   });
@@ -200,7 +215,13 @@ document.addEventListener('DOMContentLoaded', () => {
         const badField = passErr ? fieldPass : fieldUser;
         badField.classList.add('invalid');
         const errEl = badField.querySelector('.error');
-        if (errEl) errEl.textContent = err.message || 'Kayıt işlemi başarısız oldu.';
+        const errText = err.message || 'Kayıt işlemi başarısız oldu.';
+        if (errEl) errEl.textContent = errText;
+        // Yalnızca sunucunun girdiyi reddettiği (400) durumlar hatırlanır; ağ/sunucu hatasında yeniden denemeye izin verilir.
+        if (err.status === 400) {
+          if (passErr) serverErr.pass = { value: passVal, text: errText };
+          else serverErr.user = { value: emailVal, text: errText };
+        }
         (passErr ? passInput : userInput).focus();
       }
     } else {

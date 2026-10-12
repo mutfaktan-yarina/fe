@@ -101,6 +101,19 @@ document.addEventListener('DOMContentLoaded', () => {
     else detailField.setAttribute('hidden', '');
   }
 
+  // Kooperatiflerde q21 sorulmaz (puan sunucuda otomatik verilir): alan gizlenir, seçim temizlenir.
+  const q21Field = document.getElementById('field-q21');
+  const isCoop = () => checkedValue('biz-type') === 'kooperatif';
+  function syncQ21() {
+    const coop = isCoop();
+    q21Field.toggleAttribute('hidden', coop);
+    if (coop) {
+      document.querySelectorAll('input[name="q21"]').forEach(r => { r.checked = false; });
+      q21Field.classList.remove('invalid');
+    }
+  }
+  document.querySelectorAll('input[name="biz-type"]').forEach(r => r.addEventListener('change', syncQ21));
+
   function syncQ22UI() {
     q22Inputs.forEach(input => {
       input.closest('label').classList.toggle('checked', input.checked);
@@ -206,6 +219,7 @@ document.addEventListener('DOMContentLoaded', () => {
           if (chk) chk.checked = true;
         });
       }
+      syncQ21();
       syncQ22UI();
     } catch (e) {}
   }
@@ -286,7 +300,7 @@ document.addEventListener('DOMContentLoaded', () => {
       q14_hired: hired,
       q14: q14,
       q15: checkedValue('q15'),
-      q21: checkedValue('q21'),
+      q21: isCoop() ? null : checkedValue('q21'),
       q22: Array.from(document.querySelectorAll('input[name="q22"]:checked')).map(c => c.value),
       status: 'draft',
       updatedAt: new Date().toISOString()
@@ -523,7 +537,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const q13 = document.getElementById('inp-q13');
     const q14Pre = document.getElementById('field-q14-pre');
     const q15Field = document.querySelector('input[name="q15"]').closest('.field');
-    const q21Field = document.querySelector('input[name="q21"]').closest('.field');
     const q22Checks = document.querySelectorAll('input[name="q22"]:checked');
 
     [q11, q12, q13, q14Select].forEach(inp => inp.closest('.field').classList.remove('invalid'));
@@ -536,7 +549,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     const val12 = toInt(q12.value);
-    if (isNaN(val12) || val12 < 0 || val12 > val11) {
+    if (isNaN(val12) || val12 < 2 || val12 > val11) {
       q12.closest('.field').classList.add('invalid');
       valid = false;
     }
@@ -561,7 +574,7 @@ document.addEventListener('DOMContentLoaded', () => {
       valid = false;
     }
 
-    if (!checkedValue('q21')) {
+    if (!isCoop() && !checkedValue('q21')) {
       q21Field.classList.add('invalid');
       valid = false;
     }
@@ -612,6 +625,15 @@ document.addEventListener('DOMContentLoaded', () => {
     if (hired === 'no') stay = 'İşe başlayan olmadı';
     else if (hired === 'yes' && q14Select.value) stay = q14Select.options[q14Select.selectedIndex].text;
     document.getElementById('sum-emp-stay').textContent = stay;
+
+    const yn = { yes: 'Evet', no: 'Hayır' };
+    document.getElementById('sum-instagram').textContent = document.getElementById('inp-instagram').value.trim() || '-';
+    document.getElementById('sum-q15').textContent = yn[checkedValue('q15')] || '-';
+    document.getElementById('sum-q21-row').toggleAttribute('hidden', isCoop());
+    document.getElementById('sum-q21').textContent = yn[checkedValue('q21')] || '-';
+    const q22 = Array.from(document.querySelectorAll('input[name="q22"]:checked'))
+      .map(c => c.closest('label').textContent.trim());
+    document.getElementById('sum-q22').textContent = q22.length ? q22.join(' · ') : '-';
   }
 
   // Sunucu alanları bayt sınırlıdır (son bayt NUL): Türkçe harfler 2 bayt tutar. Sınırı aşan giriş kabul edilmez,

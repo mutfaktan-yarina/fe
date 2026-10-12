@@ -157,15 +157,12 @@ window.MYUI = (() => {
     return { score, label: labels[score] };
   }
 
-  // Anlık yaş uyarısı (kesin doğrulama sunucuda): bugün >= 18 tam yaş ve doğum >= 1997-01-01.
+  // Anlık yaş uyarısı (kesin doğrulama sunucuda): 31.12.2026 itibarıyla 18–30 yaş = doğum 1996-01-01 … 2008-12-31 (iki uç dahil).
   function isAgeEligible(iso) {
     const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso || '');
-    if (!m || iso < '1997-01-01') return false;
+    if (!m || iso < '1996-01-01' || iso > '2008-12-31') return false;
     const d = new Date(Date.UTC(+m[1], +m[2] - 1, +m[3]));
-    if (d.getUTCMonth() !== +m[2] - 1 || d.getUTCDate() !== +m[3]) return false;
-    const now = new Date();
-    const pad = (n) => String(n).padStart(2, '0');
-    return iso <= (now.getFullYear() - 18) + '-' + pad(now.getMonth() + 1) + '-' + pad(now.getDate());
+    return d.getUTCMonth() === +m[2] - 1 && d.getUTCDate() === +m[3];
   }
 
   // Yönetim/editör üst çubuğu (partials/header-editor.html) tek yerden kurulur: kimlik, rol rozeti, yönetici

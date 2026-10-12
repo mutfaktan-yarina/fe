@@ -200,7 +200,7 @@
           </label>
           <label>
             <input type="checkbox" name="eligibility" id="chk-el-3">
-            <span>Başvuru tarihinde 18 yaşını doldurdum ve 31 Aralık 2026 tarihine kadar 30 yaşını doldurmamış olacağım.</span>
+            <span>31 Aralık 2026 itibarıyla 18–30 yaş aralığındayım (doğum tarihim 1 Ocak 1996 ile 31 Aralık 2008 arasındadır; her iki tarih dahildir).</span>
           </label>
           <label>
             <input type="checkbox" name="eligibility" id="chk-el-4">
@@ -208,7 +208,7 @@
           </label>
           <label>
             <input type="checkbox" name="eligibility" id="chk-el-5">
-            <span>Başvuru tarihi itibarıyla işletmemde, kendim hariç, en az 2 aktif SGK'lı çalışan bulunmaktadır. (Kooperatifler için de aynı şart geçerlidir; aktif ortaklar çalışan sayılmaz.)</span>
+            <span>Başvuru tarihi itibarıyla işletmemde, kendim hariç, en az 2 SGK'lı kadın çalışan bulunmaktadır. (Kooperatifler için de aynı şart geçerlidir; SGK'lı çalışan olan kooperatif ortakları dahildir, yalnızca ortak olmak yeterli değildir.)</span>
           </label>
           <label>
             <input type="checkbox" name="eligibility" id="chk-el-6">
@@ -243,9 +243,9 @@
           </div>
 
           <div class="field">
-            <label for="inp-birthdate">Doğum Tarihi <small>(18–30 yaş kontrolü yapılır)</small></label>
+            <label for="inp-birthdate">Doğum Tarihi <small>(31 Aralık 2026 itibarıyla 18–30 yaş)</small></label>
             <input type="date" id="inp-birthdate">
-            <span class="error" id="birth-error">Başvuru tarihinde 18 yaşını doldurmuş ve 31 Aralık 2026'ya kadar 30 yaşını doldurmamış olmalısınız.</span>
+            <span class="error" id="birth-error">Başvuru için doğum tarihiniz 1 Ocak 1996 ile 31 Aralık 2008 arasında olmalıdır. Her iki tarih de dahildir.</span>
           </div>
 
           <div class="field">
@@ -375,7 +375,7 @@
               <line x1="12" y1="17" x2="12.01" y2="17"></line>
             </svg>
             <div>
-              <strong>Kritik Kural:</strong> Kendinizi ve kooperatif ortaklarını çalışan sayısına kesinlikle dahil etmeyiniz. Yalnızca SGK hizmet listesinde kayıtlı bordrolu çalışan sayısını yazınız. SGK belgesiyle uyuşmayan beyanlar elenme sebebidir.
+              <strong>Kritik Kural:</strong> Kendinizi çalışan sayılarına dahil etmeyiniz. SGK'lı çalışan olan kooperatif ortakları bu sayılara dahildir; yalnızca ortak olmak yeterli değildir. Yalnızca SGK hizmet listesinde kayıtlı bordrolu çalışan sayısını yazınız. SGK belgesiyle uyuşmayan beyanlar elenme sebebidir.
             </div>
           </div>
 
@@ -388,8 +388,8 @@
 
             <div class="field">
               <label for="inp-q12">Bu çalışanların kaçı kadın?</label>
-              <input type="number" id="inp-q12" min="0" placeholder="Kadın çalışan sayısı">
-              <span class="error">Kadın çalışan sayısı toplam çalışandan fazla olamaz.</span>
+              <input type="number" id="inp-q12" min="2" placeholder="Kadın çalışan sayısı (En az 2)">
+              <span class="error">Kendiniz hariç en az 2 SGK'lı kadın çalışan olmalı ve sayı toplam çalışandan fazla olamaz.</span>
             </div>
 
             <div class="field" id="field-q13">
@@ -445,7 +445,7 @@
         <div class="question-box">
           <h3>Bölüm 2: İhtiyaç ve Hazırlık</h3>
 
-          <div class="field">
+          <div class="field" id="field-q21">
             <label>Bu iş ailenizin tek geçim kaynağı mı?</label>
             <div class="radio-group">
               <label>
@@ -532,6 +532,7 @@
                 <tr><td>Vergi No</td><td id="sum-taxno">-</td></tr>
                 <tr><td>Faaliyet Yılı</td><td id="sum-bizyear">-</td></tr>
                 <tr><td>Adres</td><td id="sum-address">-</td></tr>
+                <tr><td>Instagram</td><td id="sum-instagram">-</td></tr>
               </table>
             </div>
           </div>
@@ -550,6 +551,9 @@
                 <tr><td>Kadın Çalışan</td><td id="sum-emp-female">-</td></tr>
                 <tr><td>1 Yıl Önceki Sayı</td><td id="sum-emp-prev">-</td></tr>
                 <tr><td>İstihdam Kalıcılığı</td><td id="sum-emp-stay">-</td></tr>
+                <tr><td>Hibe ile Yeni Kişi İşe Alım</td><td id="sum-q15">-</td></tr>
+                <tr id="sum-q21-row"><td>Tek Geçim Kaynağı</td><td id="sum-q21">-</td></tr>
+                <tr><td>Hibe Kullanım Alanı</td><td id="sum-q22">-</td></tr>
               </table>
             </div>
           </div>
