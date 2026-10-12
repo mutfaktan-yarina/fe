@@ -135,7 +135,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     verifying: { text: 'Belge ve Bilgi Doğrulama Aşamasında', stage: 1 },
     'preeval-open': { text: 'Ön Değerlendirme Aşaması Açıldı', stage: 2 },
     answered: { text: 'Ön Değerlendirme Yanıtları Alındı', stage: 2 },
-    scored: { text: 'Ön Değerlendirme Puanlandı', stage: 3 },
+    scored: { text: 'Ön Değerlendirme Tamamlandı', stage: 3 },
     rejected: { text: 'Başvuru Uygun Görülmedi', stage: 0 },
     expired: { text: 'Başvuru Süresi Doldu', stage: 0 }
   };

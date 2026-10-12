@@ -118,7 +118,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   if (applicantAge) {
     const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(details.birthdate || ''));
     if (m) {
-      const eligible = MYScoring.isAgeEligible(details.birthdate);
+      const eligible = MYUI.isAgeEligible(details.birthdate);
       applicantAge.textContent = `${m[3]}.${m[2]}.${m[1]} — Yaş şartı: ${eligible ? 'Uygun' : 'Uygun değil'}`;
     } else {
       applicantAge.textContent = '-';
@@ -142,26 +142,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     borc: 'Borç'
   };
 
-  // Sistem Puanı: kayıtlı değer; yoksa başvuru yanıtlarından hesaplanır. 0 geçerli bir puandır.
-  let scoreResult = null;
-  if (isFilled(details.q11)) {
-    try {
-      scoreResult = MYScoring.systemScore({
-        biztype: bizType,
-        q11: Number(details.q11),
-        q12: Number(details.q12),
-        q13: Number(details.q13),
-        q14: details.q14,
-        q15: details.q15,
-        q21: details.q21,
-        q22: Array.isArray(details.q22) ? details.q22 : []
-      });
-    } catch (e) {
-      scoreResult = null;
-    }
-  }
-  let sistemScore = num(currentApp.sistemScore);
-  if (sistemScore === null && scoreResult) sistemScore = scoreResult.total;
+  // Puanlar sunucuda hesaplanır; burada yalnızca API'nin döndürdüğü değer gösterilir (sayı ya da { total, items }).
+  const rawSistem = currentApp.sistemScore;
+  const scoreResult = rawSistem && typeof rawSistem === 'object' ? rawSistem : null;
+  const sistemScore = num(scoreResult ? scoreResult.total : rawSistem);
 
   setScore(sistemScoreDisplay, sistemScore, 70);
   if (summarySistemScore) summarySistemScore.textContent = sistemScore === null ? '-' : sistemScore;
@@ -419,18 +403,11 @@ document.addEventListener('DOMContentLoaded', async () => {
       if (badge) badge.textContent = `${pts === null ? 0 : pts} Puan`;
     }
 
-    let preTotal;
-    let total;
-    if (useStoredTotals) {
-      preTotal = num(currentApp.preScore);
-      total = num(currentApp.totalScore);
-    } else {
-      preTotal = MYScoring.preTotal(rubric.map(v => (v === null ? 0 : v)));
-      total = sistemScore === null ? null : MYScoring.totalPre(sistemScore, preTotal);
-    }
+    const preTotal = useStoredTotals ? num(currentApp.preScore) : null;
+    const total = useStoredTotals ? num(currentApp.totalScore) : null;
 
     setScore(previewPreScore, preTotal, 30);
-    if (summaryPreScore) summaryPreScore.textContent = preTotal;
+    if (summaryPreScore) summaryPreScore.textContent = preTotal === null ? '-' : preTotal;
     if (summaryTotalScore) summaryTotalScore.textContent = total === null ? '-' : total;
   }
 
@@ -516,16 +493,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         showBanner('Lütfen 6 sorunun tamamını puan cetvelinde işaretleyiniz.', false);
         return;
       }
-      if (sistemScore === null) {
-        showBanner('Bu başvuruda kayıtlı Sistem Puanı bulunmadığı için Toplam Ön Sıralama Puanı hesaplanamıyor.', false);
-        return;
-      }
-
-      const preTotal = MYScoring.preTotal(rubric);
-      const totalScore = MYScoring.totalPre(sistemScore, preTotal);
-
+      let res;
       try {
-        await MYAPI.submitEvaluation({
+        res = await MYAPI.submitEvaluation({
           ref: currentApp.ref,
           rubric: rubric,
           notes: evalNotes ? evalNotes.value.trim() : ''
@@ -536,11 +506,14 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
 
       currentApp.status = 'scored';
-      currentApp.totalScore = totalScore;
+      const saved = (res && res.application) || res || {};
+      if (num(saved.totalScore) !== null) currentApp.totalScore = saved.totalScore;
+      if (num(saved.preScore) !== null) currentApp.preScore = saved.preScore;
 
       renderStatusBadge();
 
-      showBanner(`Ön Değerlendirme başarıyla kaydedildi. Toplam Ön Sıralama Puanı: ${totalScore} / 100. Yönlendiriliyorsunuz...`, true);
+      const totalText = num(saved.totalScore) !== null ? ` Toplam Ön Sıralama Puanı: ${saved.totalScore} / 100.` : '';
+      showBanner(`Ön Değerlendirme başarıyla kaydedildi.${totalText} Yönlendiriliyorsunuz...`, true);
 
       setTimeout(() => {
         window.location.href = 'editor-panel.html';

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-  <!-- @include head title="Hibe Başvuru Formu | Mutfaktan Yarına" description="Mutfaktan Yarına - 2026 Hibe Başvuru Sihirbazı." css="base layout-split basvuru" scripts="ui scoring config api basvuru" robots=noindex bold=1 -->
+  <!-- @include head title="Hibe Başvuru Formu | Mutfaktan Yarına" description="Mutfaktan Yarına - 2026 Hibe Başvuru Sihirbazı." css="base layout-split basvuru" scripts="ui config api basvuru" robots=noindex bold=1 -->
   <!-- DÜZENLEME: partials/head.html dosyasını değiştirin, sonra ./build.sh çalıştırın -->
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -32,7 +32,6 @@
   <link rel="stylesheet" href="cerez.css">
   <script src="cerez.js" defer></script>
   <script src="ui.js" defer></script>
-  <script src="scoring.js" defer></script>
   <script src="config.js" defer></script>
   <script src="api.js" defer></script>
   <script src="basvuru.js" defer></script>
@@ -329,7 +328,7 @@
         <header>
           <h2>Adım 4 — MSA Sertifikası Yükleme</h2>
           <p>Program kapsamında sunulan MSA eğitimine ait sertifikayı almak için ücretsiz eğitimi tamamlayabilirsiniz. Eğitim sonundaki değerlendirmeden en az 70 puan alınması ve geçerli sertifikanın başvuru sırasında yüklenmesi zorunludur. Sistem sertifika doğruluğunu teyit etmez; doğrulama Program Yöneticileri tarafından yapılır.</p>
-          <p><a href="msa-egitim.html" class="btn btn-outline" target="_blank" rel="noopener">MSA Sertifikası Almak İçin Tıklayın <span aria-hidden="true">➔</span></a></p>
+          <p><a href="https://msa.com.tr/mutfaktan-yarina" class="btn btn-outline" target="_blank" rel="noopener">MSA Sertifikası Almak İçin Tıklayın <span aria-hidden="true">➔</span></a></p>
         </header>
 
         <div class="dropzone" id="dropzone" tabindex="0" role="button" aria-label="MSA sertifikası dosyası seç">
@@ -366,7 +365,7 @@
         </header>
 
         <div class="question-box">
-          <h3>Bölüm 1: İstihdam ve Ekip (50 Puan)</h3>
+          <h3>Bölüm 1: İstihdam ve Ekip</h3>
           <p>Kooperatiflerde yalnızca SGK'lı çalışanlar sayılır, aktif ortaklar dahil edilmez.</p>
 
           <div class="warning-callout-box">
@@ -418,10 +417,10 @@
               <label for="inp-q14">Geçen yıl işe başlayanlardan kaçı hâlâ çalışıyor?</label>
               <select id="inp-q14">
                 <option value="">Seçiniz</option>
-                <option value="zero">Oldu, kimse kalmadı (0 Puan)</option>
-                <option value="less_half">Yarıdan azı (5 Puan)</option>
-                <option value="half_more">Yarısı ve fazlası (7 Puan)</option>
-                <option value="all">Tamamı (10 Puan)</option>
+                <option value="zero">Oldu, kimse kalmadı</option>
+                <option value="less_half">Yarıdan azı</option>
+                <option value="half_more">Yarısı ve fazlası</option>
+                <option value="all">Tamamı</option>
               </select>
               <span class="error">Lütfen bir seçenek belirleyiniz.</span>
             </div>
@@ -444,10 +443,10 @@
         </div>
 
         <div class="question-box">
-          <h3>Bölüm 2: İhtiyaç ve Hazırlık (20 Puan)</h3>
+          <h3>Bölüm 2: İhtiyaç ve Hazırlık</h3>
 
           <div class="field">
-            <label>Bu iş ailenizin tek geçim kaynağı mı? <small>(Kooperatiflere doğrudan puan verilir)</small></label>
+            <label>Bu iş ailenizin tek geçim kaynağı mı?</label>
             <div class="radio-group">
               <label>
                 <input type="radio" name="q21" value="yes">

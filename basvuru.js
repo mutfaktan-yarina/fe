@@ -435,7 +435,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (birthError) birthError.textContent = 'Doğum tarihi zorunludur.';
         birth.closest('.field').classList.add('invalid');
         valid = false;
-      } else if (!MYScoring.isAgeEligible(birth.value)) {
+      } else if (!MYUI.isAgeEligible(birth.value)) {
         if (birthError) birthError.textContent = BIRTH_ERROR_DEFAULT;
         birth.closest('.field').classList.add('invalid');
         valid = false;
@@ -683,25 +683,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         MYUI.writeJSON(getAppKey(), finalData);
       };
-      try {
-        finalData.sistemScore = MYScoring.systemScore({
-          biztype: finalData.biztype,
-          q11: toInt(finalData.q11),
-          q12: toInt(finalData.q12),
-          q13: toInt(finalData.q13),
-          q14: finalData.q14,
-          q15: finalData.q15,
-          q21: finalData.q21,
-          q22: finalData.q22
-        }).total;
-      } catch (err) {
-        const finalErr = document.getElementById('final-error');
-        if (finalErr) {
-          finalErr.querySelector('span').textContent = 'Başvuru bilgilerinizde eksik veya hatalı bir alan var; lütfen önceki adımları kontrol ediniz.';
-          finalErr.classList.add('show');
-        }
-        return;
-      }
       if (window.MYAPI && typeof window.MYAPI.submitApplication === 'function') {
         btnNext.disabled = true;
         try {

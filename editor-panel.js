@@ -63,31 +63,17 @@ document.addEventListener("DOMContentLoaded", () => {
     return v === null || v === undefined || v === "" || !Number.isFinite(n) ? null : n;
   }
 
-  // Toplam Ön Sıralama Puanı oluşmuş (puanlanmış) kayıtlar birinci gruptur.
-  function isRanked(app) {
-    return statusOf(app) === "scored" && num(app.totalScore) !== null;
-  }
+  // Jüri Aday Listesi sunucuda belirlenir (ilk 25 + eşit puanlılar); burada yalnızca dönen ref'ler tutulur.
+  let juryRefs = new Set();
 
-  function compareApps(a, b) {
-    const ra = isRanked(a);
-    const rb = isRanked(b);
-    if (ra !== rb) return ra ? -1 : 1;
-    if (ra) {
-      const diff = num(b.totalScore) - num(a.totalScore);
-      if (diff) return diff;
+  async function loadJuryRefs() {
+    try {
+      const res = await MYAPI.getJuryCandidates();
+      const list = (res && (res.candidates || res.applications || res.refs)) || [];
+      juryRefs = new Set(list.map(item => (typeof item === "string" ? item : item.ref)));
+    } catch (e) {
+      juryRefs = new Set();
     }
-    const sysDiff = (num(b.sistemScore) || 0) - (num(a.sistemScore) || 0);
-    if (sysDiff) return sysDiff;
-    return String(a.ref).localeCompare(String(b.ref));
-  }
-
-  // Jüri Aday Listesi: ilk 25 + 25. ile eşit puanlıların tamamı (yalnızca puanlanmış, elenmemiş kayıtlar).
-  function juryRefSet() {
-    const candidates = applications
-      .filter(isRanked)
-      .map(a => ({ ref: a.ref, totalScore: num(a.totalScore) }));
-    const result = MYScoring.juryCandidates(candidates) || [];
-    return new Set(result.map(item => (typeof item === "string" ? item : item.ref)));
   }
 
   function updateMetrics() {
@@ -122,9 +108,9 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    // Sıra numarası filtrelenmemiş listeye göre verilir; arama ve sekme sırayı değiştirmez.
-    const jury = juryRefSet();
-    const ranked = [...applications].sort(compareApps).map((app, index) => ({ app, rank: index + 1 }));
+    // Sıralama sunucudan gelir (order_by=ranking); sıra numarası filtrelenmemiş listeye göre verilir, arama ve sekme sırayı değiştirmez.
+    const jury = juryRefs;
+    const ranked = applications.map((app, index) => ({ app, rank: index + 1 }));
 
     const query = searchQuery.toLocaleLowerCase("tr-TR");
     const filtered = ranked.filter(({ app }) => {
@@ -386,7 +372,7 @@ document.addEventListener("DOMContentLoaded", () => {
       let page = 1;
       let totalPages = 1;
       do {
-        const res = await MYAPI.getEditorApplications({ page, limit: 100 });
+        const res = await MYAPI.getEditorApplications({ page, limit: 100, order_by: "ranking" });
         if (!res || !res.ok || !Array.isArray(res.applications)) throw new Error("Beklenmeyen sunucu yanıtı.");
         all.push(...res.applications);
         totalPages = res.total_pages || 1;
@@ -405,6 +391,7 @@ document.addEventListener("DOMContentLoaded", () => {
         totalScore: app.totalScore,
         status: app.status
       }));
+      await loadJuryRefs();
       loadState = "ready";
     } catch (e) {
       applications = [];

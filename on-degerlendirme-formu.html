@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-  <!-- @include head title="Ön Değerlendirme Formu | Mutfaktan Yarına" description="Mutfaktan Yarına Eğitim ve Destek Programı 2026 6 Soruluk Ön Değerlendirme Formu" css="base panel" scripts="ui scoring config api on-degerlendirme-formu" robots=noindex bold=1 noblack=1 -->
+  <!-- @include head title="Ön Değerlendirme Formu | Mutfaktan Yarına" description="Mutfaktan Yarına Eğitim ve Destek Programı 2026 6 Soruluk Ön Değerlendirme Formu" css="base panel" scripts="ui config api on-degerlendirme-formu" robots=noindex bold=1 noblack=1 -->
   <!-- DÜZENLEME: partials/head.html dosyasını değiştirin, sonra ./build.sh çalıştırın -->
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -30,7 +30,6 @@
   <link rel="stylesheet" href="cerez.css">
   <script src="cerez.js" defer></script>
   <script src="ui.js" defer></script>
-  <script src="scoring.js" defer></script>
   <script src="config.js" defer></script>
   <script src="api.js" defer></script>
   <script src="on-degerlendirme-formu.js" defer></script>
@@ -79,18 +78,12 @@
           <span>6 Soruluk Ön Değerlendirme</span>
           <span class="status-badge" id="preeval-status-badge">
             <span class="dot"></span>
-            30 Puanlık Aşama
+            Ön Değerlendirme Aşaması
           </span>
         </h1>
         <p class="preeval-q-sub">
           Aşağıdaki soruları en fazla 1000 karakter olacak şekilde yanıtlayınız. Cevapları size bildirilen süre içinde (takvim: 25 Kasım – 2 Aralık 2026) tamamlamalısınız; tamamlanmayan başvurular değerlendirme dışı kalır.
         </p>
-        <details>
-          <summary>Puanlama nasıl yapılır?</summary>
-          <p class="preeval-q-sub">
-            Yanıtlarınız program ekibi tarafından soru başına 0–5 puan üzerinden değerlendirilir. Sistem Puanı (70) ve Ön Değerlendirme Puanı (30) toplanarak Toplam Ön Sıralama Puanı (100) oluşturulur; ilk 25 aday ve 25. sıradaki adayla eşit puanlılar Jüri Aday Listesine alınır.
-          </p>
-        </details>
       </div>
     </div>
 
@@ -121,7 +114,7 @@
           <textarea id="ans-q2" maxlength="1000" placeholder="Yanıtınızı buraya yazınız..." required></textarea>
           <span><span id="count-q2">0</span> / 1000 karakter</span>
         </div>
-        <p class="preeval-q-sub" id="q2-note" hidden>Bu soru şahıs işletmeleri ve kadın kooperatifleri için sorulmaz (doğrudan 5 puan).</p>
+        <p class="preeval-q-sub" id="q2-note" hidden>Bu soru şahıs işletmeleri ve kadın kooperatifleri için sorulmaz.</p>
       </div>
 
       <div class="preeval-card">

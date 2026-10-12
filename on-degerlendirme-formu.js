@@ -104,7 +104,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (q2Field) q2Field.setAttribute('hidden', '');
     if (q2El) q2El.required = false;
     if (q2Note) {
-      q2Note.textContent = 'Bu soru şahıs işletmeleri ve kadın kooperatifleri için sorulmaz (doğrudan 5 puan).';
+      q2Note.textContent = 'Bu soru şahıs işletmeleri ve kadın kooperatifleri için sorulmaz.';
       q2Note.removeAttribute('hidden');
     }
   }
@@ -146,30 +146,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     return v === null || v === undefined || v === '' ? NaN : Number(v);
   }
 
-  // Sistem Puanı başvuruda hesaplanmış olarak saklanır; yoksa başvuru yanıtlarından hesaplanır.
-  function resolveSystemScore(a) {
-    const candidates = [a.sistemScore, a.systemScore];
-    for (let i = 0; i < candidates.length; i++) {
-      const v = candidates[i];
-      const n = v && typeof v === 'object' ? Number(v.total) : toNumber(v);
-      if (Number.isFinite(n)) return n;
-    }
-    try {
-      return MYScoring.systemScore({
-        biztype: a.biztype,
-        q11: Number(a.q11),
-        q12: Number(a.q12),
-        q13: Number(a.q13),
-        q14: a.q14,
-        q15: a.q15,
-        q21: a.q21,
-        q22: Array.isArray(a.q22) ? a.q22 : []
-      }).total;
-    } catch (e) {
-      return null;
-    }
-  }
-
   function buildRecord(a, answers) {
     const total = toNumber(a.q11);
     const female = toNumber(a.q12);
@@ -187,9 +163,6 @@ document.addEventListener('DOMContentLoaded', async () => {
       city: a.city || '',
       totalEmployees: Number.isFinite(total) ? total : 0,
       femaleRatio: total > 0 && Number.isFinite(female) ? Math.round((female / total) * 100) : 0,
-      sistemScore: resolveSystemScore(a),
-      preScore: null,
-      totalScore: null,
       status: 'pending-score',
       statusText: 'Ön Değerlendirme Bekliyor',
       applicantAnswers: answers,
@@ -280,8 +253,6 @@ document.addEventListener('DOMContentLoaded', async () => {
           targetApp.status = 'pending-score';
           targetApp.statusText = 'Ön Değerlendirme Bekliyor';
           targetApp.applicantAnswers = answers;
-          targetApp.preScore = null;
-          targetApp.totalScore = null;
           delete targetApp.rubric;
         } else {
           applications.push(buildRecord(appData, answers));
