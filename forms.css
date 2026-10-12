@@ -31,10 +31,11 @@ button, input, select, textarea {
   color: var(--dark);
 }
 
-.field > label small {
-  font-size: 0.75rem;
-  font-weight: 500;
-  color: var(--gray-600);
+/* İpucu: denetimin altında, etiketi (ve yan alanla hizayı) bozmaz */
+.field > small {
+  font-size: 0.8rem;
+  line-height: 1.4;
+  color: var(--gray-500);
 }
 
 /* Hata iletisi: .invalid alanda ya da JS'in .show eklediği yerde görünür */
