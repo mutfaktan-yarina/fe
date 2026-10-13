@@ -18,10 +18,12 @@ function clearUserDraftData() {
     const emailKey = btoa(currentUser.email).replace(/[^a-zA-Z0-9]/g, '');
     localStorage.removeItem('mutfaktan_app_draft_' + emailKey);
     localStorage.removeItem('mutfaktan_application_' + emailKey);
+    localStorage.removeItem('onDegerlendirmeAnswers_' + emailKey);
   }
   // Also clear legacy unscoped keys
   localStorage.removeItem('mutfaktan_app_draft');
   localStorage.removeItem('mutfaktan_application');
+  localStorage.removeItem('onDegerlendirmeAnswers');
 }
 
 function redirectToLogin() {
@@ -710,8 +712,7 @@ document.addEventListener('DOMContentLoaded', () => {
           const realRef = (res && res.application && res.application.ref) || (res && res.ref);
           if (realRef) finalData.refNo = realRef;
           finalData.status = (res && res.application && res.application.status) || 'submitted';
-          MYUI.writeJSON(getAppKey(), finalData);
-          try { localStorage.removeItem(getDraftKey()); } catch (e) {}
+          try { clearUserDraftData(); } catch (e) {}
           try { sessionStorage.removeItem(stepKey); } catch (e) {}
           window.location.href = 'panel.html';
         } catch (err) {

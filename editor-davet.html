@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-  <!-- @include head title="Editör Davet Kabulü | Mutfaktan Yarına" description="Mutfaktan Yarına Eğitim ve Destek Programı 2026 Değerlendirme Kurulu Editör Davet Kabul ve Hesap Aktivasyonu" css="base editor" scripts="ui config api editor-davet" robots=noindex bold=1 noblack=1 -->
+  <!-- @include head ga_clean=1 title="Editör Davet Kabulü | Mutfaktan Yarına" description="Mutfaktan Yarına Eğitim ve Destek Programı 2026 Değerlendirme Kurulu Editör Davet Kabul ve Hesap Aktivasyonu" css="base editor" scripts="ui config api editor-davet" robots=noindex bold=1 noblack=1 -->
   <!-- DÜZENLEME: partials/head.html dosyasını değiştirin, sonra ./build.sh çalıştırın -->
   <meta charset="UTF-8">
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-061XL9S8WQ"></script>
@@ -9,7 +9,7 @@
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
-    gtag('config', 'G-061XL9S8WQ');
+    gtag('config', 'G-061XL9S8WQ', { page_location: location.origin + location.pathname });
   </script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Editör Davet Kabulü | Mutfaktan Yarına</title>

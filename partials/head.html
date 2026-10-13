@@ -4,7 +4,12 @@
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
+{{#ga_clean}}
+  gtag('config', 'G-061XL9S8WQ', { page_location: location.origin + location.pathname });
+{{/}}
+{{^ga_clean}}
   gtag('config', 'G-061XL9S8WQ');
+{{/}}
 </script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>{{title}}</title>

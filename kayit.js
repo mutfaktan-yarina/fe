@@ -191,6 +191,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     try {
       await window.MYAPI.signup({ email: emailVal, password: passVal });
+      try {
+        const k = btoa(emailVal).replace(/[^a-zA-Z0-9]/g, '');
+        ['mutfaktan_application_', 'mutfaktan_app_draft_', 'onDegerlendirmeAnswers_'].forEach(b => localStorage.removeItem(b + k));
+        ['mutfaktan_application', 'mutfaktan_app_draft', 'onDegerlendirmeAnswers'].forEach(b => localStorage.removeItem(b));
+      } catch (e) {}
       submitBtn.classList.remove('loading');
       submitBtn.disabled = false;
       if (verifyEmailDisplay) verifyEmailDisplay.textContent = emailVal;
