@@ -112,7 +112,9 @@ document.addEventListener('DOMContentLoaded', async () => {
   if (appRefBadge) appRefBadge.textContent = `Ref: ${currentApp.ref}`;
   if (applicantName) applicantName.textContent = currentApp.name || '-';
   if (applicantBusiness) applicantBusiness.textContent = currentApp.business || '-';
-  if (applicantStructure) applicantStructure.textContent = `${currentApp.structure || '-'} · ${currentApp.city || '-'}`;
+  // API işletme yapısını biztype olarak gönderir (editor-panel.js ile aynı etiketler).
+  const STRUCTURE_LABELS = { sahis: 'Şahıs İşletmesi', sirket: 'Şirket', kooperatif: 'Kadın Kooperatifi' };
+  if (applicantStructure) applicantStructure.textContent = `${STRUCTURE_LABELS[currentApp.biztype] || '-'} · ${currentApp.city || '-'}`;
   if (applicantVkn) applicantVkn.textContent = isFilled(details.taxno) ? details.taxno : '-';
   if (applicantSpace) applicantSpace.textContent = isFilled(details.bizyear) ? details.bizyear : '-';
   if (applicantAge) {
@@ -143,14 +145,14 @@ document.addEventListener('DOMContentLoaded', async () => {
   };
 
   // Puanlar sunucuda hesaplanır; burada yalnızca API'nin döndürdüğü değer gösterilir (sayı ya da { total, items }).
-  const rawSistem = currentApp.sistemScore;
+  const rawSistem = isFilled(currentApp.systemScore) ? currentApp.systemScore : currentApp.sistemScore;
   const scoreResult = rawSistem && typeof rawSistem === 'object' ? rawSistem : null;
   const sistemScore = num(scoreResult ? scoreResult.total : rawSistem);
 
   setScore(sistemScoreDisplay, sistemScore, 70);
   if (summarySistemScore) summarySistemScore.textContent = sistemScore === null ? '-' : sistemScore;
 
-  function addScoreItem(label, value) {
+  function addScoreItem(label, value, note) {
     if (!scoreDataGrid) return;
     const block = document.createElement('div');
     const labelEl = document.createElement('span');
@@ -158,37 +160,97 @@ document.addEventListener('DOMContentLoaded', async () => {
     const valEl = document.createElement('strong');
     valEl.textContent = value;
     block.append(labelEl, valEl);
+    if (note) {
+      const noteEl = document.createElement('small');
+      noteEl.textContent = note;
+      block.appendChild(noteEl);
+    }
     scoreDataGrid.appendChild(block);
+  }
+
+  // Puanın nereden geldiği: sunucudaki kuralların (api/src/scoring.c) okunabilir özeti. Hesabı sunucu yapar.
+  const Q13_RULE = 'Fark 0 → 4, 1 → 8, 2 → 11, 3 ve üzeri → 15 puan; azalma → 0';
+  const Q14_RULE = 'İşe başlayan olmadı 3,5 · kimse kalmadı 0 · yarıdan azı 5 · yarısı ve fazlası 7 · tamamı 10';
+  const Q22_RULE = 'Mutfak / Masa / İstihdam 6 puan, Dekorasyon / Tanıtım / Borç 3 puan; seçilen 2 alanın toplamı';
+
+  function ratioNote(items) {
+    const f = num(details.q12);
+    const t = num(details.q11);
+    if (f === null || !t) return 'Kadın oranı × 20 puan (azami 20).';
+    const pct = Math.round((f / t) * 1000) / 10;
+    return `Kadın oranı × 20 puan (azami 20): ${f} / ${t} = %${pct} → ${pct / 100} × 20 = ${items.q12}`;
+  }
+
+  function deltaNote(items) {
+    const a = num(details.q11);
+    const b = num(details.q13);
+    const head = 'Fark = bugünkü SGK\'lı − bir yıl önceki SGK\'lı (azami 15). ';
+    if (a === null || b === null) return head + Q13_RULE;
+    return `${head}${a} − ${b} = ${a - b}. ${Q13_RULE}`;
+  }
+
+  function q22Note() {
+    const pts = { mutfak: 6, masa: 6, istihdam: 6, dekorasyon: 3, tanitim: 3, borc: 3 };
+    const list = Array.isArray(details.q22) ? details.q22 : [];
+    const calc = list.length ? ` Seçim: ${list.map(k => `${Q22_LABELS[k] || k} ${pts[k] || 0}`).join(' + ')}.` : '';
+    return `Azami 12. ${Q22_RULE}.${calc}`;
   }
 
   function withPoints(text, pts) {
     return num(pts) === null ? text : `${text} — ${pts} Puan`;
   }
 
+  // API yalnızca toplamı döndürür; madde puanları sunucu kurallarıyla (api/src/scoring.c) burada yeniden hesaplanıp
+  // yalnızca gösterilir. Toplam API'nin değeriyle uyuşmazsa buildScoreGrid bunu açıkça belirtir.
+  const Q14_PTS = { none: 3.5, zero: 0, less_half: 5, half_more: 7, all: 10 };
+  const Q22_PTS = { mutfak: 6, masa: 6, istihdam: 6, dekorasyon: 3, tanitim: 3, borc: 3 };
+  const round1 = n => Math.round(n * 10) / 10;
+
+  function deriveItems() {
+    const q11 = num(details.q11);
+    const q12 = num(details.q12);
+    const q13 = num(details.q13);
+    if (q11 === null || q12 === null || q13 === null) return null;
+    if (!(details.q14 in Q14_PTS) || !['yes', 'no'].includes(details.q15)) return null;
+    const q22 = Array.isArray(details.q22) ? details.q22 : [];
+    if (q22.length !== 2 || !q22.every(k => k in Q22_PTS)) return null;
+    const delta = q11 - q13;
+    const q21 = bizType === 'kooperatif' ? 8 : (details.q21 === 'yes' ? 8 : 0);
+    if (bizType !== 'kooperatif' && !['yes', 'no'].includes(details.q21)) return null;
+    return {
+      q12: q11 > 0 ? round1(Math.min(1, Math.max(0, q12 / q11)) * 20) : 0,
+      q13: delta < 0 ? 0 : delta === 0 ? 4 : delta === 1 ? 8 : delta === 2 ? 11 : 15,
+      q14: Q14_PTS[details.q14],
+      q15: details.q15 === 'yes' ? 5 : 0,
+      q21,
+      q22: Q22_PTS[q22[0]] + Q22_PTS[q22[1]]
+    };
+  }
+
   function buildScoreGrid() {
     if (!scoreDataGrid) return;
     scoreDataGrid.replaceChildren();
 
-    if (!scoreResult) {
-      if (isFilled(currentApp.totalEmployees)) {
-        addScoreItem('1.1 & 1.2 İstihdam', `${currentApp.totalEmployees} SGK'lı, %${currentApp.femaleRatio} kadın`);
-      }
-      addScoreItem('Puan Dökümü', 'Bu kayıtta madde bazlı puan bilgisi bulunmuyor.');
+    const items = (scoreResult && scoreResult.items) || deriveItems();
+    if (!items) {
+      addScoreItem('Puan Dökümü', 'Bu kayıtta madde bazlı puan hesaplanamadı (eksik form verisi).');
       return;
     }
-
-    const items = scoreResult.items || {};
-    addScoreItem('1.1 Toplam SGK\'lı (kendisi hariç)', `${details.q11} kişi (puanlanmaz)`);
-    addScoreItem('1.2 Kadın Çalışan Oranı', withPoints(`${details.q12} kadın / ${details.q11} toplam`, items.q12));
-    addScoreItem('1.3 Bir Yıl Önceki Çalışan Sayısı', withPoints(`${details.q13} kişi`, items.q13));
-    addScoreItem('1.4 İşe Başlayanlardan Kalan', withPoints(Q14_LABELS[details.q14] || details.q14 || '-', items.q14));
-    addScoreItem('1.5 Hibeyle İşe Alım', withPoints(STATUS_LABELS[details.q15] || details.q15 || '-', items.q15));
+    addScoreItem('1.1 Toplam SGK\'lı (kendisi hariç)', `${details.q11} kişi (puanlanmaz)`, 'Doğrudan puan almaz; 1.2 ve 1.3 hesaplarının girdisidir.');
+    addScoreItem('1.2 Kadın Çalışan Oranı', withPoints(`${details.q12} kadın / ${details.q11} toplam`, items.q12), ratioNote(items));
+    addScoreItem('1.3 Bir Yıl Önceki Çalışan Sayısı', withPoints(`${details.q13} kişi`, items.q13), deltaNote(items));
+    addScoreItem('1.4 İşe Başlayanlardan Kalan', withPoints(Q14_LABELS[details.q14] || details.q14 || '-', items.q14), `Azami 10. ${Q14_RULE}.`);
+    addScoreItem('1.5 Hibeyle İşe Alım', withPoints(STATUS_LABELS[details.q15] || details.q15 || '-', items.q15), 'Evet → 5, Hayır → 0 puan (azami 5).');
     const q21Text = bizType === 'kooperatif' ? 'Kooperatif' : (STATUS_LABELS[details.q21] || details.q21 || '-');
-    addScoreItem('2.1 Tek Geçim Kaynağı', withPoints(q21Text, items.q21));
+    addScoreItem('2.1 Tek Geçim Kaynağı', withPoints(q21Text, items.q21), bizType === 'kooperatif' ? 'Kadın kooperatiflerinde otomatik 8 puan (azami 8).' : 'Evet → 8, Hayır → 0 puan (azami 8).');
     const q22Text = Array.isArray(details.q22) && details.q22.length
       ? details.q22.map(k => Q22_LABELS[k] || k).join(' + ')
       : '-';
-    addScoreItem('2.2 Hibe Kullanım Alanı', withPoints(q22Text, items.q22));
+    addScoreItem('2.2 Hibe Kullanım Alanı', withPoints(q22Text, items.q22), q22Note());
+    const sum = round1(['q12', 'q13', 'q14', 'q15', 'q21', 'q22'].reduce((t, k) => t + (num(items[k]) || 0), 0));
+    if (sistemScore !== null && Math.abs(sum - sistemScore) > 0.05) {
+      addScoreItem('Uyarı', `Madde toplamı ${sum}, sistem puanı ${sistemScore}`, 'Arayüzdeki hesap sunucudakiyle uyuşmuyor; sistem puanı sunucudaki değerdir.');
+    }
   }
   buildScoreGrid();
 
@@ -202,60 +264,70 @@ document.addEventListener('DOMContentLoaded', async () => {
     MYUI.openModal(docPreviewModal);
   }
 
+  // Her satır: belge adı + (varsa) "Belgeyi İncele" + Doğrulandı / Uyumsuz düğmeleri (data-v = doğrulama anahtarı).
+  function addDocRow({ key, name, meta, openUrl, kind }) {
+    const row = document.createElement('div');
+    if (kind) row.dataset.kind = kind;
+    // Belge yüklenmemişse "Doğrulandı" seçili gelmez: satır "Doğrulama bekleniyor" durumundadır (editör bir düğmeye basana dek).
+    if (!openUrl) row.dataset.pending = '';
+    const text = document.createElement('div');
+    const nameEl = document.createElement('strong');
+    nameEl.textContent = name;
+    const metaEl = document.createElement('small');
+    metaEl.textContent = meta;
+    text.append(nameEl, metaEl);
+
+    const actions = document.createElement('div');
+    if (openUrl) {
+      const view = document.createElement('button');
+      view.type = 'button';
+      view.textContent = 'Belgeyi İncele';
+      view.addEventListener('click', () => window.open(openUrl, '_blank'));
+      actions.appendChild(view);
+    }
+    [['valid', 'Doğrulandı'], ['invalid', 'Uyumsuz']].forEach(([status, label]) => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.dataset.v = key;
+      btn.dataset.status = status;
+      btn.textContent = label;
+      if (status === 'valid' && openUrl) btn.classList.add('active-valid');
+      actions.appendChild(btn);
+    });
+    row.append(text, actions);
+    docFilesList.appendChild(row);
+  }
+
   function buildDocList() {
     if (!docFilesList) return;
     docFilesList.replaceChildren();
 
-    const item = document.createElement('div');
-    const text = document.createElement('div');
-    const nameEl = document.createElement('strong');
-    const metaEl = document.createElement('small');
-
-    if (isFilled(details.fileName)) {
-      nameEl.textContent = details.fileName;
-      metaEl.textContent = 'MSA Sertifikası';
-    } else {
-      nameEl.textContent = 'MSA Sertifikası';
-      metaEl.textContent = 'Belge henüz yüklenmedi.';
-    }
-    text.append(nameEl, metaEl);
-    item.appendChild(text);
-
-    if (isFilled(details.fileName)) {
-      const btn = document.createElement('button');
-      btn.type = 'button';
-      btn.textContent = 'Belgeyi İncele';
-      btn.addEventListener('click', () => {
-        window.open(MYAPI.editorCertificateDownloadUrl(currentApp.ref), '_blank');
-      });
-      item.appendChild(btn);
-    }
-    docFilesList.appendChild(item);
+    const hasCert = isFilled(details.fileName);
+    addDocRow({
+      key: 'msa',
+      name: hasCert ? details.fileName : 'MSA Sertifikası',
+      meta: hasCert ? 'MSA Sertifikası · Eğitim sonu değerlendirmeden en az 70 puan; sertifika geçerliliği' : 'MSA Sertifikası · Belge henüz yüklenmedi.',
+      openUrl: hasCert ? MYAPI.editorCertificateDownloadUrl(currentApp.ref) : ''
+    });
 
     // Doğrulama belgeleri: her tür için bir satır; yüklenmeyenler "yüklenmedi" olarak görünür.
     const verifDocs = details.verificationDocs || currentApp.verificationDocs || [];
     const kinds = (window.MYCONFIG && window.MYCONFIG.verificationKinds) || [{ kind: 'tax', label: 'Doğrulama Belgesi' }];
+    const KEYS = { tax: 'vergi', sgk: 'sgk', id: 'kimlik' };
+    const HINTS = {
+      tax: 'Geçerli vergi levhası; en az 2 yıldır faaliyette olma',
+      sgk: 'Kendisi hariç en az 2 aktif SGK\'lı çalışan; beyan edilen çalışan sayıları',
+      id: '31 Aralık 2026 itibarıyla 18–30 yaş (doğum 1996-01-01 – 2008-12-31)'
+    };
     kinds.forEach((k) => {
       const doc = verifDocs.find(d => d && d.kind === k.kind);
-      const vitem = document.createElement('div');
-      vitem.dataset.kind = k.kind;
-      const vtext = document.createElement('div');
-      const vnameEl = document.createElement('strong');
-      const vmetaEl = document.createElement('small');
-      vnameEl.textContent = doc ? doc.name : k.label;
-      vmetaEl.textContent = doc ? k.label : 'Belge henüz yüklenmedi.';
-      vtext.append(vnameEl, vmetaEl);
-      vitem.appendChild(vtext);
-      if (doc) {
-        const vbtn = document.createElement('button');
-        vbtn.type = 'button';
-        vbtn.textContent = 'Belgeyi İncele';
-        vbtn.addEventListener('click', () => {
-          window.open(MYAPI.editorVerificationDocDownloadUrl(currentApp.ref, k.kind), '_blank');
-        });
-        vitem.appendChild(vbtn);
-      }
-      docFilesList.appendChild(vitem);
+      addDocRow({
+        key: KEYS[k.kind] || k.kind,
+        kind: k.kind,
+        name: doc ? doc.name : k.label,
+        meta: [doc ? k.label : 'Belge henüz yüklenmedi.', HINTS[k.kind]].filter(Boolean).join(' · '),
+        openUrl: doc ? MYAPI.editorVerificationDocDownloadUrl(currentApp.ref, k.kind) : ''
+      });
     });
   }
   buildDocList();
@@ -366,6 +438,8 @@ document.addEventListener('DOMContentLoaded', async () => {
       const groupKey = btn.getAttribute('data-v');
       const siblings = document.querySelectorAll(`[data-v="${groupKey}"]`);
       siblings.forEach(s => s.classList.remove('active-valid', 'active-invalid'));
+      const row = btn.closest('[data-pending]');
+      if (row) row.removeAttribute('data-pending');
       const status = btn.getAttribute('data-status');
       if (status === 'valid') {
         btn.classList.add('active-valid');
@@ -490,7 +564,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
       const rubric = readRubric();
       if (rubric.some(v => v === null)) {
-        showBanner('Lütfen 6 sorunun tamamını puan cetvelinde işaretleyiniz.', false);
+        // 30 puanlık cetvel kaldırıldı; puanın nerede verileceği henüz belirlenmedi.
+        showBanner('30 puanlık ön değerlendirme puanlaması henüz tanımlanmadı; kayıt yapılamaz.', false);
         return;
       }
       let res;

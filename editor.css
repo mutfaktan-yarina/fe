@@ -547,6 +547,40 @@ main.editor-page-wrap {
   color: var(--dark);
 }
 
+.card-box > summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  font-family: var(--font-body);
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--dark);
+  cursor: pointer;
+  list-style: none;
+}
+
+.card-box > summary::-webkit-details-marker {
+  display: none;
+}
+
+.card-box > summary::after {
+  content: "+";
+  font-size: 1.4rem;
+  line-height: 1;
+  color: var(--gray-500);
+}
+
+.card-box[open] > summary {
+  border-bottom: 1px solid var(--gray-200);
+  padding-bottom: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.card-box[open] > summary::after {
+  content: "\2212";
+}
+
 .data-grid-two {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -569,6 +603,13 @@ main.editor-page-wrap {
   margin-bottom: 0.2rem;
 }
 
+.data-grid-two > div > small {
+  font-size: 0.76rem;
+  color: var(--gray-500);
+  line-height: 1.4;
+  margin-top: 0.15rem;
+}
+
 .data-grid-two > div > strong {
   font-size: 0.92rem;
   font-weight: 600;
@@ -583,16 +624,66 @@ main.editor-page-wrap {
 
 .doc-files-list > div {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
+  gap: 0.75rem;
   padding: 0.75rem 1rem;
   background: var(--gray-50);
   border: 1px solid var(--gray-200);
   border-radius: var(--radius-sm);
 }
 
-.doc-files-list > div > div {
+.doc-files-list > div > div:first-child {
   display: grid;
+  flex: 1 1 200px;
+  min-width: 0;
+}
+
+.doc-files-list > div[data-pending] > div:first-child::after {
+  content: "Doğrulama bekleniyor";
+  justify-self: start;
+  margin-top: 0.35rem;
+  padding: 0.1rem 0.5rem;
+  border-radius: 999px;
+  background: var(--warning-light);
+  border: 1px solid var(--warning-border);
+  color: var(--warning-text);
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+.doc-files-list > div > div:last-child {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.doc-files-list button:hover {
+  border-color: var(--gray-600);
+  color: var(--dark);
+}
+
+.doc-files-list .active-valid,
+.doc-files-list .active-valid:hover {
+  background: var(--success);
+  border-color: var(--success);
+  color: var(--white);
+}
+
+.doc-files-list .active-invalid,
+.doc-files-list .active-invalid:hover {
+  background: var(--danger);
+  border-color: var(--danger);
+  color: var(--white);
+}
+
+#verify-actions {
+  margin-top: 1rem;
+}
+
+#verify-actions > button {
+  width: 100%;
 }
 
 .doc-files-list strong {
@@ -662,88 +753,6 @@ main.editor-page-wrap {
 .sticky-score-panel {
   position: sticky;
   top: 5.5rem;
-}
-
-.verification-checklist {
-  display: flex;
-  flex-direction: column;
-  gap: 0.9rem;
-  margin-bottom: 1.5rem;
-}
-
-.verification-checklist > div {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-start;
-  justify-content: space-between;
-  padding: 0.85rem 1rem;
-  background: var(--gray-50);
-  border: 1px solid var(--gray-200);
-  border-radius: var(--radius-sm);
-  gap: 0.75rem;
-}
-
-.verification-checklist > div > p {
-  display: flex;
-  flex-direction: column;
-  flex: 1 1 200px;
-  min-width: 0;
-}
-
-.verification-checklist strong {
-  font-size: 0.88rem;
-  font-weight: 700;
-  color: var(--dark);
-}
-
-.verification-checklist small {
-  font-size: 0.78rem;
-  color: var(--gray-500);
-}
-
-.verification-checklist > div > div {
-  display: flex;
-  gap: 0.4rem;
-}
-
-.verification-checklist button {
-  padding: 0.35rem 0.7rem;
-  border: 1px solid var(--gray-300);
-  background: var(--white);
-  font-size: 0.76rem;
-  font-weight: 700;
-  border-radius: var(--radius-sm);
-  cursor: pointer;
-  color: var(--gray-600);
-}
-
-.verification-checklist button:hover {
-  border-color: var(--gray-600);
-  color: var(--dark);
-}
-
-.verification-checklist .active-valid {
-  background: var(--success);
-  border-color: var(--success);
-  color: var(--white);
-}
-
-.verification-checklist .active-valid:hover {
-  background: var(--success-dark);
-  border-color: var(--success-dark);
-  color: var(--white);
-}
-
-.verification-checklist .active-invalid {
-  background: var(--danger);
-  border-color: var(--danger);
-  color: var(--white);
-}
-
-.verification-checklist .active-invalid:hover {
-  background: var(--primary-dark);
-  border-color: var(--primary-dark);
-  color: var(--white);
 }
 
 .card-box > section {
@@ -1028,7 +1037,7 @@ main.editor-page-wrap {
   .topbar > div > a,
   .filter-tab,
   .btn-table-action,
-  .verification-checklist button,
+  .doc-files-list button,
   .modal-close-btn {
     min-height: 44px;
   }
@@ -1037,7 +1046,7 @@ main.editor-page-wrap {
     min-width: 44px;
   }
 
-  .verification-checklist button {
+  .doc-files-list button {
     padding-inline: 0.9rem;
   }
 

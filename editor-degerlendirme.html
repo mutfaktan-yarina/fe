@@ -151,18 +151,26 @@
           <div class="data-grid-two" id="scoreDataGrid"></div>
         </div>
 
-        <div class="card-box">
-          <div class="card-box-header">
-            <h2>Yüklenen Resmî Belgeler</h2>
-          </div>
+        <details class="card-box" open>
+          <summary>Yüklenen Resmî Belgeler</summary>
 
           <div class="doc-files-list" id="docFilesList"></div>
-        </div>
 
-        <div class="card-box">
-          <div class="card-box-header">
-            <h2>Adayın 6 Ön Değerlendirme Sorusuna Yazılı Cevapları</h2>
+          <div id="rejection-box" class="rejection-box" hidden>
+            <label for="inp-rejection-reason">Uyumsuzluk / İnceleme Ret Gerekçesi (Zorunlu)</label>
+            <textarea id="inp-rejection-reason" placeholder="Tespit edilen belge uyumsuzluğunu veya ret nedenini buraya açıkça yazınız..."></textarea>
+            <span id="rejection-error" hidden>Belge uyumsuzluğu tespit edildiğinde gerekçe yazılması zorunludur.</span>
           </div>
+
+          <div id="verify-actions">
+            <button type="button" class="btn btn-outline" id="btnOpenPreeval">
+              <span>Belgeleri Onayla ve Ön Değerlendirmeyi Aç</span>
+            </button>
+          </div>
+        </details>
+
+        <details class="card-box">
+          <summary>Adayın 6 Ön Değerlendirme Sorusuna Yazılı Cevapları</summary>
 
           <article>
             <h3><b>Ö1</b>İşletmeniz son iki yılda herhangi bir kurumdan geri ödemesiz hibe veya ayni destek aldı mı? Destek aldıysanız hangi kurumdan ne zaman ve ne tutarda aldınız?</h3>
@@ -175,17 +183,17 @@
           </article>
 
           <article>
-            <h3><b>Ö3</b>Düzenli olarak ürün veya hizmet aldığınız kadın girişimci, kadın üretici ya da kadın kooperatifi var mı?</h3>
+            <h3><b>Ö3</b>Düzenli olarak ürün veya hizmet aldığınız kadın girişimci, kadın üretici ya da kadın kooperatifi var mı? Varsa açıklayınız.</h3>
             <div id="ansQ3"></div>
           </article>
 
           <article>
-            <h3><b>Ö4</b>İşletmenizin menüsünde/üretiminde öne çıkan, coğrafi işaretli, yerel veya reçetesi size özel bir ürün var mı?</h3>
+            <h3><b>Ö4</b>İşletmenizin menüsünde/üretiminde öne çıkan, coğrafi işaretli, yerel veya reçetesi size özel bir ürün var mı? Varsa açıklayınız.</h3>
             <div id="ansQ4"></div>
           </article>
 
           <article>
-            <h3><b>Ö5</b>Gıda güvenliği, hijyen ve sıfır atık / gıda israfını önleme konusunda işletmenizde uyguladığınız özel bir yöntem veya belgeniz var mı?</h3>
+            <h3><b>Ö5</b>Gıda güvenliği, hijyen ve sıfır atık / gıda israfını önleme konusunda işletmenizde uyguladığınız özel bir yöntem veya belgeniz var mı? Varsa açıklayınız.</h3>
             <div id="ansQ5"></div>
           </article>
 
@@ -193,209 +201,11 @@
             <h3><b>Ö6</b>Yaptığınız işe katkı sağlamak ve kendinizi geliştirmek amacıyla bugüne kadar katıldığınız eğitim, kurs veya sertifika programları var mı? Varsa eğitim/sertifika adı, düzenleyen kurum ve yılıyla birlikte belirtiniz.</h3>
             <div id="ansQ6"></div>
           </article>
-        </div>
+        </details>
       </div>
 
       <div class="sticky-score-panel">
         <form id="evaluationForm">
-          <div class="card-box">
-            <div class="card-box-header">
-              <h2>A) Belge ve Beyan Doğrulama</h2>
-            </div>
-            <p>Resmî Belgelerin Beyanlarla Uygunluğu</p>
-
-            <div class="verification-checklist">
-              <div>
-                <p>
-                  <strong>SGK Hizmet Dökümü</strong>
-                  <small>Kendisi hariç en az 2 aktif SGK'lı çalışan; beyan edilen çalışan sayıları</small>
-                </p>
-                <div>
-                  <button type="button" class="active-valid" data-v="sgk" data-status="valid">Doğrulandı</button>
-                  <button type="button" data-v="sgk" data-status="invalid">Uyumsuz</button>
-                </div>
-              </div>
-
-              <div>
-                <p>
-                  <strong>Vergi Levhası & Faaliyet</strong>
-                  <small>Geçerli vergi levhası; en az 2 yıldır faaliyette olma</small>
-                </p>
-                <div>
-                  <button type="button" class="active-valid" data-v="vergi" data-status="valid">Doğrulandı</button>
-                  <button type="button" data-v="vergi" data-status="invalid">Uyumsuz</button>
-                </div>
-              </div>
-
-              <div>
-                <p>
-                  <strong>Kimlik & Yaş Şartı</strong>
-                  <small>31 Aralık 2026 itibarıyla 18–30 yaş (doğum 1996-01-01 – 2008-12-31)</small>
-                </p>
-                <div>
-                  <button type="button" class="active-valid" data-v="kimlik" data-status="valid">Doğrulandı</button>
-                  <button type="button" data-v="kimlik" data-status="invalid">Uyumsuz</button>
-                </div>
-              </div>
-
-              <div>
-                <p>
-                  <strong>MSA Sertifikası</strong>
-                  <small>Eğitim sonu değerlendirmeden en az 70 puan; sertifika geçerliliği</small>
-                </p>
-                <div>
-                  <button type="button" class="active-valid" data-v="msa" data-status="valid">Doğrulandı</button>
-                  <button type="button" data-v="msa" data-status="invalid">Uyumsuz</button>
-                </div>
-              </div>
-            </div>
-
-            <div id="rejection-box" class="rejection-box" hidden>
-              <label for="inp-rejection-reason">Uyumsuzluk / İnceleme Ret Gerekçesi (Zorunlu)</label>
-              <textarea id="inp-rejection-reason" placeholder="Tespit edilen belge uyumsuzluğunu veya ret nedenini buraya açıkça yazınız..."></textarea>
-              <span id="rejection-error" hidden>Belge uyumsuzluğu tespit edildiğinde gerekçe yazılması zorunludur.</span>
-            </div>
-
-            <div id="verify-actions" style="margin-top: 1rem;">
-              <button type="button" class="btn btn-outline" id="btnOpenPreeval" style="width: 100%;">
-                <span>Belgeleri Onayla ve Ön Değerlendirmeyi Aç</span>
-              </button>
-            </div>
-          </div>
-
-          <div class="card-box">
-            <div class="card-box-header">
-              <h2>B) 6 Soru Ön Değerlendirme Cetveli</h2>
-              <span class="score-badge score-on" id="previewPreScore">0 <span>/ 30</span></span>
-            </div>
-
-            <section>
-              <h3>Ö1. Geçmiş Hibe / Destek Durumu <span id="scoreBadgeQ1">0 Puan</span></h3>
-              <div class="checklist">
-                <label>
-                  <input type="radio" name="rubric_q1" value="5" data-q="1">
-                  <span>Destek almadı</span>
-                  <small>5 Puan</small>
-                </label>
-                <label>
-                  <input type="radio" name="rubric_q1" value="3" data-q="1">
-                  <span>Yalnızca ayni destek aldı</span>
-                  <small>3 Puan</small>
-                </label>
-                <label>
-                  <input type="radio" name="rubric_q1" value="0" data-q="1">
-                  <span>Geri ödemesiz nakit hibe aldı</span>
-                  <small>0 Puan</small>
-                </label>
-              </div>
-            </section>
-
-            <section>
-              <h3>Ö2. Ortaklık Payı <span id="scoreBadgeQ2">0 Puan</span></h3>
-              <div class="checklist">
-                <label>
-                  <input type="radio" name="rubric_q2" value="5" data-q="2">
-                  <span>Tamamı kendisine ait</span>
-                  <small>5 Puan</small>
-                </label>
-                <label>
-                  <input type="radio" name="rubric_q2" value="3" data-q="2">
-                  <span>%51–99 ortaklık payı</span>
-                  <small>3 Puan</small>
-                </label>
-                <label>
-                  <input type="radio" name="rubric_q2" value="1" data-q="2">
-                  <span>%50 ve altı pay</span>
-                  <small>1 Puan</small>
-                </label>
-              </div>
-            </section>
-
-            <section>
-              <h3>Ö3. Kadın Tedarikçi Ağı <span id="scoreBadgeQ3">0 Puan</span></h3>
-              <div class="checklist">
-                <label>
-                  <input type="radio" name="rubric_q3" value="5" data-q="3">
-                  <span>2 ve üzeri kadın tedarikçi (adı belirtilmiş)</span>
-                  <small>5 Puan</small>
-                </label>
-                <label>
-                  <input type="radio" name="rubric_q3" value="3" data-q="3">
-                  <span>1 kadın tedarikçi (adı belirtilmiş)</span>
-                  <small>3 Puan</small>
-                </label>
-                <label>
-                  <input type="radio" name="rubric_q3" value="0" data-q="3">
-                  <span>Yok</span>
-                  <small>0 Puan</small>
-                </label>
-              </div>
-            </section>
-
-            <section>
-              <h3>Ö4. Coğrafi İşaret / Yerel Ürün <span id="scoreBadgeQ4">0 Puan</span></h3>
-              <div class="checklist">
-                <label>
-                  <input type="radio" name="rubric_q4" value="5" data-q="4">
-                  <span>Coğrafi işaretli / belgeli özgün reçete</span>
-                  <small>5 Puan</small>
-                </label>
-                <label>
-                  <input type="radio" name="rubric_q4" value="3" data-q="4">
-                  <span>Var ve açıklanmış</span>
-                  <small>3 Puan</small>
-                </label>
-                <label>
-                  <input type="radio" name="rubric_q4" value="0" data-q="4">
-                  <span>Yok</span>
-                  <small>0 Puan</small>
-                </label>
-              </div>
-            </section>
-
-            <section>
-              <h3>Ö5. Gıda Güvenliği & Sıfır Atık <span id="scoreBadgeQ5">0 Puan</span></h3>
-              <div class="checklist">
-                <label>
-                  <input type="radio" name="rubric_q5" value="5" data-q="5">
-                  <span>Belgeli</span>
-                  <small>5 Puan</small>
-                </label>
-                <label>
-                  <input type="radio" name="rubric_q5" value="3" data-q="5">
-                  <span>Uygulama var, belge yok</span>
-                  <small>3 Puan</small>
-                </label>
-                <label>
-                  <input type="radio" name="rubric_q5" value="0" data-q="5">
-                  <span>Yok</span>
-                  <small>0 Puan</small>
-                </label>
-              </div>
-            </section>
-
-            <section>
-              <h3>Ö6. Mesleki Eğitim / Sertifika <span id="scoreBadgeQ6">0 Puan</span></h3>
-              <div class="checklist">
-                <label>
-                  <input type="radio" name="rubric_q6" value="5" data-q="6">
-                  <span>2 ve üzeri eğitim (kurum/yıl belirtilmiş)</span>
-                  <small>5 Puan</small>
-                </label>
-                <label>
-                  <input type="radio" name="rubric_q6" value="3" data-q="6">
-                  <span>1 eğitim (kurum ve yıl belirtilmiş)</span>
-                  <small>3 Puan</small>
-                </label>
-                <label>
-                  <input type="radio" name="rubric_q6" value="0" data-q="6">
-                  <span>Yok</span>
-                  <small>0 Puan</small>
-                </label>
-              </div>
-            </section>
-          </div>
-
           <div class="live-score-summary-card">
             <div>
               <div>
