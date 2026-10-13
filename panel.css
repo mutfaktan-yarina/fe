@@ -110,7 +110,6 @@ body {
 }
 
 .status-card,
-.timeline-card,
 .review-section {
   background: var(--white);
   border: 1px solid var(--gray-200);
@@ -238,77 +237,11 @@ body {
   border-color: var(--primary);
 }
 
-.timeline-card h2,
 .review-header h2 {
   font-family: var(--font-body);
   font-size: 1.25rem;
   font-weight: 800;
   color: var(--gray-900);
-}
-
-.timeline-card h2 {
-  margin-bottom: 1.75rem;
-}
-
-.timeline-steps {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 1rem;
-  position: relative;
-}
-
-.timeline-steps > div {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  gap: 0.65rem;
-  position: relative;
-}
-
-.timeline-steps > div > div {
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  background: var(--gray-100);
-  border: 2px solid var(--gray-300);
-  color: var(--gray-400);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 700;
-  font-size: 1rem;
-  z-index: 2;
-  transition: var(--transition);
-}
-
-.timeline-steps > .completed > div {
-  background: var(--success);
-  border-color: var(--success);
-  color: var(--white);
-}
-
-.timeline-steps > .current > div {
-  background: var(--primary);
-  border-color: var(--primary);
-  color: var(--white);
-  box-shadow: 0 0 0 4px var(--primary-glow);
-}
-
-.timeline-steps h3 {
-  font-size: 0.88rem;
-  font-weight: 700;
-  color: var(--gray-800);
-}
-
-.timeline-steps > .locked > h3 {
-  color: var(--gray-400);
-}
-
-.timeline-steps p {
-  font-size: 0.78rem;
-  color: var(--gray-500);
-  line-height: 1.4;
 }
 
 .info-banner,
@@ -637,12 +570,33 @@ body {
 
 footer.site-footer {
   margin-top: auto;
-  background: var(--white);
-  border-top: 1px solid var(--gray-200);
+  background: #000;
   padding: 1.5rem;
   text-align: center;
   font-size: 0.85rem;
-  color: var(--gray-500);
+  color: #a3a3a3;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+footer.site-footer > p {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.4rem 1.5rem;
+}
+
+footer.site-footer a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  color: #fff;
+  text-decoration: none;
+}
+
+footer.site-footer a:hover {
+  text-decoration: underline;
 }
 
 .preeval-container {
@@ -740,6 +694,90 @@ footer.site-footer {
   margin-top: 0.35rem;
 }
 
+/* Evrak yükleme bölümü (ön değerlendirme sayfası) */
+#section-verify-docs > h2 {
+  font-family: var(--font-body);
+  font-size: 1.05rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 1rem;
+}
+
+#section-verify-docs > p {
+  font-size: 0.85rem;
+  color: var(--gray-700);
+  line-height: 1.5;
+  margin-top: 0.75rem;
+}
+
+#verify-doc-list {
+  list-style: none;
+  margin: 1rem 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+#verify-doc-list > li {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--gray-200);
+  border-radius: 8px;
+}
+
+#verify-doc-list > li > div:first-child > div {
+  font-size: 0.85rem;
+  color: var(--gray-700);
+}
+
+#verify-doc-list button {
+  min-height: 44px;
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--gray-300, var(--gray-200));
+  border-radius: var(--radius-sm);
+  background: var(--white);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+#verify-doc-list button:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+#verify-doc-list [data-role="row-error"],
+#verify-error {
+  display: none;
+  flex-basis: 100%;
+  font-size: 0.85rem;
+  color: var(--primary);
+  font-weight: 600;
+}
+
+#verify-uploaded-success {
+  display: none;
+  margin-top: 1rem;
+  padding: 0.75rem 1rem;
+  background: var(--success-light);
+  border: 1px solid var(--success-border);
+  border-radius: var(--radius-sm);
+  font-size: 0.88rem;
+  color: var(--success);
+  font-weight: 500;
+}
+
+.preeval-container button[type="submit"]:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 /* Doğruluk beyanı: seçim kartı (forms.css .checklist); yalnızca boşluk */
 .preeval-container form > .checklist {
   margin-bottom: 1.5rem;
@@ -748,7 +786,6 @@ footer.site-footer {
 @media print {
   .panel-header,
   .status-actions,
-  .timeline-card,
   .info-banner,
   footer.site-footer {
     display: none;
@@ -762,11 +799,7 @@ footer.site-footer {
 }
 
 @media (max-width: 900px) {
-  .timeline-steps {
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
-  }
-  .status-card {
+    .status-card {
     flex-direction: column;
     align-items: flex-start;
   }
@@ -851,7 +884,6 @@ footer.site-footer {
   }
 
   .status-card,
-  .timeline-card,
   .review-section,
   .preeval-card {
     padding: 1.25rem;

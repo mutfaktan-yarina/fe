@@ -64,10 +64,13 @@
     // Geliştirme portu (allowed_origins eşleşmesi). Oturum çerezi SameSite=Lax olduğundan API,
     // sayfayla aynı ana makine adından çağrılmalı: localhost ile 127.0.0.1 farklı site sayılır.
     defaultApiBase = 'http://' + host + ':4666/v1';
+  } else if (port === '8444') {
+    // start.sh TLS yığını, localhost takma adı: ana-gateway https://localhost:8443 (aynı site: çerez gider)
+    defaultApiBase = 'https://' + host + ':8443/v1';
   } else if (port === '4666') {
     defaultApiBase = '/v1';
   } else {
-    // Test veya doğrudan statik sunucu: API çevrimdışı mod
+    // Tanınmayan port: API adresi yok; istekler açık bir yapılandırma hatasıyla başarısız olur
     defaultApiBase = '';
   }
 

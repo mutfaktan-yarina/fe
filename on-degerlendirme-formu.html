@@ -89,6 +89,15 @@
 
     <div id="preeval-feedback" class="info-banner" role="status" aria-live="polite" hidden></div>
 
+    <section class="preeval-card" id="section-verify-docs" hidden>
+      <h2>Doğrulama Belgeleri <span class="status-badge" id="badge-verify-status">Belge Bekleniyor</span></h2>
+      <p>Program Yöneticileri tarafından talep edilen resmî belgelerinizi (SGK Hizmet Dökümü, Vergi Levhası / Kooperatif Kayıtları, Borcu Yoktur Belgeleri, Kimlik Fotokopisi ve Faaliyet/Üretim Alanı Görselleri) yükleyiniz; zorunlu belgeler yüklenmeden aşağıdaki sorular gönderilemez. Görsellerin işlenmesine ilişkin bilgi için <a href="gorsel-isitsel-aydinlatma.html" target="_blank" rel="noopener">Görsel ve İşitsel Veri Aydınlatma Metni</a>'ni inceleyebilirsiniz.</p>
+      <p>Her belge türü için tek dosya yüklenir (PDF, JPG, PNG — en fazla 10 MB). Yeni bir dosya yüklerseniz öncekinin yerine geçer; yükleme başarısız olursa mevcut belgeniz korunur. Yanıtlarınızı gönderdikten sonra belgeler değiştirilemez.</p>
+      <ul id="verify-doc-list"></ul>
+      <span id="verify-error" role="alert"></span>
+      <div id="verify-uploaded-success">&#10003; Zorunlu belgeleriniz sisteme yüklendi; soruları yanıtlayabilirsiniz. Belgelerin yüklenmesi nihai olarak doğrulandığı anlamına gelmez; kontroller Program Takviminde ilan edilen tarihlerde yapılacaktır.</div>
+    </section>
+
     <form id="preeval-form" novalidate>
       <div class="preeval-card">
         <div class="preeval-q-header">
@@ -169,7 +178,7 @@
         </label>
       </div>
 
-      <button type="submit" id="btn-submit-preeval">
+      <button type="submit" id="btn-submit-preeval" disabled>
         <span>Ön Değerlendirme Cevaplarını Gönder</span>
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
           <line x1="5" y1="12" x2="19" y2="12"></line>
@@ -182,7 +191,9 @@
   <!-- @include footer variant=short -->
   <!-- DÜZENLEME: partials/footer.html dosyasını değiştirin, sonra ./build.sh çalıştırın -->
   <footer class="site-footer">
-    <p><a href="index.html">Ana Sayfa</a> · <a href="sss.html">Sıkça Sorulan Sorular</a> · <a href="iletisim.html">İletişim</a> · <a href="aydinlatma-metni.html">Aday Aydınlatma Metni</a> · <a href="hibe-aydinlatma.html">Hibe Aydınlatma Metni</a> · <a href="cerez-politikasi.html">Çerez Aydınlatma Metni ve Politikası</a> · <a href="kvkk-basvuru.html">KVKK Başvuru Formu</a> · <a href="#" data-cerez-ac>Çerez Tercihleri</a> · &copy; 2026 Mutfaktan Yarına. Tüm hakları saklıdır.</p>
+    <p><a href="index.html">Ana Sayfa</a><a href="sss.html">Sıkça Sorulan Sorular</a><a href="iletisim.html">İletişim</a><a href="aydinlatma-metni.html">Aday Aydınlatma Metni</a><a href="hibe-aydinlatma.html">Hibe Aydınlatma Metni</a></p>
+    <p><a href="cerez-politikasi.html">Çerez Aydınlatma Metni ve Politikası</a><a href="kvkk-basvuru.html">KVKK Başvuru Formu</a><a href="#" data-cerez-ac>Çerez Tercihleri</a></p>
+    <small>&copy; 2026 Mutfaktan Yarına. Tüm hakları saklıdır.</small>
   </footer>
   <!-- @end footer -->
 

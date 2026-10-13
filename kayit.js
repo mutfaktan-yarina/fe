@@ -189,43 +189,35 @@ document.addEventListener('DOMContentLoaded', () => {
       MYUI.openModal(modalSuccess);
     }
 
-    if (window.MYAPI && typeof window.MYAPI.signup === 'function') {
-      try {
-        await window.MYAPI.signup({ email: emailVal, password: passVal });
-        submitBtn.classList.remove('loading');
-        submitBtn.disabled = false;
-        if (verifyEmailDisplay) verifyEmailDisplay.textContent = emailVal;
-        if (modalVerify && inpVerifyCode && btnVerifyConfirm) {
-          MYUI.openModal(modalVerify);
-          startResendCountdown();
-          inpVerifyCode.value = '';
-          if (errVerifyCode) errVerifyCode.style.display = 'none';
-          inpVerifyCode.focus();
-        } else {
-          openSuccess();
-        }
-      } catch (err) {
-        submitBtn.classList.remove('loading');
-        submitBtn.disabled = false;
-        if (err.isOfflineDemo) {
-          openSuccess();
-          return;
-        }
-        const passErr = !!(err.getField && err.getField('password'));
-        const badField = passErr ? fieldPass : fieldUser;
-        badField.classList.add('invalid');
-        const errEl = badField.querySelector('.error');
-        const errText = err.message || 'Kayıt işlemi başarısız oldu.';
-        if (errEl) errEl.textContent = errText;
-        // Yalnızca sunucunun girdiyi reddettiği (400) durumlar hatırlanır; ağ/sunucu hatasında yeniden denemeye izin verilir.
-        if (err.status === 400) {
-          if (passErr) serverErr.pass = { value: passVal, text: errText };
-          else serverErr.user = { value: emailVal, text: errText };
-        }
-        (passErr ? passInput : userInput).focus();
+    try {
+      await window.MYAPI.signup({ email: emailVal, password: passVal });
+      submitBtn.classList.remove('loading');
+      submitBtn.disabled = false;
+      if (verifyEmailDisplay) verifyEmailDisplay.textContent = emailVal;
+      if (modalVerify && inpVerifyCode && btnVerifyConfirm) {
+        MYUI.openModal(modalVerify);
+        startResendCountdown();
+        inpVerifyCode.value = '';
+        if (errVerifyCode) errVerifyCode.style.display = 'none';
+        inpVerifyCode.focus();
+      } else {
+        openSuccess();
       }
-    } else {
-      setTimeout(openSuccess, 700);
+    } catch (err) {
+      submitBtn.classList.remove('loading');
+      submitBtn.disabled = false;
+      const passErr = !!(err.getField && err.getField('password'));
+      const badField = passErr ? fieldPass : fieldUser;
+      badField.classList.add('invalid');
+      const errEl = badField.querySelector('.error');
+      const errText = err.message || 'Kayıt işlemi başarısız oldu.';
+      if (errEl) errEl.textContent = errText;
+      // Yalnızca sunucunun girdiyi reddettiği (400) durumlar hatırlanır; ağ/sunucu hatasında yeniden denemeye izin verilir.
+      if (err.status === 400) {
+        if (passErr) serverErr.pass = { value: passVal, text: errText };
+        else serverErr.user = { value: emailVal, text: errText };
+      }
+      (passErr ? passInput : userInput).focus();
     }
   });
 

@@ -43,10 +43,6 @@ document.addEventListener('DOMContentLoaded', () => {
   let currentStep = 1;
   const totalSteps = 6;
 
-  const urlParams = new URLSearchParams(window.location.search);
-  const isEditMode = urlParams.get('mode') === 'edit';
-  const editBanner = document.getElementById('edit-banner');
-  if (isEditMode && editBanner) editBanner.classList.add('active');
 
   const stepPanes = document.querySelectorAll('.step-pane');
   const stepItems = document.querySelectorAll('[data-step]');
@@ -73,8 +69,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const BIRTH_ERROR_DEFAULT = birthError ? birthError.textContent : '';
 
   const hiredRadios = document.querySelectorAll('input[name="q14_hired"]');
-  const detailField = document.getElementById('field-q14-detail');
-  const q14Select = document.getElementById('inp-q14');
+  const q14Stayed = document.getElementById('inp-q14');
+  const q14HiredInp = document.getElementById('inp-q14-hired');
+  const q14More = document.getElementById('q14-more');
   const q22Inputs = document.querySelectorAll('input[name="q22"]');
   const q22CounterLabel = document.getElementById('q22-counter-label');
   const q22Err = document.getElementById('q22-error');
@@ -97,8 +94,8 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function syncQ14Detail() {
-    if (checkedValue('q14_hired') === 'yes') detailField.removeAttribute('hidden');
-    else detailField.setAttribute('hidden', '');
+    const yes = checkedValue('q14_hired') === 'yes';
+    q14More.toggleAttribute('hidden', !yes);
   }
 
   // Kooperatiflerde q21 sorulmaz (puan sunucuda otomatik verilir): alan gizlenir, seçim temizlenir.
@@ -196,13 +193,19 @@ document.addEventListener('DOMContentLoaded', () => {
       if (data.q12 !== undefined && data.q12 !== null) document.getElementById('inp-q12').value = data.q12;
       if (data.q13 !== undefined && data.q13 !== null) document.getElementById('inp-q13').value = data.q13;
 
+      // Sunucu: q14 ('none' = işe alım yok; '' = yanıtsız) + sayılar; yerel taslak: q14_hired ('yes'/'no') + sayılar.
+      const countOf = v => (v === undefined || v === null || v === '' ? '' : v);
       let hired = data.q14_hired || null;
-      if (!hired && data.q14) hired = data.q14 === 'none' ? 'no' : 'yes';
+      if (!hired && data.q14 === 'none') hired = 'no';
+      if (!hired && Number(data.q14_hired_count) > 0) hired = 'yes';
       if (hired) {
         const rad = document.querySelector(`input[name="q14_hired"][value="${hired}"]`);
         if (rad) rad.checked = true;
       }
-      if (hired === 'yes' && data.q14 && data.q14 !== 'none') q14Select.value = data.q14;
+      if (hired === 'yes') {
+        q14HiredInp.value = countOf(data.q14_hired_count);
+        q14Stayed.value = data.q14 === '' ? '' : countOf(data.q14_stayed_count);
+      }
       syncQ14Detail();
 
       if (data.q15) {
@@ -228,9 +231,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const draft = MYUI.readJSON(getDraftKey());
     const app = MYUI.readJSON(getAppKey());
     const isObj = d => d && typeof d === 'object';
-    // Gönderilmiş başvuru yalnızca düzenleme modunda forma yüklenir; yeni açılışta gönderilmiş kayıt hatırlanmaz.
+    // Gönderim kesindir: yalnızca taslak forma yüklenir, gönderilmiş kayıt hiçbir yolla açılmaz.
     const isDraftObj = d => isObj(d) && d.status === 'draft';
-    const data = isEditMode ? [draft, app].find(isObj) : [draft].find(isDraftObj);
+    const data = [draft].find(isDraftObj);
     const metaSrc = [app, draft].find(d => isObj(d) && d.refNo);
     if (metaSrc) {
       refNo = metaSrc.refNo;
@@ -260,7 +263,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const apiApp = res.application;
             if (apiApp.ref) refNo = apiApp.ref;
             if (apiApp.submittedAt) submittedAt = apiApp.submittedAt;
-            if (!isEditMode && apiApp.status !== 'draft') return;
+            if (apiApp.status !== 'draft') return;
             populateForm(apiApp);
             const merged = Object.assign({}, MYUI.readJSON(getDraftKey(), {}), apiApp);
             MYUI.writeJSON(getDraftKey(), merged);
@@ -272,9 +275,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   async function saveDraft() {
     const hired = checkedValue('q14_hired');
-    let q14 = null;
-    if (hired === 'no') q14 = 'none';
-    else if (hired === 'yes') q14 = q14Select.value || null;
 
     const emailEl = document.getElementById('inp-email');
     const curUser = MYUI.readJSON('currentUser') || {};
@@ -298,7 +298,8 @@ document.addEventListener('DOMContentLoaded', () => {
       q12: (document.getElementById('inp-q12') || {}).value || '',
       q13: (document.getElementById('inp-q13') || {}).value || '',
       q14_hired: hired,
-      q14: q14,
+      q14_hired_count: hired === 'yes' ? q14HiredInp.value.trim() : (hired === 'no' ? '0' : ''),
+      q14_stayed_count: hired === 'yes' ? q14Stayed.value.trim() : (hired === 'no' ? '0' : ''),
       q15: checkedValue('q15'),
       q21: isCoop() ? null : checkedValue('q21'),
       q22: Array.from(document.querySelectorAll('input[name="q22"]:checked')).map(c => c.value),
@@ -335,7 +336,8 @@ document.addEventListener('DOMContentLoaded', () => {
         q11: data.q11 !== '' ? parseInt(data.q11, 10) : null,
         q12: data.q12 !== '' ? parseInt(data.q12, 10) : null,
         q13: data.q13 !== '' ? parseInt(data.q13, 10) : null,
-        q14: data.q14,
+        q14_hired_count: data.q14_hired_count !== '' ? parseInt(data.q14_hired_count, 10) : null,
+        q14_stayed_count: data.q14_stayed_count !== '' ? parseInt(data.q14_stayed_count, 10) : null,
         q15: data.q15,
         q21: data.q21,
         q22: data.q22
@@ -346,17 +348,11 @@ document.addEventListener('DOMContentLoaded', () => {
           return res;
         })
         .catch((err) => {
-          if (err && err.isOfflineDemo) {
-            showDraftStatus('Taslak kaydedildi (yerel)', false);
-            return null;
-          }
           if (err && err.status === 401) { redirectToLogin(); throw err; }
           showDraftStatus('Taslak kaydedilemedi: ' + (err.message || 'Hata'), true);
           throw err;
         });
     }
-    showDraftStatus('Taslak kaydedildi (yerel)', false);
-    return Promise.resolve(null);
   }
 
   // Kalınan adım sekme oturumunda (kullanıcıya özel) tutulur: yenileyince sihirbaz aynı adımda açılır.
@@ -539,7 +535,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const q15Field = document.querySelector('input[name="q15"]').closest('.field');
     const q22Checks = document.querySelectorAll('input[name="q22"]:checked');
 
-    [q11, q12, q13, q14Select].forEach(inp => inp.closest('.field').classList.remove('invalid'));
+    [q11, q12, q13, q14HiredInp, q14Stayed].forEach(inp => inp.closest('.field').classList.remove('invalid'));
     [q14Pre, q15Field, q21Field].forEach(f => f.classList.remove('invalid'));
 
     const val11 = toInt(q11.value);
@@ -564,9 +560,17 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!hired) {
       q14Pre.classList.add('invalid');
       valid = false;
-    } else if (hired === 'yes' && !q14Select.value) {
-      q14Select.closest('.field').classList.add('invalid');
-      valid = false;
+    } else if (hired === 'yes') {
+      const nHired = toInt(q14HiredInp.value);
+      const nStayed = toInt(q14Stayed.value);
+      if (isNaN(nHired) || nHired < 1) {
+        q14HiredInp.closest('.field').classList.add('invalid');
+        valid = false;
+      }
+      if (isNaN(nStayed) || nStayed < 0 || (!isNaN(nHired) && nStayed > nHired)) {
+        q14Stayed.closest('.field').classList.add('invalid');
+        valid = false;
+      }
     }
 
     if (!checkedValue('q15')) {
@@ -623,7 +627,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const hired = checkedValue('q14_hired');
     let stay = '-';
     if (hired === 'no') stay = 'İşe başlayan olmadı';
-    else if (hired === 'yes' && q14Select.value) stay = q14Select.options[q14Select.selectedIndex].text;
+    else if (hired === 'yes' && q14HiredInp.value.trim() !== '' && q14Stayed.value.trim() !== '') stay = `${q14HiredInp.value.trim()} kişi işe başladı, ${q14Stayed.value.trim()} kişi hâlâ çalışıyor`;
     document.getElementById('sum-emp-stay').textContent = stay;
 
     const yn = { yes: 'Evet', no: 'Hayır' };
@@ -698,13 +702,6 @@ document.addEventListener('DOMContentLoaded', () => {
       const finalData = MYUI.readJSON(getDraftKey(), {});
       finalData.status = 'submitted';
       if (!finalData.submittedAt) finalData.submittedAt = new Date().toISOString();
-      // Yerel (çevrimdışı) kayıt yalnızca API yokken yazılır: sunucu onaylamadan "gönderildi" ve sahte numara saklanmaz.
-      const persistLocalSubmission = () => {
-        if (!finalData.refNo) {
-          finalData.refNo = 'MY-2026-' + Math.floor(10000 + Math.random() * 90000);
-        }
-        MYUI.writeJSON(getAppKey(), finalData);
-      };
       if (window.MYAPI && typeof window.MYAPI.submitApplication === 'function') {
         btnNext.disabled = true;
         try {
@@ -719,15 +716,6 @@ document.addEventListener('DOMContentLoaded', () => {
           window.location.href = 'panel.html';
         } catch (err) {
           btnNext.disabled = false;
-          if (err && err.isOfflineDemo) {
-            // Offline demo mode: generate a local ref for display only
-            if (!finalData.refNo) {
-              finalData.refNo = 'MY-2026-' + Math.floor(10000 + Math.random() * 90000);
-            }
-            MYUI.writeJSON(getAppKey(), finalData);
-            window.location.href = 'panel.html';
-            return;
-          }
           const finalErr = document.getElementById('final-error');
           if (finalErr) {
             const sp = finalErr.querySelector('span');
@@ -738,13 +726,6 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
       }
 
-      // Offline demo fallback
-      if (!finalData.refNo) {
-        finalData.refNo = 'MY-2026-' + Math.floor(10000 + Math.random() * 90000);
-      }
-      MYUI.writeJSON(getAppKey(), finalData);
-      window.location.href = 'panel.html';
-      return;
     }
 
     await saveDraft().catch((err) => {
@@ -810,16 +791,14 @@ document.addEventListener('DOMContentLoaded', () => {
           saveDraft();
         })
         .catch((err) => {
-          if (!err || !err.isOfflineDemo) {
-            // Sunucu kabul etmediyse dosya "seçili" kalmaz: yoksa kullanıcı sertifikasız ilerleyebilirdi.
-            if (uploadedFile === file) {
-              uploadedFile = null;
-              fileInput.value = '';
-              filePreview.classList.remove('active');
-              dropzone.classList.remove('hidden');
-            }
-            showFileError((err && err.message) || 'Sertifika yüklenemedi.');
+          // Sunucu kabul etmediyse dosya "seçili" kalmaz: yoksa kullanıcı sertifikasız ilerleyebilirdi.
+          if (uploadedFile === file) {
+            uploadedFile = null;
+            fileInput.value = '';
+            filePreview.classList.remove('active');
+            dropzone.classList.remove('hidden');
           }
+          showFileError((err && err.message) || 'Sertifika yüklenemedi.');
         });
     }
   }
@@ -859,7 +838,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   hiredRadios.forEach(r => {
     r.addEventListener('change', () => {
-      if (r.value === 'no') q14Select.value = '';
+      if (r.value === 'no') { q14HiredInp.value = ''; q14Stayed.value = ''; }
       syncQ14Detail();
     });
   });

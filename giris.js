@@ -99,47 +99,14 @@ document.addEventListener('DOMContentLoaded', () => {
       passInput.focus();
     }
 
-    if (window.MYAPI && typeof window.MYAPI.login === 'function') {
-      window.MYAPI.login({ email: userVal, password: passVal })
-        .then((res) => {
-          if (!res || !res.user) {
-            handleError('Giriş yanıtı beklenen biçimde değil. Lütfen tekrar deneyiniz.');
-            return;
-          }
-          handleSuccess(res.user);
-        })
-        .catch((err) => {
-          if (err.isOfflineDemo) {
-            // Çevrim dışı / demo kip yedeği
-            const userLower = userVal.toLowerCase();
-            const storedEditor = MYUI.readJSON('editorUser');
-            const isEditor = userLower.includes('editor') || (storedEditor && storedEditor.email && storedEditor.email.toLowerCase() === userLower);
-            if (isEditor) {
-              const editorObj = storedEditor || {
-                email: userVal,
-                name: 'Dr. Elif Kaya',
-                role: 'editor'
-              };
-              handleSuccess(editorObj);
-            } else {
-              const applicantObj = { email: userVal, role: 'applicant' };
-              handleSuccess(applicantObj);
-            }
-            return;
-          }
-          handleError(err.message || 'E-posta veya şifre hatalı.');
-        });
-    } else {
-      setTimeout(() => {
-        const userLower = userVal.toLowerCase();
-        const storedEditor = MYUI.readJSON('editorUser');
-        const isEditor = userLower.includes('editor') || (storedEditor && storedEditor.email && storedEditor.email.toLowerCase() === userLower);
-        if (isEditor) {
-          handleSuccess(storedEditor || { email: userVal, name: 'Dr. Elif Kaya', role: 'editor' });
-        } else {
-          handleSuccess({ email: userVal, role: 'applicant' });
+    window.MYAPI.login({ email: userVal, password: passVal })
+      .then((res) => {
+        if (!res || !res.user) {
+          handleError('Giriş yanıtı beklenen biçimde değil. Lütfen tekrar deneyiniz.');
+          return;
         }
-      }, 300);
-    }
+        handleSuccess(res.user);
+      })
+      .catch((err) => handleError(err.message || 'E-posta veya şifre hatalı.'));
   });
 });

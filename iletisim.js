@@ -86,28 +86,20 @@ document.addEventListener('DOMContentLoaded', () => {
         if (errEl) errEl.textContent = msg || 'Mesaj iletilemedi. Lütfen daha sonra tekrar deneyiniz.';
       }
 
-      if (window.MYAPI && typeof window.MYAPI.sendContact === 'function') {
-        const topicText = (selTopic.options && selTopic.options[selTopic.selectedIndex]) ? selTopic.options[selTopic.selectedIndex].text : selTopic.value;
-        const payload = {
-          name: inpName.value.trim(),
-          email: inpEmail.value.trim(),
-          phone: inpPhone.value.trim(),
-          subject: topicText || 'İletişim Talebi',
-          message: txtMessage.value.trim()
-        };
+      const topicText = (selTopic.options && selTopic.options[selTopic.selectedIndex]) ? selTopic.options[selTopic.selectedIndex].text : selTopic.value;
+      const payload = {
+        name: inpName.value.trim(),
+        email: inpEmail.value.trim(),
+        phone: inpPhone.value.trim(),
+        subject: topicText || 'İletişim Talebi',
+        message: txtMessage.value.trim()
+      };
 
-        try {
-          await window.MYAPI.sendContact(payload);
-          showSuccess();
-        } catch (err) {
-          if (err.isOfflineDemo) {
-            showSuccess();
-            return;
-          }
-          showError(err.message);
-        }
-      } else {
+      try {
+        await window.MYAPI.sendContact(payload);
         showSuccess();
+      } catch (err) {
+        showError(err.message);
       }
     });
   }

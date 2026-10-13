@@ -83,9 +83,7 @@
     options = options || {};
     var base = (window.MYCONFIG && window.MYCONFIG.apiBase) || '';
     if (!base) {
-      var offlineErr = ApiError(0, [{ field: 'network', text: 'API çevrimdışı modda.' }], null);
-      offlineErr.isOfflineDemo = true;
-      throw offlineErr;
+      throw ApiError(0, [{ field: 'network', text: 'API adresi yapılandırılmamış (config.js). Sayfayı API ile birlikte çalışan adresten açınız.' }], null);
     }
     var url = base + path;
     var headers = Object.assign({}, options.headers);
@@ -210,9 +208,6 @@
     },
     submitApplication: function () {
       return request('/application/submit', { method: 'POST', body: {} });
-    },
-    reopenApplication: function () {
-      return request('/application/reopen', { method: 'POST', body: {} });
     },
     uploadCertificate: function (file) {
       var form = new FormData();

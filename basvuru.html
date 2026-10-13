@@ -119,14 +119,6 @@
           </div>
         </div>
 
-    <div class="edit-mode-banner" id="edit-banner">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-      </svg>
-      <span>Başvuru Düzenleme Modu: Değişikliklerinizi yaptıktan sonra son adımda tekrar onaylayıp göndermeniz gerekmektedir.</span>
-    </div>
-
     <div class="deadline-banner" id="deadline-banner">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
         <circle cx="12" cy="12" r="10"></circle>
@@ -417,16 +409,19 @@
               <span class="error">Lütfen bir seçenek belirleyiniz.</span>
             </div>
 
-            <div class="field" id="field-q14-detail" hidden>
-              <label for="inp-q14">Geçen yıl işe başlayanlardan kaçı hâlâ çalışıyor?</label>
-              <select id="inp-q14">
-                <option value="">Seçiniz</option>
-                <option value="zero">Oldu, kimse kalmadı</option>
-                <option value="less_half">Yarıdan azı</option>
-                <option value="half_more">Yarısı ve fazlası</option>
-                <option value="all">Tamamı</option>
-              </select>
-              <span class="error">Lütfen bir seçenek belirleyiniz.</span>
+            <div id="q14-more" hidden>
+              <div class="field">
+                <label for="inp-q14-hired">Geçen yıl kaç kişi işe başladı?</label>
+                <input type="number" id="inp-q14-hired" min="1" placeholder="İşe başlayan kişi sayısı">
+                <span class="error">Lütfen 1 veya daha büyük bir sayı giriniz.</span>
+              </div>
+
+              <div class="field">
+                <label for="inp-q14">Geçen yıl işe başlayanlardan kaçı hâlâ çalışıyor?</label>
+                <input type="number" id="inp-q14" min="0" placeholder="Hâlâ çalışan kişi sayısı">
+                <small>İşe başlayan kişi sayısından fazla olamaz.</small>
+                <span class="error">Hâlâ çalışan sayısı 0 ile işe başlayan sayısı arasında olmalıdır.</span>
+              </div>
             </div>
           </div>
 

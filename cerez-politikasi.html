@@ -127,19 +127,21 @@
       <h2>4. Çerez Envanteri</h2>
       <table>
         <thead>
-          <tr><th scope="col">Kategori</th><th scope="col">Kullanım Amacı</th><th scope="col">Rıza Durumu</th></tr>
+          <tr><th scope="col">Çerez</th><th scope="col">İçerik ve Amaç</th><th scope="col">Saklama Süresi</th></tr>
         </thead>
         <tbody>
-          <tr><td>Kesinlikle Gerekli</td><td>Site/başvuru sistemi işlevi, oturum ve/veya güvenlik</td><td>Açık rıza aranmaz</td></tr>
-          <tr><td>İşlevsel</td><td>Tercihlerin hatırlanması / ek işlevler</td><td>Hukuki sebebe göre; gerekiyorsa opt-in açık rıza</td></tr>
-          <tr><td>Performans / Analitik</td><td>İstatistik, performans ölçümü ve site geliştirme</td><td>Opt-in açık rıza</td></tr>
+          <tr><td>cerez_tercih</td><td>Zorunlu tercih kaydı. Kategori seçimleri ve tarih.</td><td>Yeni seçimle değiştirilir.</td></tr>
+          <tr><td>currentUser</td><td>Hesap ve arayüz bilgileri; e-posta, rol ve API yanıtına göre diğer kullanıcı alanları.</td><td>Oturum süresince.</td></tr>
+          <tr><td>mutfaktan_app_draft</td><td>Başvuru taslağı ve form alanları; tekrar açıldığında formu doldurmak ve taslağı sürdürmek.</td><td>Başarılı gönderim ve taslak temizleme işlevinde silinir.</td></tr>
+          <tr><td>mutfaktan_application</td><td>Başvuru bilgilerini taslak halinde tutmak.</td><td>Taslak temizleme işlevinde silinir.</td></tr>
+          <tr><td>mutfaktan_app_step</td><td>Başvuru sihirbazında kalınan adım numarası.</td><td>Oturum süresince geçerlidir. Gönderimden sonra silinir.</td></tr>
         </tbody>
       </table>
 
       <h2>5. Çerez Tercih Paneli ve Açık Rıza Yönetimi</h2>
-      <p>İnternet sitesine ilk girişte, açık rıza gerektiren çerezler çalıştırılmadan önce kullanıcıya çerez tercih paneli sunulur. Panelde 'Kabul Et', 'Reddet' ve 'Tercihler' seçenekleri kullanıcıyı belirli bir tercihe yönlendirmeyecek şekilde eşit ve anlaşılır biçimde sunulmalıdır.</p>
+      <p>İnternet sitesine ilk girişte, açık rıza gerektiren çerezler çalıştırılmadan önce kullanıcıya çerez tercih paneli sunulur. Panelde 'Kabul Et', 'Reddet' ve 'Tercihler' seçenekleri kullanıcıyı belirli bir tercihe yönlendirmeyecek şekilde eşit ve anlaşılır biçimde sunulmaktadır.</p>
       <p>Kesinlikle Gerekli çerezler açık rızaya tabi değildir. Açık rıza gerektiren İşlevsel ve Performans / Analitik çerezler varsayılan olarak kapalı olmalı ve yalnızca kullanıcının ilgili kategori için aktif bir seçim yapması sonrasında çalışmalıdır. Açık rıza gerektiren farklı çerez kategorileri için ayrı tercih imkânı sağlanmalıdır.</p>
-      <p>Kullanıcı tarafından verilen açık rıza, internet sitesinde kolayca erişilebilir çerez tercih paneli üzerinden her zaman geri alınabilmeli veya değiştirilebilmelidir. Rızanın geri alınması, geri alma işleminden önce rızaya dayanılarak gerçekleştirilen işleme faaliyetlerinin hukuka uygunluğunu etkilemez.</p>
+      <p>Kullanıcı tarafından verilen açık rıza, internet sitesinde kolayca erişilebilir çerez tercih paneli üzerinden her zaman geri alınabilir veya değiştirilebilir. Rızanın geri alınması, geri alma işleminden önce rızaya dayanılarak gerçekleştirilen işleme faaliyetlerinin hukuka uygunluğunu etkilemez.</p>
       <h2>6. Tarayıcı Üzerinden Çerezlerin Yönetilmesi</h2>
       <p>Kullanıcılar ayrıca internet tarayıcılarının ayarları üzerinden çerezleri görüntüleyebilir, silebilir veya engelleyebilir. Kesinlikle gerekli çerezlerin tarayıcı üzerinden engellenmesi internet sitesinin veya başvuru sisteminin bazı temel işlevlerinin çalışmamasına ya da kullanıcı oturumunun sürdürülememesine neden olabilir.</p>
       <h2>7. Üçüncü Taraf Çerezler ve Yurt Dışına Aktarım</h2>

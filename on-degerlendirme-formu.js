@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   if (logoutLink) {
     logoutLink.addEventListener('click', async () => {
-      if (window.MYAPI && window.MYCONFIG && window.MYCONFIG.apiBase) {
+      if (window.MYAPI) {
         try { await MYAPI.logout(); } catch (e) {}
       }
       try {
@@ -46,9 +46,17 @@ document.addEventListener('DOMContentLoaded', async () => {
   const appData = MYUI.readJSON(appKey) || MYUI.readJSON('mutfaktan_application');
   // Sunucu tek doğru kaynaktır: ref, iş türü ve pencerenin açıklığı varsa oradan alınır; yerel kayıt yalnız çevrimdışı yedektir.
   let server = null;
-  if (window.MYAPI && window.MYCONFIG && window.MYCONFIG.apiBase) {
+  if (window.MYAPI) {
     try { server = await MYAPI.getPreeval(); } catch (e) { server = null; }
     if (server && !server.ok) server = null;
+  }
+  // Doğrulama belgeleri sunucuda ayrı kayıttır; liste yalnızca sunucunun tuttuğu belgeleri gösterir.
+  let serverDocs = null;
+  if (server) {
+    try {
+      const res = await MYAPI.getApplication();
+      if (res && res.application) serverDocs = res.application.verificationDocs || [];
+    } catch (e) { serverDocs = null; }
   }
   const refNo = (server && server.ref) || (appData && appData.refNo);
   const askQ2 = server ? server.biztype === 'sirket' : (!!appData && appData.biztype === 'sirket');
@@ -89,7 +97,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Yanıtlar başka bir cihazdan gönderilmiş olabilir: yerel kayıt yoksa sunucudaki yanıtlar gösterilir.
     loadRemotePreeval().then((shown) => {
       if (!shown) {
-        showFeedback('Ön Değerlendirme aşamanız henüz açılmadı', 'Bu aşama, talep edilen doğrulama belgelerinin tamamını yükleyen adaylar için açılır; belgelerinizi yüklemeniz halinde erişebilirsiniz.');
+        showFeedback('Ön Değerlendirme aşamanız henüz açılmadı', 'Bu aşama, program ekibi tarafından açılan adaylar içindir. Aşamanız açıldığında belgelerinizi bu sayfadan yükleyip soruları yanıtlayabilirsiniz.');
       }
     });
     return;
@@ -108,6 +116,133 @@ document.addEventListener('DOMContentLoaded', async () => {
       q2Note.removeAttribute('hidden');
     }
   }
+
+  // Evrak yükleme bölümü: yanıtlar verilmediyse yüklenebilir, verildiyse salt okunur listelenir.
+  const sectionDocs = document.getElementById('section-verify-docs');
+  const docList = document.getElementById('verify-doc-list');
+  const docError = document.getElementById('verify-error');
+  const docSuccess = document.getElementById('verify-uploaded-success');
+  const docBadge = document.getElementById('badge-verify-status');
+  const docKinds = (window.MYCONFIG && window.MYCONFIG.verificationKinds) || [{ kind: 'tax', label: 'Doğrulama Belgesi', required: true }];
+  const readOnly = isViewMode;
+
+  function currentDocs() {
+    return (serverDocs || (appData && appData.verificationDocs) || []);
+  }
+  function docOfKind(kind) {
+    return currentDocs().find(d => d && d.kind === kind) || null;
+  }
+  function requiredDocsDone() {
+    return docKinds.filter(k => k.required).every(k => docOfKind(k.kind));
+  }
+  // Zorunlu belge yokken sorular gönderilemez (sunucu da aynısını uygular).
+  function syncSubmit() {
+    if (submitBtn && !readOnly) submitBtn.disabled = !requiredDocsDone();
+  }
+
+  function formatDocMeta(doc) {
+    const kb = doc.size >= 1024 * 1024 ? (doc.size / 1048576).toFixed(1) + ' MB' : Math.max(1, Math.round(doc.size / 1024)) + ' KB';
+    const d = doc.uploadedAt ? new Date(doc.uploadedAt) : null;
+    const when = d && !isNaN(d) ? d.toLocaleString('tr-TR', { dateStyle: 'short', timeStyle: 'short' }) : '';
+    return [kb, when].filter(Boolean).join(' · ');
+  }
+
+  function showRowError(row, msg) {
+    const el = row.querySelector('[data-role="row-error"]');
+    el.textContent = msg || '';
+    el.style.display = msg ? 'block' : 'none';
+  }
+
+  function renderDocs() {
+    if (!sectionDocs || !docList) return;
+    sectionDocs.removeAttribute('hidden');
+    docList.replaceChildren();
+    docKinds.forEach((k) => {
+      const doc = docOfKind(k.kind);
+      const row = document.createElement('li');
+      row.dataset.kind = k.kind;
+
+      const info = document.createElement('div');
+      const title = document.createElement('strong');
+      title.textContent = k.label + (k.required ? '' : ' (isteğe bağlı)');
+      const state = document.createElement('div');
+      state.dataset.role = 'doc-state';
+      state.textContent = doc ? doc.name + ' — ' + formatDocMeta(doc) : (readOnly ? 'Belge yüklenmedi' : 'Belge bekleniyor');
+      info.append(title, state);
+      if (!readOnly) {
+        const hint = document.createElement('div');
+        hint.textContent = 'PDF, JPG veya PNG — en fazla 10 MB';
+        info.append(hint);
+      }
+      row.append(info);
+
+      if (!readOnly) {
+        const actions = document.createElement('div');
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = '.pdf,.jpg,.jpeg,.png';
+        input.hidden = true;
+        input.dataset.role = 'doc-input';
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.dataset.role = 'doc-button';
+        btn.textContent = doc ? 'Değiştir' : 'Yükle';
+        btn.addEventListener('click', () => input.click());
+        input.addEventListener('change', () => uploadOne(row, k, input, btn));
+        actions.append(input, btn);
+        const err = document.createElement('div');
+        err.dataset.role = 'row-error';
+        err.setAttribute('role', 'alert');
+        row.append(actions, err);
+      }
+      docList.append(row);
+    });
+    const done = readOnly || requiredDocsDone();
+    if (docBadge) docBadge.textContent = readOnly ? 'Belgeler Teslim Edildi' : (done ? 'Belgeler Yüklendi' : 'Belge Bekleniyor');
+    if (docSuccess) docSuccess.style.display = done && !readOnly ? 'block' : 'none';
+    syncSubmit();
+  }
+
+  // Her işlem tek dosyadır ve sonunda liste sunucudaki gerçek duruma göre yeniden çizilir; başarısız ya da
+  // yarım kalan bir yükleme ekranda eski ya da olmayan bir dosya adı bırakmaz.
+  async function uploadOne(row, kind, input, btn) {
+    const file = input.files && input.files[0];
+    if (!file) return;
+    if (docError) docError.style.display = 'none';
+    showRowError(row, '');
+    // Sunucu aynı kuralları uygular; burada yalnızca gereksiz yüklemeyi önleriz.
+    const fileProblem = !/\.(pdf|jpe?g|png)$/i.test(file.name) ? 'Yalnızca PDF, JPG veya PNG dosyası yükleyebilirsiniz.'
+      : file.size === 0 ? 'Dosya boş; lütfen geçerli bir dosya seçiniz.'
+      : file.size > 10 * 1024 * 1024 ? 'Dosya boyutu en fazla 10 MB olabilir.' : '';
+    if (fileProblem) {
+      input.value = '';
+      showRowError(row, fileProblem);
+      return;
+    }
+    btn.disabled = true;
+    btn.textContent = 'Yükleniyor...';
+    let failure = '';
+    if (window.MYAPI) {
+      try {
+        await MYAPI.uploadVerificationDoc(file, kind.kind);
+      } catch (err) {
+        failure = (err.errors && err.errors[0] && err.errors[0].text) || err.message || 'Belge yüklenemedi: ' + file.name;
+      }
+      try {
+        const res = await MYAPI.getApplication();
+        if (res && res.application) serverDocs = res.application.verificationDocs || [];
+      } catch (e) {
+        if (!failure) failure = 'Belge yüklendi ancak liste yenilenemedi; sayfayı yenileyiniz.';
+      }
+    }
+    renderDocs();
+    if (failure) {
+      const fresh = docList.querySelector('[data-kind="' + kind.kind + '"]');
+      if (fresh) showRowError(fresh, failure);
+    }
+  }
+
+  renderDocs();
 
   textareas.forEach(item => {
     const el = document.getElementById(item.id);
@@ -142,49 +277,17 @@ document.addEventListener('DOMContentLoaded', async () => {
     showFeedback('Ön Değerlendirme Yanıtlarınız Alındı', 'Verdiğiniz yanıtlar kaydedilmiştir ve program ekibi tarafından incelenmektedir.');
   }
 
-  function toNumber(v) {
-    return v === null || v === undefined || v === '' ? NaN : Number(v);
-  }
-
-  function buildRecord(a, answers) {
-    const total = toNumber(a.q11);
-    const female = toNumber(a.q12);
-    const STRUCTURE_LABELS = {
-      sahis: 'Şahıs İşletmesi',
-      sirket: 'Şirket',
-      kooperatif: 'Kadın Kooperatifi'
-    };
-    return {
-      ref: a.refNo,
-      name: a.fullname || '',
-      business: a.bizname || '',
-      structure: STRUCTURE_LABELS[a.biztype] || '',
-      biztype: a.biztype || null,
-      city: a.city || '',
-      totalEmployees: Number.isFinite(total) ? total : 0,
-      femaleRatio: total > 0 && Number.isFinite(female) ? Math.round((female / total) * 100) : 0,
-      status: 'pending-score',
-      statusText: 'Ön Değerlendirme Bekliyor',
-      applicantAnswers: answers,
-      details: {
-        birthdate: a.birthdate || null,
-        taxno: a.taxno || null,
-        bizyear: a.bizyear || null,
-        fileName: a.fileName || null,
-        q11: a.q11,
-        q12: a.q12,
-        q13: a.q13,
-        q14: a.q14,
-        q15: a.q15,
-        q21: a.q21,
-        q22: a.q22
-      }
-    };
-  }
-
   if (form && !isViewMode) {
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
+      if (!requiredDocsDone()) {
+        if (docError) {
+          docError.textContent = 'Soruları gönderebilmek için lütfen önce zorunlu doğrulama belgelerinizi yükleyiniz.';
+          docError.style.display = 'block';
+        }
+        sectionDocs.scrollIntoView({ behavior: 'smooth' });
+        return;
+      }
 
       let allFilled = true;
       const answers = { ref: refNo };
@@ -224,7 +327,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         return;
       }
 
-      if (window.MYAPI && window.MYCONFIG && window.MYCONFIG.apiBase) {
+      if (window.MYAPI) {
         try {
           await MYAPI.submitPreeval({
             q1: answers.q1 || '',
@@ -243,23 +346,6 @@ document.addEventListener('DOMContentLoaded', async () => {
       answers.submittedAt = new Date().toISOString();
       MYUI.writeJSON(getPreevalAnswersKey(), answers);
 
-      // Kaydı başvurunun ref numarasına göre bul; yoksa başvurudan yeni kayıt oluştur.
-      // Note: In production, the editor panel fetches fresh data from the API.
-      // This localStorage update is only for offline/demo mode without API.
-      if (!window.MYCONFIG || !window.MYCONFIG.apiBase) {
-        const applications = MYUI.readJSON('programApplications', []);
-        const targetApp = applications.find(a => a.ref === refNo);
-        if (targetApp) {
-          targetApp.status = 'pending-score';
-          targetApp.statusText = 'Ön Değerlendirme Bekliyor';
-          targetApp.applicantAnswers = answers;
-          delete targetApp.rubric;
-        } else {
-          applications.push(buildRecord(appData, answers));
-        }
-        MYUI.writeJSON('programApplications', applications);
-      }
-
       showFeedback('Ön Değerlendirme cevaplarınız gönderildi', 'Cevaplarınız program ekibine iletildi. Takip paneline yönlendiriliyorsunuz...');
 
       submitBtn.disabled = true;
@@ -271,7 +357,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
   // Arka uç API entegrasyonu (sunucuda kayıtlı ön değerlendirme cevapları varsa formu doldurur ve kilitler)
   async function loadRemotePreeval() {
-    if (!window.MYAPI || !window.MYCONFIG || !window.MYCONFIG.apiBase) return false;
+    if (!window.MYAPI) return false;
     try {
       const res = await MYAPI.getPreeval();
       // GET /v1/preeval: {ok, ref, status, biztype, is_open, answers}; answers is null until the applicant has answered.
@@ -297,7 +383,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         return true;
       }
     } catch (e) {
-      // Çevrimdışı modda yerel depolama kullanılır
     }
     return false;
   }

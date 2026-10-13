@@ -37,22 +37,16 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   }
 
-  // Doğrulama belgesi sunucuda ayrı kayıttır; sayfa yalnız sunucunun tuttuğu belgeyi gösterir.
-  function adoptServerDocs(app) {
-    app.verificationDocs = Array.isArray(app.verificationDocs) ? app.verificationDocs : [];
-  }
-
   // Sunucu tek doğru kaynaktır: yeni bir tarayıcıda ya da cihazda yerel kayıt boştur; önce sunucudan okunur, sayfa
   // gerçek başvuruyla çizilir. Sunucu "başvuru yok" derse eski yerel kopya silinir (aynı tarayıcıda başka biri girmiş olabilir).
   // Sunucuya ulaşılamazsa (çevrimdışı) yerel kayıtla devam edilir.
   let loadFailed = false;
-  if (window.MYAPI && typeof window.MYAPI.getApplication === 'function' && window.MYCONFIG && window.MYCONFIG.apiBase) {
+  if (window.MYAPI && typeof window.MYAPI.getApplication === 'function') {
     try {
       const res = await window.MYAPI.getApplication();
       if (res && res.application) {
         const remote = res.application;
         if (remote.ref && !remote.refNo) remote.refNo = remote.ref;
-        adoptServerDocs(remote);
         MYUI.writeJSON(getAppKey(), remote);
       } else if (res && res.application === null) {
         try { localStorage.removeItem(getAppKey()); localStorage.removeItem(getDraftKey()); } catch (e) {}
@@ -63,10 +57,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   }
 
-  const modalEdit = document.getElementById('modal-edit-confirm');
   const btnOpenEdit = document.getElementById('btn-open-edit');
-  const btnConfirmEdit = document.getElementById('btn-confirm-edit');
-  const closeButtons = document.querySelectorAll('[data-close="modal-edit-confirm"]');
   const btnPrint = document.getElementById('btn-print');
 
   function getUserScopedKey(baseKey) {
@@ -128,16 +119,16 @@ document.addEventListener('DOMContentLoaded', async () => {
   const storedAnswers = MYUI.readJSON(getUserScopedKey('onDegerlendirmeAnswers')) || MYUI.readJSON('onDegerlendirmeAnswers');
   const hasAnswers = !!(appData && appData.refNo && storedAnswers && storedAnswers.ref === appData.refNo);
 
-  // Durum -> rozet metni ve süreç çizelgesindeki güncel adım (0 tabanlı).
+  // Durum -> rozet metni.
   const STATUS_INFO = {
-    draft: { text: 'Taslak — henüz gönderilmedi', stage: 0 },
-    submitted: { text: 'Başvuru Alındı — İnceleme Aşamasında', stage: 1 },
-    verifying: { text: 'Belge ve Bilgi Doğrulama Aşamasında', stage: 1 },
-    'preeval-open': { text: 'Ön Değerlendirme Aşaması Açıldı', stage: 2 },
-    answered: { text: 'Ön Değerlendirme Yanıtları Alındı', stage: 2 },
-    scored: { text: 'Ön Değerlendirme Tamamlandı', stage: 3 },
-    rejected: { text: 'Başvuru Uygun Görülmedi', stage: 0 },
-    expired: { text: 'Başvuru Süresi Doldu', stage: 0 }
+    draft: { text: 'Taslak — henüz gönderilmedi' },
+    submitted: { text: 'Başvuru Alındı — İnceleme Aşamasında' },
+    verifying: { text: 'Belge ve Bilgi Doğrulama Aşamasında' },
+    'preeval-open': { text: 'Ön Değerlendirme Aşaması Açıldı' },
+    answered: { text: 'Ön Değerlendirme Yanıtları Alındı' },
+    scored: { text: 'Ön Değerlendirme Tamamlandı' },
+    rejected: { text: 'Başvuru Uygun Görülmedi' },
+    expired: { text: 'Başvuru Süresi Doldu' }
   };
 
   let status = 'draft';
@@ -159,27 +150,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   }
 
-  const timelineSteps = document.querySelectorAll('.timeline-steps > div');
-  const stage = appData ? statusInfo.stage : 0;
   const isDraft = !!appData && status === 'draft';
-
-  // Taslakta 1. adım "alındı" değil, yapılacak iştir; metinler gönderimden sonra HTML'deki haline döner.
-  if (isDraft && timelineSteps[0]) {
-    timelineSteps[0].querySelector('h3').textContent = '1. Başvuruyu Gönderin';
-    timelineSteps[0].querySelector('p').textContent = 'Formu tamamlayıp gönderin; gönderilene kadar başvurunuz değerlendirilmez.';
-  }
   setVisible(document.getElementById('draft-note'), isDraft);
-  timelineSteps.forEach((step, i) => {
-    step.classList.remove('completed', 'current', 'locked');
-    const icon = step.firstElementChild;
-    if (i < stage) {
-      step.classList.add('completed');
-      if (icon) icon.textContent = '✓';
-    } else {
-      step.classList.add(i === stage ? 'current' : 'locked');
-      if (icon) icon.textContent = String(i + 1);
-    }
-  });
 
   if (appData) {
     setText('panel-username', appData.fullname || currentUser.name);
@@ -243,166 +215,15 @@ document.addEventListener('DOMContentLoaded', async () => {
     const yesNo = { yes: 'Evet', no: 'Hayır' };
     if (isFilled(appData.q15)) setText('tbl-q15', yesNo[appData.q15] || appData.q15);
     if (isFilled(appData.q21)) setText('tbl-q21', yesNo[appData.q21] || appData.q21);
-  } else {
-    setVisible(btnOpenEdit, false);
   }
 
-  // Ön değerlendirme bandı ve doğrulama belgeleri yalnızca aşama açıkken görünür.
-  const banner = document.getElementById('banner-preeval');
-  const sectionVerifyDocs = document.getElementById('section-verify-docs');
-  const verifyDocList = document.getElementById('verify-doc-list');
-  const verifyError = document.getElementById('verify-error');
-  const verifySuccess = document.getElementById('verify-uploaded-success');
-  const badgeVerifyStatus = document.getElementById('badge-verify-status');
-  const btnPreevalLink = document.getElementById('btn-preeval-link');
-
-  const isPreEvalOpen = !!appData && status === 'preeval-open';
-  setVisible(banner, isPreEvalOpen);
-  setVisible(sectionVerifyDocs, isPreEvalOpen);
+  // Ön değerlendirme bandı yalnızca aşama açıkken görünür; belge yükleme ve sorular tek sayfadadır (on-degerlendirme-formu.html).
+  setVisible(document.getElementById('banner-preeval'), !!appData && status === 'preeval-open');
 
   // Show deadline banner for draft and submitted applications
   const deadlineBanner = document.getElementById('deadline-banner-panel');
   if (deadlineBanner && appData && (status === 'draft' || status === 'submitted')) {
     deadlineBanner.style.display = 'flex';
-  }
-
-  const verifyKinds = (window.MYCONFIG && window.MYCONFIG.verificationKinds) || [{ kind: 'tax', label: 'Doğrulama Belgesi', required: true }];
-
-  function docOfKind(kind) {
-    const docs = (appData && appData.verificationDocs) || [];
-    return docs.find(d => d && d.kind === kind) || null;
-  }
-
-  // Zorunlu türlerin hepsi yüklendiyse (ya da yanıtlar zaten verildiyse) ön değerlendirme sorularına geçilebilir.
-  function requiredDocsDone() {
-    return hasAnswers || verifyKinds.filter(k => k.required).every(k => docOfKind(k.kind));
-  }
-
-  function formatDocMeta(doc) {
-    const kb = doc.size >= 1024 * 1024 ? (doc.size / 1048576).toFixed(1) + ' MB' : Math.max(1, Math.round(doc.size / 1024)) + ' KB';
-    const d = doc.uploadedAt ? new Date(doc.uploadedAt) : null;
-    const when = d && !isNaN(d) ? d.toLocaleString('tr-TR', { dateStyle: 'short', timeStyle: 'short' }) : '';
-    return [kb, when].filter(Boolean).join(' · ');
-  }
-
-  function showRowError(row, msg) {
-    const el = row.querySelector('[data-role="row-error"]');
-    el.textContent = msg || '';
-    el.style.display = msg ? 'block' : 'none';
-  }
-
-  function renderVerifyDocs() {
-    if (!isPreEvalOpen || !sectionVerifyDocs || !verifyDocList) return;
-    verifyDocList.replaceChildren();
-    verifyKinds.forEach((k) => {
-      const doc = docOfKind(k.kind);
-      const row = document.createElement('li');
-      row.dataset.kind = k.kind;
-      row.style.cssText = 'display:flex;flex-wrap:wrap;gap:0.5rem 1rem;align-items:center;justify-content:space-between;padding:0.75rem 1rem;border:1px solid var(--gray-200,#ddd);border-radius:8px;';
-
-      const info = document.createElement('div');
-      const title = document.createElement('strong');
-      title.textContent = k.label + (k.required ? '' : ' (isteğe bağlı)');
-      const state = document.createElement('div');
-      state.dataset.role = 'doc-state';
-      state.style.cssText = 'font-size:0.85rem;color:var(--gray-700);';
-      state.textContent = doc ? doc.name + ' — ' + formatDocMeta(doc) : 'Belge bekleniyor';
-      const hint = document.createElement('div');
-      hint.style.cssText = 'font-size:0.8rem;color:var(--gray-700);';
-      hint.textContent = 'PDF, JPG veya PNG — en fazla 10 MB';
-      info.append(title, state, hint);
-
-      const actions = document.createElement('div');
-      const input = document.createElement('input');
-      input.type = 'file';
-      input.accept = '.pdf,.jpg,.jpeg,.png';
-      input.hidden = true;
-      input.dataset.role = 'doc-input';
-      const btn = document.createElement('button');
-      btn.type = 'button';
-      btn.className = 'btn-panel-outline';
-      btn.dataset.role = 'doc-button';
-      btn.style.padding = '0.5rem 1rem';
-      btn.textContent = doc ? 'Değiştir' : 'Yükle';
-      btn.addEventListener('click', () => input.click());
-      input.addEventListener('change', () => uploadOne(row, k, input, btn));
-      actions.append(input, btn);
-
-      const err = document.createElement('div');
-      err.dataset.role = 'row-error';
-      err.setAttribute('role', 'alert');
-      err.style.cssText = 'display:none;flex-basis:100%;font-size:0.85rem;color:var(--primary);font-weight:600;';
-
-      row.append(info, actions, err);
-      verifyDocList.append(row);
-    });
-    const done = requiredDocsDone();
-    if (badgeVerifyStatus) badgeVerifyStatus.textContent = done ? 'Belgeler Yüklendi' : 'Belge Bekleniyor';
-    if (verifySuccess) verifySuccess.style.display = done ? 'block' : 'none';
-  }
-
-  // Her işlem tek dosyadır ve sonunda ekran sunucudaki gerçek duruma göre yeniden çizilir; böylece başarısız ya da
-  // yarım kalan bir yükleme ekranda eski ya da olmayan bir dosya adı bırakmaz.
-  async function uploadOne(row, kind, input, btn) {
-    const file = input.files && input.files[0];
-    if (!file) return;
-    if (verifyError) verifyError.style.display = 'none';
-    showRowError(row, '');
-    // Sunucu aynı kuralları uygular; burada yalnızca gereksiz yüklemeyi önleriz.
-    const fileProblem = !/\.(pdf|jpe?g|png)$/i.test(file.name) ? 'Yalnızca PDF, JPG veya PNG dosyası yükleyebilirsiniz.'
-      : file.size === 0 ? 'Dosya boş; lütfen geçerli bir dosya seçiniz.'
-      : file.size > 10 * 1024 * 1024 ? 'Dosya boyutu en fazla 10 MB olabilir.' : '';
-    if (fileProblem) {
-      input.value = '';
-      showRowError(row, fileProblem);
-      return;
-    }
-    btn.disabled = true;
-    btn.textContent = 'Yükleniyor...';
-    let failure = '';
-    if (window.MYAPI && window.MYCONFIG && window.MYCONFIG.apiBase) {
-      try {
-        await MYAPI.uploadVerificationDoc(file, kind.kind);
-      } catch (err) {
-        failure = (err.errors && err.errors[0] && err.errors[0].text) || err.message || 'Belge yüklenemedi: ' + file.name;
-      }
-      try {
-        const res = await window.MYAPI.getApplication();
-        if (res && res.application && appData) {
-          appData.verificationDocs = res.application.verificationDocs || [];
-          MYUI.writeJSON(getAppKey(), appData);
-        }
-      } catch (e) {
-        if (!failure) failure = 'Belge yüklendi ancak liste yenilenemedi; sayfayı yenileyiniz.';
-      }
-    } else if (appData) {
-      // Çevrimdışı gösterim modu: yalnızca yerel kayıt.
-      const rest = (appData.verificationDocs || []).filter(d => d.kind !== kind.kind);
-      appData.verificationDocs = rest.concat([{ kind: kind.kind, name: file.name, size: file.size, uploadedAt: new Date().toISOString() }]);
-      MYUI.writeJSON(getAppKey(), appData);
-    }
-    renderVerifyDocs();
-    if (failure) {
-      const fresh = verifyDocList.querySelector('[data-kind="' + kind.kind + '"]');
-      if (fresh) showRowError(fresh, failure);
-    }
-  }
-
-  if (isPreEvalOpen) {
-    renderVerifyDocs();
-
-    if (btnPreevalLink) {
-      btnPreevalLink.addEventListener('click', (e) => {
-        if (!requiredDocsDone()) {
-          e.preventDefault();
-          if (verifyError) {
-            verifyError.textContent = 'Ön Değerlendirme sorularına erişebilmek için lütfen önce doğrulama belgelerinizi yükleyiniz.';
-            verifyError.style.display = 'block';
-          }
-          sectionVerifyDocs.scrollIntoView({ behavior: 'smooth' });
-        }
-      });
-    }
   }
 
   if (appData && status === 'preeval-open' && hasAnswers) {
@@ -431,49 +252,17 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   }
 
+  // Gönderilen başvuru kesindir; düzenleme yalnızca henüz gönderilmemiş taslak için sunulur.
   if (btnOpenEdit) {
-    if (appData && status === 'draft') {
-      // Taslak zaten düzenlenebilir durumda; onay penceresi gerekmez.
+    if (isDraft) {
       const label = btnOpenEdit.querySelector('span');
       if (label) label.textContent = 'Başvuruyu Tamamla ve Gönder';
       btnOpenEdit.addEventListener('click', () => {
-        window.location.href = 'basvuru.html?mode=edit';
+        window.location.href = 'basvuru.html';
       });
     } else {
-      btnOpenEdit.addEventListener('click', () => MYUI.openModal(modalEdit));
+      btnOpenEdit.remove();
     }
-  }
-
-  closeButtons.forEach(btn => {
-    btn.addEventListener('click', () => MYUI.closeModal(modalEdit));
-  });
-
-  if (btnConfirmEdit) {
-    btnConfirmEdit.addEventListener('click', async () => {
-      btnConfirmEdit.disabled = true;
-      function proceed() {
-        const current = getStoredData() || {};
-        current.status = 'draft';
-        current.updatedAt = new Date().toISOString();
-        MYUI.writeJSON(getDraftKey(), current);
-        MYUI.writeJSON(getAppKey(), current);
-        window.location.href = 'basvuru.html?mode=edit';
-      }
-      if (window.MYAPI && typeof window.MYAPI.reopenApplication === 'function') {
-        try {
-          await window.MYAPI.reopenApplication();
-          proceed();
-        } catch (err) {
-          btnConfirmEdit.disabled = false;
-          if (err.isOfflineDemo) {
-            proceed();
-            return;
-          }
-        }
-      } else {
-        proceed();
-      }
-    });
   }
 
   // Şifre Değiştirme Modalı
@@ -526,32 +315,21 @@ document.addEventListener('DOMContentLoaded', async () => {
       if (!valid) return;
 
       btnSubmitPw.disabled = true;
-      if (window.MYAPI && typeof window.MYAPI.changePassword === 'function') {
-        try {
-          await window.MYAPI.changePassword({ old_password: oldPw, new_password: newPw });
-          btnSubmitPw.disabled = false;
-          if (msgPwSuccess) msgPwSuccess.style.display = 'block';
-          if (inpOldPw) inpOldPw.value = '';
-          if (inpNewPw) inpNewPw.value = '';
-          setTimeout(() => {
-            MYUI.closeModal(modalPw);
-          }, 1500);
-        } catch (err) {
-          btnSubmitPw.disabled = false;
-          if (err.isOfflineDemo) {
-            if (msgPwSuccess) msgPwSuccess.style.display = 'block';
-            setTimeout(() => { MYUI.closeModal(modalPw); }, 1500);
-            return;
-          }
-          if (errOldPw) {
-            errOldPw.textContent = err.message || 'Mevcut şifre hatalı.';
-            errOldPw.style.display = 'block';
-          }
-        }
-      } else {
+      try {
+        await window.MYAPI.changePassword({ old_password: oldPw, new_password: newPw });
         btnSubmitPw.disabled = false;
         if (msgPwSuccess) msgPwSuccess.style.display = 'block';
-        setTimeout(() => { MYUI.closeModal(modalPw); }, 1500);
+        if (inpOldPw) inpOldPw.value = '';
+        if (inpNewPw) inpNewPw.value = '';
+        setTimeout(() => {
+          MYUI.closeModal(modalPw);
+        }, 1500);
+      } catch (err) {
+        btnSubmitPw.disabled = false;
+        if (errOldPw) {
+          errOldPw.textContent = err.message || 'Mevcut şifre hatalı.';
+          errOldPw.style.display = 'block';
+        }
       }
     });
   }

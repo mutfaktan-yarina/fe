@@ -63,32 +63,6 @@
   color: var(--primary);
 }
 
-/* Düzenleme Modu Bildirimi */
-.edit-mode-banner {
-  background: var(--gray-100);
-  border: 1px solid var(--gray-300);
-  border-left: 4px solid var(--gray-800);
-  border-radius: var(--radius-sm);
-  padding: 0.875rem 1.25rem;
-  display: none;
-  align-items: center;
-  gap: 0.75rem;
-  color: var(--gray-800);
-  font-size: 0.875rem;
-  font-weight: 500;
-}
-
-.edit-mode-banner.active {
-  display: flex;
-}
-
-.edit-mode-banner svg {
-  width: 20px;
-  height: 20px;
-  flex-shrink: 0;
-  color: var(--gray-800);
-}
-
 /* Son Tarih Bildirimi */
 .deadline-banner {
   background: #fef3c7;
@@ -332,9 +306,17 @@
   grid-template-columns: 1fr;
 }
 
-/* q13 tek satır: altındaki "personel girişi" ve "kaçı hâlâ çalışıyor" alanları yan yana oturur */
-#field-q13 {
+/* q13 ve personel girişi radyosu aynı satırda; "Evet" ise devam soruları sol çizgili çerçevede, radyonun altında tam genişlikte açılır */
+#q14-more {
   grid-column: 1 / -1;
+  display: grid;
+  gap: 1.25rem;
+  padding-left: 1.25rem;
+  border-left: 3px solid var(--gray-300);
+}
+
+#q14-more[hidden] {
+  display: none;
 }
 
 /*-------- Dosya Yükleme / Dropzone --------*/
