@@ -1660,4 +1660,12 @@ main[data-admin-ops] > section > form[data-stacked] > button {
 #docPreviewModal .card-box-header {
   justify-content: flex-end;
   gap: 0.75rem;
+  margin-top: 1.25rem;
+}
+
+.btn-action-block,
+.btn-action-unblock,
+.btn-action-role,
+.btn-action-reset {
+  margin: 0 0.4rem 0.5rem 0;
 }

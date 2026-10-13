@@ -369,7 +369,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // Arayüz durumu: seçilen talep anahtarı ve (kalıcı olmayan) Uyumsuz gerekçesi.
   const docUi = {};
-  ['msa', ...DOC_KINDS].forEach((k) => { docUi[k] = { selected: false, invalid: '' }; });
+  ['msa', ...DOC_KINDS].forEach((k) => { docUi[k] = { invalid: '' }; });
   const requestedDocsList = document.getElementById('requestedDocsList');
   const btnRequestDocs = document.getElementById('btnRequestDocs');
   const requestHint = document.getElementById('requestHint');
@@ -474,18 +474,6 @@ document.addEventListener('DOMContentLoaded', async () => {
       btn.disabled = true;
       btn.textContent = 'Talep Edildi';
       actions.appendChild(btn);
-    } else {
-      const btn = document.createElement('button');
-      btn.type = 'button';
-      btn.setAttribute('aria-pressed', ui.selected ? 'true' : 'false');
-      btn.textContent = ui.selected ? 'Talep Edilecek' : 'Belge Talep Et';
-      btn.disabled = currentApp.status !== 'pending-verify' || !preevalOpen();
-      if (!preevalOpen()) btn.title = calendarState.preevalMsg;
-      btn.addEventListener('click', () => {
-        ui.selected = !ui.selected;
-        renderDocs();
-      });
-      actions.appendChild(btn);
     }
     row.append(text, actions);
     list.appendChild(row);
@@ -503,7 +491,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     syncRequestButton();
   }
 
-  // #btnRequestDocs: seçili belge -> talep; seçili yok -> belgesiz devam; talepten sonra / sorular açılınca pasif.
+  // #btnRequestDocs: vergi/SGK/kimlik belgelerinin üçünü birden talep eder ve soruları açar; sorular açılınca pasif.
   function syncRequestButton() {
     if (!btnRequestDocs) return;
     const status = currentApp.status;
@@ -521,18 +509,13 @@ document.addEventListener('DOMContentLoaded', async () => {
       label = 'Ön Değerlendirme Açık';
       disabled = true;
     } else {
-      const selected = DOC_KINDS.filter(k => docUi[k].selected && !requestedList().includes(k));
-      const requestedNow = requestedList().length > 0;
-      label = selected.length ? 'Seçilen Belgeleri Talep Et' : requestedNow ? 'Belgeler Talep Edildi' : 'Belge Talep Etmeden Devam Et';
+      label = 'Belge Talep Et ve Ön Değerlendirme Sorularını Gönder';
       if (!preevalOpen()) {
         disabled = true;
         hint = calendarState.preevalMsg;
       } else if (!isMsaValid() || verifyWrites > 0) {
         disabled = true;
         hint = isMsaValid() ? 'Doğrulama kaydediliyor…' : 'Önce MSA Sertifikası belgesini inceleyip Doğrulandı olarak işaretleyiniz.';
-      } else if (!selected.length && requestedNow) {
-        disabled = true;
-        hint = 'Aday talep edilen belgelerin tamamını yüklediğinde ön değerlendirme soruları otomatik açılır.';
       }
     }
     if (sp) sp.textContent = label;
@@ -600,7 +583,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   async function refreshDetail() {
     const res = await MYAPI.getEditorApplicationDetail(currentApp.ref);
     if (res && res.ok && res.application) Object.assign(currentApp, res.application);
-    DOC_KINDS.forEach((k) => { if (requestedList().includes(k)) docUi[k].selected = false; });
     renderStatusBadge();
     renderDocs();
     renderPreeval();
@@ -609,11 +591,9 @@ document.addEventListener('DOMContentLoaded', async () => {
   if (btnRequestDocs) {
     btnRequestDocs.addEventListener('click', async () => {
       if (btnRequestDocs.disabled) return;
-      const selected = DOC_KINDS.filter(k => docUi[k].selected && !requestedList().includes(k));
       btnRequestDocs.disabled = true;
       try {
-        if (selected.length) await MYAPI.requestDocs(currentApp.ref, selected);
-        else await MYAPI.openPreeval(currentApp.ref);
+        await MYAPI.requestDocs(currentApp.ref, DOC_KINDS);
       } catch (apiErr) {
         syncRequestButton();
         showBanner(apiErr.message || 'İşlem tamamlanamadı.', false);
@@ -625,9 +605,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         showBanner((err && err.message) || 'Başvuru yenilenemedi. Sayfayı yenileyiniz.', false);
         return;
       }
-      showBanner(selected.length
-        ? 'Seçilen belgeler talep edildi; adaya e-posta gönderildi. Belgelerin tamamı yüklenince ön değerlendirme soruları açılır.'
-        : 'Adayın Ön Değerlendirme soruları açıldı.', true);
+      showBanner('Belgeler talep edildi ve ön değerlendirme soruları açıldı; adaya e-posta gönderildi.', true);
     });
   }
 

@@ -35,6 +35,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const calForm = document.getElementById("calendarForm");
   const calState = document.getElementById("calState");
   const calFeedback = document.getElementById("calFeedback");
+  const calFreeze = document.getElementById("calFreeze");
+  const calFreezeNote = document.getElementById("calFreezeNote");
   const CAL_FIELDS = ["apply_open", "apply_close", "preeval_open", "preeval_close", "eval_open", "eval_close"];
 
   // "2026-11-20T23:59:59+03:00" -> "2026-11-20T23:59" (datetime-local değeri)
@@ -46,6 +48,8 @@ document.addEventListener("DOMContentLoaded", () => {
     CAL_FIELDS.forEach(name => { calForm.elements[name].value = toInputValue(cal[name]); });
     const left = cal.apply_seconds_left;
     const extra = cal.apply_state === "open" ? ` (kalan ${Math.ceil(left / 86400)} gün)` : "";
+    calFreeze.checked = !!cal.frozen;
+    calFreezeNote.hidden = !cal.frozen;
     calState.textContent = `Başvuru: ${STATE_LABELS[cal.apply_state]}${extra} · Ön değerlendirme: ${STATE_LABELS[cal.preeval_state]} · Değerlendirme: ${STATE_LABELS[cal.eval_state]}`;
   }
 
@@ -75,6 +79,17 @@ document.addEventListener("DOMContentLoaded", () => {
     const warnings = calendarWarnings(values);
     if (warnings.length && !await MYUI.confirmDialog({ title: "Takvim uyarıları", text: `${warnings.join("\n")}\n\nYine de kaydedilsin mi?`, ok: "Yine de Kaydet" })) return;
     saveCalendar(values);
+  });
+
+  calFreeze.addEventListener("change", async () => {
+    const on = calFreeze.checked;
+    try {
+      showCalendar(await MYAPI.setCalendar({ freeze: on }));
+      note(calFeedback, on ? "Tarih denetimi donduruldu." : "Tarih denetimi yeniden açıldı.", true);
+    } catch (err) {
+      calFreeze.checked = !on;
+      note(calFeedback, err.message || "Ayar kaydedilemedi.", false);
+    }
   });
 
   async function loadCalendar() {
