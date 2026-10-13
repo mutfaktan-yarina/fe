@@ -1,5 +1,5 @@
 // cerez.js - Çerez tercih paneli (yalnızca arayüz). Seçim tarayıcıda 'cerez_tercih' anahtarında saklanır.
-// TODO(analytics): Google Analytics bağlandığında 'cerez:degisti' olayını dinleyip yalnızca analytics === true ise yükleyin.
+// Google Analytics (gtag.js) yalnızca analitik onayı varsa yüklenir; head'deki satır içi betik yalnızca dataLayer/gtag kuyruğunu hazırlar.
 (() => {
   const KEY = 'cerez_tercih';
   const CATS = [
@@ -15,11 +15,34 @@
     try { localStorage.setItem(KEY, JSON.stringify(v)); } catch (e) { /* depolama kapalı: panel her ziyarette görünür */ }
   };
 
+  const GA_ID = 'G-061XL9S8WQ';
+  let gaLoaded = false;
+
+  // Onay varsa gtag.js'i yükler (kuyruktaki config çağrıları yüklenince işlenir); onay yoksa ağa/çerez yazmaya dokunmaz.
+  function applyAnalytics(v) {
+    if (v && v.analitik === true) {
+      window['ga-disable-' + GA_ID] = false;
+      if (gaLoaded) return;
+      gaLoaded = true;
+      const s = document.createElement('script');
+      s.async = true;
+      s.src = 'https://www.googletagmanager.com/gtag/js?id=' + GA_ID;
+      document.head.appendChild(s);
+    } else if (gaLoaded) {
+      // Onay geri çekildi: ölçümü durdur ve GA çerezlerini sil.
+      window['ga-disable-' + GA_ID] = true;
+      document.cookie.split(';').map((c) => c.split('=')[0].trim()).filter((n) => /^_ga(_|$)/.test(n)).forEach((n) => {
+        document.cookie = n + '=; Max-Age=0; path=/';
+      });
+    }
+  }
+
   let panel = null;
 
   function save(choice) {
     const value = { zorunlu: true, islevsel: !!choice.islevsel, analitik: !!choice.analitik, tarih: new Date().toISOString() };
     write(value);
+    applyAnalytics(value);
     document.dispatchEvent(new CustomEvent('cerez:degisti', { detail: value }));
     close();
   }
@@ -81,7 +104,8 @@
   }
 
   document.addEventListener('DOMContentLoaded', () => {
-    if (!read()) open();
+    const saved = read();
+    if (!saved) open(); else applyAnalytics(saved);
     document.addEventListener('click', (e) => {
       const t = e.target.closest('[data-cerez-ac]');
       if (t) { e.preventDefault(); open(); }

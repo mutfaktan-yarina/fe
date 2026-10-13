@@ -74,10 +74,10 @@
     defaultApiBase = '';
   }
 
-  // Doğrulama belgesi türleri (sunucu türleri: tax, sgk, id). Hangi türlerin zorunlu olduğu program kuralıdır;
-  // müşteri netleştirince yalnızca bu listeye satır eklenir/çıkarılır.
+  // Doğrulama belgesi türleri (sunucu türleri: tax, sgk, id). Belge yükleme zorunlu değildir (belge talebi editör kararıdır);
+  // zorunlu bir tür gerekirse yalnızca bu listeye eklenir.
   var verificationKinds = [
-    { kind: 'tax', label: 'Vergi Levhası / Kooperatif Kayıtları', required: true },
+    { kind: 'tax', label: 'Vergi Levhası / Kooperatif Kayıtları', required: false },
     { kind: 'sgk', label: 'SGK Hizmet Dökümü', required: false },
     { kind: 'id', label: 'Kimlik Fotokopisi', required: false }
   ];

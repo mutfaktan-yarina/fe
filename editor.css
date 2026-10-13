@@ -376,6 +376,26 @@ main.editor-page-wrap {
   letter-spacing: 0.04em;
 }
 
+.table-card th > button {
+  all: unset;
+  cursor: pointer;
+  text-transform: inherit;
+  letter-spacing: inherit;
+}
+
+.table-card th > button:focus-visible {
+  outline: 2px solid var(--dark);
+  outline-offset: 2px;
+}
+
+.table-card th[aria-sort="ascending"] > button::after {
+  content: " ▲";
+}
+
+.table-card th[aria-sort="descending"] > button::after {
+  content: " ▼";
+}
+
 .table-card td {
   padding: 1rem;
   border-bottom: 1px solid var(--gray-100);
@@ -640,17 +660,12 @@ main.editor-page-wrap {
   min-width: 0;
 }
 
-.doc-files-list > div[data-pending] > div:first-child::after {
-  content: "Doğrulama bekleniyor";
-  justify-self: start;
+.doc-files-list > div > div:first-child > p {
   margin-top: 0.35rem;
-  padding: 0.1rem 0.5rem;
-  border-radius: 999px;
-  background: var(--warning-light);
-  border: 1px solid var(--warning-border);
-  color: var(--warning-text);
-  font-size: 0.72rem;
-  font-weight: 700;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--danger);
+  overflow-wrap: anywhere;
 }
 
 .doc-files-list > div > div:last-child {
@@ -684,6 +699,75 @@ main.editor-page-wrap {
 
 #verify-actions > button {
   width: 100%;
+}
+
+#verify-actions > p {
+  margin-top: 0.5rem;
+  font-size: 0.78rem;
+  color: var(--gray-500);
+}
+
+.card-box > h3 {
+  margin: 1.25rem 0 0.6rem;
+  font-size: 0.95rem;
+  color: var(--dark);
+}
+
+.doc-files-list button:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.doc-files-list button[aria-pressed="true"] {
+  background: var(--dark);
+  border-color: var(--dark);
+  color: var(--white);
+}
+
+#preevalClosed > p {
+  font-size: 0.9rem;
+  color: var(--gray-600);
+}
+
+.card-box > article > [role="radiogroup"] {
+  display: inline-flex;
+  gap: 0.15rem;
+  margin: 0.6rem 0.75rem 0 0;
+}
+
+.card-box > article > [role="radiogroup"] > button {
+  background: none;
+  border: 0;
+  padding: 0 0.1rem;
+  font-size: 1.6rem;
+  line-height: 1;
+  color: var(--gray-300);
+  cursor: pointer;
+}
+
+.card-box > article > [role="radiogroup"] > button.on {
+  color: var(--primary);
+}
+
+.card-box > article > [role="radiogroup"] > button:disabled {
+  cursor: default;
+  opacity: 0.55;
+}
+
+.card-box > article > button {
+  background: var(--white);
+  border: 1px solid var(--gray-300);
+  border-radius: var(--radius-sm);
+  padding: 0.25rem 0.7rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--gray-700);
+  cursor: pointer;
+}
+
+.card-box > article > button:disabled {
+  opacity: 0.55;
+  cursor: default;
 }
 
 .doc-files-list strong {
@@ -858,35 +942,6 @@ main.editor-page-wrap {
   margin-bottom: 1.5rem;
 }
 
-.rejection-box {
-  background: var(--danger-light);
-  border: 1.5px solid rgba(163,0,6, 0.3);
-  border-radius: var(--radius-sm);
-  padding: 1rem;
-  margin-top: 1rem;
-}
-
-.rejection-box label {
-  display: block;
-  font-size: 0.84rem;
-  font-weight: 700;
-  color: var(--danger);
-  margin-bottom: 0.35rem;
-}
-
-.rejection-box textarea {
-  border-color: var(--danger);
-}
-
-.rejection-box > span {
-  font-size: 0.78rem;
-  color: var(--danger);
-  font-weight: 600;
-  margin-top: 0.35rem;
-  display: block;
-}
-
-
 .modal-backdrop {
   position: fixed;
   inset: 0;
@@ -976,6 +1031,15 @@ main.editor-page-wrap {
   color: var(--danger);
 }
 
+.feedback-warning {
+  background: var(--warning-light);
+  border: 1px solid var(--warning-border);
+  color: var(--warning-text);
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.35rem;
+}
+
 @media (max-width: 1024px) {
   /* Geniş tablo kırpılmaz: kart yatay kaydırılır (kaydırma ipucu için sütunlar kesilmez) */
   .table-card {
@@ -1039,6 +1103,12 @@ main.editor-page-wrap {
   .btn-table-action,
   .doc-files-list button,
   .modal-close-btn {
+    min-height: 44px;
+  }
+
+  .table-card th > button {
+    display: inline-flex;
+    align-items: center;
     min-height: 44px;
   }
 
@@ -1553,4 +1623,41 @@ main[data-admin-ops] > section > form[data-stacked] {
 
 main[data-admin-ops] > section > form[data-stacked] > button {
   justify-self: start;
+}
+
+#docPreviewModal .modal-card {
+  max-width: 900px;
+}
+
+#docPreviewBody > iframe {
+  width: 100%;
+  height: 65vh;
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-sm);
+}
+
+#docPreviewBody > img {
+  display: block;
+  max-width: 100%;
+  max-height: 65vh;
+  margin: 0 auto;
+}
+
+#docInvalidModal textarea {
+  border-color: var(--danger);
+}
+
+#docInvalidModal .field > span {
+  font-size: 0.78rem;
+  color: var(--danger);
+  font-weight: 600;
+  margin-top: 0.35rem;
+  display: block;
+}
+
+#docInvalidModal .card-box-header,
+#docValidModal .card-box-header,
+#docPreviewModal .card-box-header {
+  justify-content: flex-end;
+  gap: 0.75rem;
 }

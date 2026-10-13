@@ -197,7 +197,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
       docList.append(row);
     });
-    const done = readOnly || requiredDocsDone();
+    const done = readOnly || (requiredDocsDone() && currentDocs().length > 0);
     if (docBadge) docBadge.textContent = readOnly ? 'Belgeler Teslim Edildi' : (done ? 'Belgeler Yüklendi' : 'Belge Bekleniyor');
     if (docSuccess) docSuccess.style.display = done && !readOnly ? 'block' : 'none';
     syncSubmit();

@@ -220,6 +220,88 @@ document.addEventListener('DOMContentLoaded', async () => {
   // Ön değerlendirme bandı yalnızca aşama açıkken görünür; belge yükleme ve sorular tek sayfadadır (on-degerlendirme-formu.html).
   setVisible(document.getElementById('banner-preeval'), !!appData && status === 'preeval-open');
 
+  // Talep Edilen Belgeler: yalnız aday durumu "verifying" iken ve yalnız talep edilen türler; dosya seçilince yükleme otomatik başlar.
+  const docsSection = document.getElementById('requested-docs');
+  const DOC_LABELS = { tax: 'Vergi Levhası / Kooperatif Kayıtları', sgk: 'SGK Hizmet Dökümü', id: 'Kimlik Fotokopisi' };
+  const DOC_ORDER = ['tax', 'sgk', 'id'];
+
+  function renderRequestedDocs(app) {
+    if (!docsSection) return;
+    const requested = DOC_ORDER.filter(k => Array.isArray(app.requestedDocs) && app.requestedDocs.indexOf(k) >= 0);
+    const show = app.status === 'verifying' && requested.length > 0;
+    setVisible(docsSection, show);
+    const list = docsSection.querySelector('ul');
+    list.replaceChildren();
+    if (!show) return;
+    const uploaded = {};
+    (app.verificationDocs || []).forEach(d => { if (d && d.kind) uploaded[d.kind] = d; });
+    requested.forEach(kind => {
+      const doc = uploaded[kind];
+      const li = document.createElement('li');
+      li.dataset.docKind = kind;
+      li.dataset.state = doc ? 'uploaded' : 'pending';
+      const info = document.createElement('div');
+      const title = document.createElement('strong');
+      title.textContent = DOC_LABELS[kind];
+      const note = document.createElement('span');
+      note.textContent = doc ? (doc.name || 'Belge yüklendi') : 'Belge bekleniyor';
+      info.append(title, note);
+      const label = document.createElement('label');
+      const input = document.createElement('input');
+      input.type = 'file';
+      input.accept = '.pdf,.jpg,.jpeg,.png';
+      input.setAttribute('aria-label', DOC_LABELS[kind] + (doc ? ' belgesini değiştir' : ' belgesini yükle'));
+      input.addEventListener('change', () => uploadRequested(li, kind, input));
+      label.append(input);
+      const err = document.createElement('p');
+      err.setAttribute('role', 'alert');
+      err.hidden = true;
+      li.append(info, label, err);
+      list.append(li);
+    });
+  }
+
+  async function uploadRequested(li, kind, input) {
+    const file = input.files && input.files[0];
+    if (!file) return;
+    const err = li.querySelector('[role="alert"]');
+    const fail = (msg) => { err.textContent = msg; err.hidden = !msg; };
+    fail('');
+    if (!/\.(pdf|jpe?g|png)$/i.test(file.name)) { input.value = ''; fail('Yalnızca PDF, JPG veya PNG dosyası yükleyebilirsiniz.'); return; }
+    if (file.size === 0) { input.value = ''; fail('Dosya boş; lütfen geçerli bir dosya seçiniz.'); return; }
+    if (file.size > 10 * 1024 * 1024) { input.value = ''; fail('Dosya boyutu en fazla 10 MB olabilir.'); return; }
+    input.disabled = true;
+    li.querySelector('span').textContent = 'Yükleniyor...';
+    let failure = '';
+    try {
+      await window.MYAPI.uploadVerificationDoc(file, kind);
+    } catch (e) {
+      failure = (e.errors && e.errors[0] && e.errors[0].text) || e.message || 'Belge yüklenemedi: ' + file.name;
+    }
+    try {
+      const res = await window.MYAPI.getApplication();
+      if (res && res.application) {
+        const fresh = res.application;
+        if (fresh.ref && !fresh.refNo) fresh.refNo = fresh.ref;
+        MYUI.writeJSON(getAppKey(), fresh);
+        // Son belge yüklenince sunucu durumu ön değerlendirmeye alır: sayfa yeni durumla yeniden çizilir.
+        if (fresh.status !== 'verifying') { window.location.reload(); return; }
+        renderRequestedDocs(fresh);
+        if (failure) {
+          const row = docsSection.querySelector('[data-doc-kind="' + kind + '"] [role="alert"]');
+          if (row) { row.textContent = failure; row.hidden = false; }
+        }
+        return;
+      }
+    } catch (e) {
+      if (!failure) failure = 'Belge yüklendi ancak liste yenilenemedi; sayfayı yenileyiniz.';
+    }
+    input.disabled = false;
+    fail(failure);
+  }
+
+  if (appData) renderRequestedDocs(appData);
+
   // Show deadline banner for draft and submitted applications
   const deadlineBanner = document.getElementById('deadline-banner-panel');
   if (deadlineBanner && appData && (status === 'draft' || status === 'submitted')) {

@@ -89,6 +89,47 @@ document.addEventListener("DOMContentLoaded", () => {
     if (statRejected) statRejected.textContent = counts.rejected;
   }
 
+  // Puan sütunu sıralaması: ilk yüklemede Form azalan; yeni sütun azalan başlar, aynısı yön değiştirir.
+  const SORT_KEYS = { form: "sistemScore", pre: "preScore", total: "totalScore" };
+  let sortCol = "form";
+  let sortDir = "desc";
+
+  // Boş (null) puanlar her iki yönde sonda; eşitlikte başvuru sırası (id artan).
+  function sortedApplications() {
+    const key = SORT_KEYS[sortCol];
+    const sign = sortDir === "asc" ? 1 : -1;
+    return applications.map((app, i) => ({ app, i })).sort((x, y) => {
+      const a = num(x.app[key]);
+      const b = num(y.app[key]);
+      if (a === null || b === null) {
+        if (a !== b) return a === null ? 1 : -1;
+      } else if (a !== b) {
+        return (a - b) * sign;
+      }
+      return x.app.order - y.app.order || x.i - y.i;
+    }).map(item => item.app);
+  }
+
+  function syncSortHeaders() {
+    document.querySelectorAll("th[data-sort]").forEach(th => {
+      const on = th.dataset.sort === sortCol;
+      th.setAttribute("aria-sort", on ? (sortDir === "asc" ? "ascending" : "descending") : "none");
+    });
+  }
+
+  document.querySelectorAll("th[data-sort]").forEach(th => {
+    th.querySelector("button").addEventListener("click", () => {
+      if (th.dataset.sort === sortCol) {
+        sortDir = sortDir === "desc" ? "asc" : "desc";
+      } else {
+        sortCol = th.dataset.sort;
+        sortDir = "desc";
+      }
+      syncSortHeaders();
+      renderTable();
+    });
+  });
+
   function scoreBadge(className, value, max) {
     const badge = document.createElement("div");
     badge.className = className;
@@ -108,9 +149,9 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    // Sıralama sunucudan gelir (order_by=ranking); sıra numarası filtrelenmemiş listeye göre verilir, arama ve sekme sırayı değiştirmez.
+    // Sıralama istemcide yapılır; sıra numarası o anki sıralamada filtrelenmemiş listedeki konumdur, arama ve sekme sırayı değiştirmez.
     const jury = juryRefs;
-    const ranked = applications.map((app, index) => ({ app, rank: index + 1 }));
+    const ranked = sortedApplications().map((app, index) => ({ app, rank: index + 1 }));
 
     const query = searchQuery.toLocaleLowerCase("tr-TR");
     const filtered = ranked.filter(({ app }) => {
@@ -178,7 +219,7 @@ document.addEventListener("DOMContentLoaded", () => {
       if (sistem !== null) {
         tdSistem.appendChild(scoreBadge("score-badge score-sistem", sistem, 70));
       } else {
-        tdSistem.textContent = "—";
+        tdSistem.textContent = "-";
       }
       tr.appendChild(tdSistem);
 
@@ -186,7 +227,7 @@ document.addEventListener("DOMContentLoaded", () => {
       if (num(app.preScore) !== null) {
         tdPre.appendChild(scoreBadge("score-badge score-on", app.preScore, 30));
       } else {
-        tdPre.textContent = "—";
+        tdPre.textContent = "-";
       }
       tr.appendChild(tdPre);
 
@@ -194,7 +235,7 @@ document.addEventListener("DOMContentLoaded", () => {
       if (num(app.totalScore) !== null) {
         tdTotal.appendChild(scoreBadge("score-badge score-total", app.totalScore, 100));
       } else {
-        tdTotal.textContent = "—";
+        tdTotal.textContent = "-";
       }
       tr.appendChild(tdTotal);
 
@@ -273,9 +314,9 @@ document.addEventListener("DOMContentLoaded", () => {
       tdApplicant.appendChild(colDiv);
       cell(`${app.city} · ${STRUCTURE_LABELS[app.biztype] || "-"}`);
       cell(num(app.totalEmployees) === null ? "—" : `${app.totalEmployees} SGK (%${app.femaleRatio} Kadın)`);
-      cell("—");
-      cell("—");
-      cell("—");
+      cell("-");
+      cell("-");
+      cell("-");
       const badge = document.createElement("span");
       badge.className = "badge-status status-draft";
       badge.textContent = "Taslak";
@@ -378,7 +419,8 @@ document.addEventListener("DOMContentLoaded", () => {
         totalPages = res.total_pages || 1;
         page++;
       } while (page <= totalPages);
-      applications = all.map(app => ({
+      applications = all.map((app, i) => ({
+        order: Number.isFinite(Number(app.id)) ? Number(app.id) : i,
         ref: app.ref,
         name: app.name,
         business: app.business,

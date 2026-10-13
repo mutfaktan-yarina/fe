@@ -52,6 +52,7 @@
   var KNOWN_TEXT = [
     [/belge degistirme suresi doldugu/i, 'Belge değiştirme süresi dolduğu için belge artık değiştirilemez.'],
     [/incelemede ilerledigi icin belge degistirilemez/i, 'Başvurunuz incelemede ilerlediği için belge artık değiştirilemez.'],
+    [/belge yalnizca editor belge talep ettiginde veya on degerlendirme asamasinda yuklenebilir/i, 'Belge yalnızca editör belge talep ettiğinde veya ön değerlendirme aşamasında yüklenebilir.'],
     [/gonderilmis basvurunun belgesi degistirilemez/i, 'Gönderilmiş başvurunun belgesi değiştirilemez.']
   ];
   var ENGLISH_HINT = /(^|[^a-z])(upstream|unavailable|bad gateway|gateway|time-?out|timed out|too many|rate limit|forbidden|unauthori[sz]ed|authentication|not found|internal server|server error|bad request|payload|entity too large|service|failed|failure|error|invalid|denied|required|something went wrong|try again|please|the|is|are|was|not|cannot|could not|unable|connection|refused|reset|closed|busy|overloaded)([^a-z]|$)/i;
@@ -265,6 +266,12 @@
     },
     openPreeval: function (ref) {
       return request('/editor/applications/open-preeval', { method: 'POST', body: { ref: ref } });
+    },
+    requestDocs: function (ref, kinds) {
+      return request('/editor/applications/request-docs', { method: 'POST', body: { ref: ref, kinds: kinds } });
+    },
+    verifyDoc: function (payload) {
+      return request('/editor/applications/verify-doc', { method: 'POST', body: payload });
     },
     verifyApplication: function (payload) {
       return request('/editor/applications/verify', { method: 'POST', body: payload });

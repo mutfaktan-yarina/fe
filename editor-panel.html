@@ -4,7 +4,6 @@
   <!-- @include head title="Değerlendirme Kurulu Paneli | Mutfaktan Yarına" description="Mutfaktan Yarına Eğitim ve Destek Programı 2026 Başvuru İnceleme ve Ön Değerlendirme Paneli" css="base editor" scripts="ui config api editor-panel" robots=noindex bold=1 -->
   <!-- DÜZENLEME: partials/head.html dosyasını değiştirin, sonra ./build.sh çalıştırın -->
   <meta charset="UTF-8">
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-061XL9S8WQ"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
@@ -102,7 +101,7 @@
   <main class="editor-page-wrap" id="main">
     <div class="card-heading">
       <h1>Hibe Başvuru İnceleme ve Ön Değerlendirme</h1>
-      <p>Başvurular Sistem Puanına (70) göre sıralanmıştır. Belge doğrulaması uygun bulunan adayların 6 soruluk Ön Değerlendirmesini (30) puanlayarak Toplam Ön Sıralama Puanını (100) oluşturursunuz; Jüri Aday Listesi bu puana göre belirlenir.</p>
+      <p>Başvurular varsayılan olarak Form Puanına (70) göre sıralanır; Form, Ön Değerlendirme ve Toplam başlıklarına tıklayarak sıralamayı değiştirebilirsiniz. Belge doğrulaması uygun bulunan adayların 6 soruluk Ön Değerlendirmesini (30) puanlayarak Toplam Ön Sıralama Puanını (100) oluşturursunuz; Jüri Aday Listesi bu puana göre belirlenir.</p>
     </div>
 
     <div class="stats-grid">
@@ -176,9 +175,9 @@
             <th>Girişimci & İşletme</th>
             <th>İl / Yapı</th>
             <th>İstihdam (Kadın %)</th>
-            <th>Sistem (70)</th>
-            <th>Ön Değ. (30)</th>
-            <th>Toplam (100)</th>
+            <th data-sort="form" aria-sort="descending"><button type="button">Form (70)</button></th>
+            <th data-sort="pre" aria-sort="none"><button type="button">Ön Değerlendirme (30)</button></th>
+            <th data-sort="total" aria-sort="none"><button type="button">Toplam (100)</button></th>
             <th>Durum</th>
             <th>İşlem</th>
           </tr>

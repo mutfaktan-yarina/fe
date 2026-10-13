@@ -4,7 +4,6 @@
   <!-- @include head title="Başvuru Değerlendirme Cetveli | Mutfaktan Yarına" description="Mutfaktan Yarına Eğitim ve Destek Programı 2026 Şartnameye Uygun Başvuru İnceleme ve 6 Soruluk Ön Değerlendirme Puanlaması" css="base editor" scripts="ui config api editor-degerlendirme" robots=noindex -->
   <!-- DÜZENLEME: partials/head.html dosyasını değiştirin, sonra ./build.sh çalıştırın -->
   <meta charset="UTF-8">
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-061XL9S8WQ"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
@@ -105,6 +104,7 @@
     </div>
 
     <div id="saveFeedback" class="feedback-banner" hidden></div>
+    <div id="calendarNotice" class="feedback-banner feedback-warning" role="status" hidden></div>
 
     <div class="split-layout">
       <div>
@@ -156,21 +156,21 @@
 
           <div class="doc-files-list" id="docFilesList"></div>
 
-          <div id="rejection-box" class="rejection-box" hidden>
-            <label for="inp-rejection-reason">Uyumsuzluk / İnceleme Ret Gerekçesi (Zorunlu)</label>
-            <textarea id="inp-rejection-reason" placeholder="Tespit edilen belge uyumsuzluğunu veya ret nedenini buraya açıkça yazınız..."></textarea>
-            <span id="rejection-error" hidden>Belge uyumsuzluğu tespit edildiğinde gerekçe yazılması zorunludur.</span>
-          </div>
+          <h3>Talep Edilen Belgeler</h3>
+          <div class="doc-files-list" id="requestedDocsList"></div>
 
           <div id="verify-actions">
-            <button type="button" class="btn btn-outline" id="btnOpenPreeval">
-              <span>Belgeleri Onayla ve Ön Değerlendirmeyi Aç</span>
+            <button type="button" class="btn btn-outline" id="btnRequestDocs">
+              <span>Belge Talep Etmeden Devam Et</span>
             </button>
+            <p id="requestHint" hidden></p>
           </div>
         </details>
 
         <details class="card-box">
-          <summary>Adayın 6 Ön Değerlendirme Sorusuna Yazılı Cevapları</summary>
+          <summary>Ön Değerlendirme</summary>
+
+          <div id="preevalClosed"><p>Ön değerlendirme henüz açılmadı. Sorular, belge talebi tamamlanınca ya da belge talep edilmeden devam edilince adaya açılır.</p></div>
 
           <article>
             <h3><b>Ö1</b>İşletmeniz son iki yılda herhangi bir kurumdan geri ödemesiz hibe veya ayni destek aldı mı? Destek aldıysanız hangi kurumdan ne zaman ve ne tutarda aldınız?</h3>
@@ -247,13 +247,45 @@
   <div class="modal-backdrop" id="docPreviewModal" hidden>
     <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="docPreviewTitle">
       <div class="modal-head">
-        <h3 id="docPreviewTitle">Belge Bilgisi</h3>
+        <h3 id="docPreviewTitle">Belge Önizleme</h3>
         <button type="button" class="modal-close-btn" id="closeDocPreviewModal" aria-label="Kapat">&times;</button>
       </div>
-      <div class="modal-body-text" id="docPreviewBody">
+      <div class="modal-body-text" id="docPreviewBody"></div>
+      <div class="card-box-header">
+        <a class="btn btn-outline" id="docPreviewDownload" download hidden>İndir</a>
+        <button type="button" class="btn btn-outline" id="confirmDocPreview">Kapat</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" id="docInvalidModal" hidden>
+    <form class="modal-card" role="dialog" aria-modal="true" aria-labelledby="docInvalidTitle">
+      <div class="modal-head">
+        <h3 id="docInvalidTitle">Uyumsuzluk Gerekçesi</h3>
+        <button type="button" class="modal-close-btn" id="closeDocInvalidModal" aria-label="Kapat">&times;</button>
+      </div>
+      <div class="field">
+        <label for="docInvalidReason">Bu belgenin neden uyumsuz olduğunu yazınız (zorunlu)</label>
+        <textarea id="docInvalidReason" maxlength="80" placeholder="Tespit edilen uyumsuzluğu açıkça yazınız..."></textarea>
+        <span id="docInvalidError" hidden>Gerekçe yazılması zorunludur.</span>
       </div>
       <div class="card-box-header">
-        <button type="button" class="btn btn-outline" id="confirmDocPreview">Kapat</button>
+        <button type="button" class="btn btn-outline" id="cancelDocInvalid">Vazgeç</button>
+        <button type="submit" class="btn">Uyumsuz Olarak İşaretle</button>
+      </div>
+    </form>
+  </div>
+
+  <div class="modal-backdrop" id="docValidModal" hidden>
+    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="docValidTitle">
+      <div class="modal-head">
+        <h3 id="docValidTitle">Belge Doğrulansın mı?</h3>
+        <button type="button" class="modal-close-btn" id="closeDocValidModal" aria-label="Kapat">&times;</button>
+      </div>
+      <div class="modal-body-text" id="docValidBody"></div>
+      <div class="card-box-header">
+        <button type="button" class="btn btn-outline" id="cancelDocValid">Vazgeç</button>
+        <button type="button" class="btn" id="confirmDocValid">Evet, Doğrulandı</button>
       </div>
     </div>
   </div>
