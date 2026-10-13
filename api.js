@@ -132,6 +132,15 @@
         : (data && typeof data === 'object' && typeof data.error === 'string') ? [{ field: 'general', text: data.error }]
         : (typeof data === 'string' && data) ? [{ field: 'general', text: data.slice(0, 300) }] : null;
       var errors = localizeErrors(res.status, raw, fromApp);
+      // Oturum düşmüşse (giriş yapılmış görünen kullanıcıda 401) giriş sayfasına yönlendirilir; /auth/ uçlarındaki 401 yanlış şifre vb. anlamına gelir.
+      if (res.status === 401 && path.indexOf('/auth/') !== 0) {
+        var wasSignedIn = false;
+        try { wasSignedIn = !!localStorage.getItem('currentUser'); } catch (e) { /* yoksay */ }
+        if (wasSignedIn) {
+          try { localStorage.removeItem('currentUser'); } catch (e) { /* yoksay */ }
+          window.location.replace('giris.html');
+        }
+      }
       throw ApiError(res.status, errors, data);
     }
 
