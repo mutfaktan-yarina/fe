@@ -1253,7 +1253,7 @@ a {
 .partners > img {
   display: block;
   width: 100%;
-  max-width: 1040px;
+  max-width: 1000px;
   height: auto;
   margin-inline: auto;
 }
