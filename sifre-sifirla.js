@@ -7,8 +7,10 @@ document.addEventListener('DOMContentLoaded', () => {
   const simLink = document.getElementById('btn-open-change-link');
 
   if (form) {
+    let sending = false;
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
+      if (sending) return;
 
       const emailVal = inpEmail.value.trim();
       const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -47,11 +49,14 @@ document.addEventListener('DOMContentLoaded', () => {
         inpEmail.focus();
       }
 
+      sending = true;
       try {
         await window.MYAPI.forgotPassword({ email: emailVal });
         showSuccess();
       } catch (err) {
         showRequestError(err);
+      } finally {
+        sending = false;
       }
     });
   }

@@ -396,3 +396,15 @@ body {
     font-size: 1.75rem;
   }
 }
+
+.session-notice {
+  margin: 0 0 1.25rem;
+  padding: 0.85rem 1rem;
+  border: 1px solid var(--warning-border);
+  border-radius: var(--radius-sm, 6px);
+  background: var(--warning-light);
+  color: var(--warning-text);
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+.session-notice[hidden] { display: none; }

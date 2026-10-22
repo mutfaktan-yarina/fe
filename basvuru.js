@@ -26,9 +26,9 @@ function clearUserDraftData() {
   localStorage.removeItem('onDegerlendirmeAnswers');
 }
 
-function redirectToLogin() {
+function redirectToLogin(expired) {
   try { localStorage.removeItem('currentUser'); } catch (e) {}
-  window.location.replace('giris.html?next=basvuru.html');
+  window.location.replace('giris.html?next=basvuru.html' + (expired ? '&expired=1' : ''));
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', () => {
     return;
   }
   if (window.MYAPI && typeof window.MYAPI.session === 'function') {
-    window.MYAPI.session().catch((err) => { if (err && err.status === 401) redirectToLogin(); });
+    window.MYAPI.session().catch((err) => { if (err && err.status === 401) redirectToLogin(true); });
   }
 
   let currentStep = 1;
@@ -350,7 +350,7 @@ document.addEventListener('DOMContentLoaded', () => {
           return res;
         })
         .catch((err) => {
-          if (err && err.status === 401) { redirectToLogin(); throw err; }
+          if (err && err.status === 401) { redirectToLogin(true); throw err; }
           showDraftStatus('Taslak kaydedilemedi: ' + (err.message || 'Hata'), true);
           throw err;
         });

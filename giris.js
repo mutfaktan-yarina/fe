@@ -5,6 +5,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const toggleBtn = document.getElementById('toggle-pw');
   const submitBtn = document.getElementById('btn-submit');
 
+  // Oturum bitince yönlendirilen kullanıcıya nedenini söyle (?expired=1; sayfa kendi yönlendirmelerinde ekler).
+  if (new URLSearchParams(window.location.search).get('expired') === '1') document.getElementById('session-notice').hidden = false;
+
   const fieldUser = userInput.closest('.field');
   const fieldPass = passInput.closest('.field');
 

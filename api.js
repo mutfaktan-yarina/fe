@@ -138,7 +138,7 @@
         try { wasSignedIn = !!localStorage.getItem('currentUser'); } catch (e) { /* yoksay */ }
         if (wasSignedIn) {
           try { localStorage.removeItem('currentUser'); } catch (e) { /* yoksay */ }
-          window.location.replace('giris.html');
+          window.location.replace('giris.html?expired=1');
         }
       }
       throw ApiError(res.status, errors, data);

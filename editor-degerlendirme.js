@@ -756,9 +756,17 @@ document.addEventListener('DOMContentLoaded', async () => {
   renderSummary();
 
   if (evaluationForm) {
+    // Devam eden kayıt varken (veya kayıt başarılı olup yönlendirme beklenirken) ikinci gönderim yok sayılır.
+    let saving = false;
     evaluationForm.addEventListener('submit', async (e) => {
       e.preventDefault();
+      if (saving) return;
+      saving = true;
+      let redirecting = false;
+      try { redirecting = await saveEvaluation(); } finally { if (!redirecting) saving = false; }
+    });
 
+    async function saveEvaluation() {
       const hasInvalid = document.querySelector('[data-v].active-invalid');
       if (hasInvalid) {
         const reasonVal = collectRejectionReason();
@@ -785,7 +793,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         setTimeout(() => {
           window.location.href = 'editor-panel.html';
         }, 1400);
-        return;
+        return true;
       }
 
       if (vals.some(v => v === null)) {
@@ -821,6 +829,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       setTimeout(() => {
         window.location.href = 'editor-panel.html';
       }, 1400);
-    });
+      return true;
+    }
   }
 });

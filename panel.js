@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     window.MYAPI.session().catch((err) => {
       if (err.status === 401) {
         try { localStorage.removeItem('currentUser'); } catch (e) {}
-        window.location.replace('giris.html');
+        window.location.replace('giris.html?expired=1');
       }
     });
   }
