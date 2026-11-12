@@ -321,7 +321,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     msa: 'Eğitim sonu değerlendirmeden en az 70 puan; sertifika geçerliliği',
     tax: 'Geçerli vergi levhası; en az 2 yıldır faaliyette olma',
     sgk: 'Kendisi hariç en az 2 aktif SGK\'lı çalışan; beyan edilen çalışan sayıları',
-    id: '31 Aralık 2026 itibarıyla 18–30 yaş (doğum 1996-01-01 – 2008-12-31)'
+    id: '31 Aralık 2026 itibarıyla 18–55 yaş (doğum 1971-01-01 – 2008-12-31)'
   };
   // Takvim (GET /v1/calendar): ön değerlendirme penceresi dışında MSA/belge doğrulama, belge talebi ve soruları açma;
   // değerlendirme penceresi dışında puan kaydetme ve ret sunucuda reddedilir. Uyarı ve pasiflik tarihleri takvimden gelir.

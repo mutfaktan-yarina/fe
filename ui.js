@@ -157,10 +157,10 @@ window.MYUI = (() => {
     return { score, label: labels[score] };
   }
 
-  // Anlık yaş uyarısı (kesin doğrulama sunucuda): 31.12.2026 itibarıyla 18–30 yaş = doğum 1996-01-01 … 2008-12-31 (iki uç dahil).
+  // Anlık yaş uyarısı (kesin doğrulama sunucuda): 31.12.2026 itibarıyla 18 yaşını doldurmuş, 56 yaşına girmemiş = doğum 1971-01-01 … 2008-12-31 (iki uç dahil).
   function isAgeEligible(iso) {
     const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso || '');
-    if (!m || iso < '1996-01-01' || iso > '2008-12-31') return false;
+    if (!m || iso < '1971-01-01' || iso > '2008-12-31') return false;
     const d = new Date(Date.UTC(+m[1], +m[2] - 1, +m[3]));
     return d.getUTCMonth() === +m[2] - 1 && d.getUTCDate() === +m[3];
   }
