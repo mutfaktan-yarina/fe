@@ -75,9 +75,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     return 'onDegerlendirmeAnswers';
   }
 
-  // Yanıtlar yalnızca bu başvurunun ref numarasıyla eşleşiyorsa bu başvuruya aittir.
-  const storedAnswers = MYUI.readJSON(getPreevalAnswersKey());
-  const existingAnswers = storedAnswers && refNo && storedAnswers.ref === refNo ? storedAnswers : null;
+  // Gönderilmiş yanıtlar sunucudan gelir (başka cihazda ya da yerel kayıt silinmişken de görünür); yerel kopya
+  // yalnız sunucuya ulaşılamazken kullanılır ve ancak bu başvurunun ref numarasıyla eşleşiyorsa bu başvuruya aittir.
+  // GET /v1/preeval: {ok, ref, status, biztype, is_open, answers}; answers aday yanıtlayana dek null'dır.
+  const serverAnswers = server && server.answers && typeof server.answers === 'object' ? server.answers : null;
+  const storedAnswers = server ? null : MYUI.readJSON(getPreevalAnswersKey());
+  const localAnswers = storedAnswers && refNo && storedAnswers.ref === refNo ? storedAnswers : null;
+  const existingAnswers = serverAnswers || localAnswers;
   const isViewMode = !!existingAnswers;
 
   const textareas = [1, 2, 3, 4, 5, 6].map(n => ({
@@ -94,12 +98,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   if (!isViewMode && !formOpen) {
     if (form) form.setAttribute('hidden', '');
-    // Yanıtlar başka bir cihazdan gönderilmiş olabilir: yerel kayıt yoksa sunucudaki yanıtlar gösterilir.
-    loadRemotePreeval().then((shown) => {
-      if (!shown) {
-        showFeedback('Ön Değerlendirme aşamanız henüz açılmadı', 'Bu aşama, program ekibi tarafından açılan adaylar içindir. Aşamanız açıldığında belgelerinizi bu sayfadan yükleyip soruları yanıtlayabilirsiniz.');
-      }
-    });
+    showFeedback('Ön Değerlendirme aşamanız henüz açılmadı', 'Bu aşama, program ekibi tarafından açılan adaylar içindir. Aşamanız açıldığında belgelerinizi bu sayfadan yükleyip soruları yanıtlayabilirsiniz.');
     return;
   }
 
@@ -155,19 +154,25 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   function renderDocs() {
     if (!sectionDocs || !docList) return;
+    // Gönderimden sonra yalnız yüklenmiş belgeler listelenir; hiç belge yoksa (belgesiz yol) bölüm gizli kalır.
+    const kinds = readOnly ? docKinds.filter(k => docOfKind(k.kind)) : docKinds;
+    if (readOnly && kinds.length === 0) {
+      sectionDocs.setAttribute('hidden', '');
+      return;
+    }
     sectionDocs.removeAttribute('hidden');
     docList.replaceChildren();
-    docKinds.forEach((k) => {
+    kinds.forEach((k) => {
       const doc = docOfKind(k.kind);
       const row = document.createElement('li');
       row.dataset.kind = k.kind;
 
       const info = document.createElement('div');
       const title = document.createElement('strong');
-      title.textContent = k.label + (k.required ? '' : ' (isteğe bağlı)');
+      title.textContent = k.label + (k.required || readOnly ? '' : ' (isteğe bağlı)');
       const state = document.createElement('div');
       state.dataset.role = 'doc-state';
-      state.textContent = doc ? doc.name + ' — ' + formatDocMeta(doc) : (readOnly ? 'Belge yüklenmedi' : 'Belge bekleniyor');
+      state.textContent = doc ? doc.name + ' — ' + formatDocMeta(doc) : 'Belge bekleniyor';
       info.append(title, state);
       if (!readOnly) {
         const hint = document.createElement('div');
@@ -175,6 +180,17 @@ document.addEventListener('DOMContentLoaded', async () => {
         info.append(hint);
       }
       row.append(info);
+
+      // Gönderimden sonra aday kendi belgesini açıp görebilir (sunucu yalnız oturum sahibinin belgesini verir).
+      if (readOnly && doc && window.MYAPI) {
+        const view = document.createElement('a');
+        view.href = MYAPI.verificationDocDownloadUrl(k.kind);
+        view.target = '_blank';
+        view.rel = 'noopener';
+        view.textContent = 'Görüntüle';
+        view.setAttribute('aria-label', k.label + ' belgesini görüntüle');
+        row.append(view);
+      }
 
       if (!readOnly) {
         const actions = document.createElement('div');
@@ -274,7 +290,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
     if (submitBtn) submitBtn.setAttribute('hidden', '');
     if (statusBadge) statusBadge.textContent = 'Cevaplar Gönderildi';
-    showFeedback('Ön Değerlendirme Yanıtlarınız Alındı', 'Verdiğiniz yanıtlar kaydedilmiştir ve program ekibi tarafından incelenmektedir.');
+    showFeedback('Ön Değerlendirme Yanıtlarınız Alındı', 'Verdiğiniz yanıtlar ve yüklediğiniz belgeler aşağıda yer almaktadır; program ekibi tarafından incelenmektedir.');
   }
 
   if (form && !isViewMode) {
@@ -355,37 +371,4 @@ document.addEventListener('DOMContentLoaded', async () => {
       }, 1500);
     });
   }
-  // Arka uç API entegrasyonu (sunucuda kayıtlı ön değerlendirme cevapları varsa formu doldurur ve kilitler)
-  async function loadRemotePreeval() {
-    if (!window.MYAPI) return false;
-    try {
-      const res = await MYAPI.getPreeval();
-      // GET /v1/preeval: {ok, ref, status, biztype, is_open, answers}; answers is null until the applicant has answered.
-      if (res && res.ok && res.answers && typeof res.answers === 'object') {
-        const answers = res.answers;
-        textareas.forEach(item => {
-          const el = document.getElementById(item.id);
-          if (el && answers[item.key]) {
-            el.value = answers[item.key];
-            const countEl = document.getElementById(item.countId);
-            if (countEl) countEl.textContent = el.value.length;
-            el.setAttribute('readonly', '');
-          }
-        });
-        if (confirmCheck) {
-          confirmCheck.checked = true;
-          confirmCheck.disabled = true;
-        }
-        if (submitBtn) submitBtn.setAttribute('hidden', '');
-        if (statusBadge) statusBadge.textContent = 'Cevaplar Gönderildi';
-        if (form) form.removeAttribute('hidden');
-        showFeedback('Ön Değerlendirme Yanıtlarınız Alındı', 'Verdiğiniz yanıtlar kaydedilmiştir ve program ekibi tarafından incelenmektedir.');
-        return true;
-      }
-    } catch (e) {
-    }
-    return false;
-  }
-
-  loadRemotePreeval();
 });

@@ -217,8 +217,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (isFilled(appData.q21)) setText('tbl-q21', yesNo[appData.q21] || appData.q21);
   }
 
-  // Ön değerlendirme bandı yalnızca aşama açıkken görünür; belge yükleme ve sorular tek sayfadadır (on-degerlendirme-formu.html).
-  setVisible(document.getElementById('banner-preeval'), !!appData && status === 'preeval-open');
+  // Ön değerlendirme bandı aşama açıkken giriş, yanıtlar alındıktan sonra (puanlama dahil) görüntüleme içindir;
+  // belge yükleme ve sorular tek sayfadadır (on-degerlendirme-formu.html).
+  const preevalAnswered = status === 'answered' || status === 'scored' || (status === 'preeval-open' && hasAnswers);
+  setVisible(document.getElementById('banner-preeval'), !!appData && (status === 'preeval-open' || preevalAnswered));
 
   // Talep Edilen Belgeler: yalnız aday durumu "verifying" iken ve yalnız talep edilen türler; dosya seçilince yükleme otomatik başlar.
   const docsSection = document.getElementById('requested-docs');
@@ -308,13 +310,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     deadlineBanner.style.display = 'flex';
   }
 
-  if (appData && status === 'preeval-open' && hasAnswers) {
+  if (appData && preevalAnswered) {
     const bannerTitle = document.getElementById('preeval-banner-title');
     const bannerDesc = document.getElementById('preeval-banner-desc');
     const btnText = document.getElementById('btn-preeval-text');
     const btnLink = document.getElementById('btn-preeval-link');
     if (bannerTitle) bannerTitle.textContent = 'Ön Değerlendirme Yanıtlarınız Alındı';
-    if (bannerDesc) bannerDesc.textContent = 'Yanıtlarınız kaydedilmiştir ve program ekibi tarafından incelenmektedir.';
+    if (bannerDesc) bannerDesc.textContent = 'Yanıtlarınız kaydedilmiştir ve program ekibi tarafından incelenmektedir. Gönderdiğiniz yanıtları ve belgeleri görüntüleyebilirsiniz.';
     if (btnText) btnText.textContent = 'Cevaplarımı İncele';
     if (btnLink) btnLink.setAttribute('href', 'on-degerlendirme-formu.html?mode=view');
   }
