@@ -184,10 +184,11 @@ window.MYUI = (() => {
     }
     if (isAdmin) {
       document.querySelectorAll('[data-admin-only]').forEach(el => el.removeAttribute('hidden'));
+      // Yöneticide sağdaki rol rozeti gösterilmez (kullanıcı kararı 2026-11-21); ad ve e-posta yeterli.
       const badge = bar.querySelector('.role-badge:not([id])');
       if (badge) {
-        badge.textContent = 'Yönetici (Admin)';
         badge.dataset.role = 'admin';
+        badge.hidden = true;
       }
     }
     const logout = document.getElementById('btnLogout');

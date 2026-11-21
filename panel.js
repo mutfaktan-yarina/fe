@@ -222,15 +222,17 @@ document.addEventListener('DOMContentLoaded', async () => {
   const preevalAnswered = status === 'answered' || status === 'scored' || (status === 'preeval-open' && hasAnswers);
   setVisible(document.getElementById('banner-preeval'), !!appData && (status === 'preeval-open' || preevalAnswered));
 
-  // Talep Edilen Belgeler: yalnız aday durumu "verifying" iken ve yalnız talep edilen türler; dosya seçilince yükleme otomatik başlar.
+  // Talep Edilen Belgeler: belge doğrulama aşamasında ve yanıtlardan sonra gelen ek taleplerde (K14) yalnız talep edilen
+  // türler; dosya seçilince yükleme otomatik başlar. Soruları açık adayda yükleme ön değerlendirme formundadır.
   const docsSection = document.getElementById('requested-docs');
   const DOC_LABELS = { tax: 'Vergi Levhası / Kooperatif Kayıtları', sgk: 'SGK Hizmet Dökümü', id: 'Kimlik Fotokopisi' };
   const DOC_ORDER = ['tax', 'sgk', 'id'];
+  const DOC_STATES = ['verifying', 'answered', 'scored'];
 
   function renderRequestedDocs(app) {
     if (!docsSection) return;
     const requested = DOC_ORDER.filter(k => Array.isArray(app.requestedDocs) && app.requestedDocs.indexOf(k) >= 0);
-    const show = app.status === 'verifying' && requested.length > 0;
+    const show = DOC_STATES.indexOf(app.status) >= 0 && requested.length > 0;
     setVisible(docsSection, show);
     const list = docsSection.querySelector('ul');
     list.replaceChildren();
@@ -287,7 +289,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (fresh.ref && !fresh.refNo) fresh.refNo = fresh.ref;
         MYUI.writeJSON(getAppKey(), fresh);
         // Son belge yüklenince sunucu durumu ön değerlendirmeye alır: sayfa yeni durumla yeniden çizilir.
-        if (fresh.status !== 'verifying') { window.location.reload(); return; }
+        if (DOC_STATES.indexOf(fresh.status) < 0) { window.location.reload(); return; }
         renderRequestedDocs(fresh);
         if (failure) {
           const row = docsSection.querySelector('[data-doc-kind="' + kind + '"] [role="alert"]');

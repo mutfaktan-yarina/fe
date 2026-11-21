@@ -50,6 +50,11 @@ document.addEventListener("DOMContentLoaded", () => {
   let searchQuery = "";
 
   const KNOWN_STATUSES = ["pending-verify", "pending-score", "scored", "rejected"];
+  // Davet listesi (Sistem Puanı ile 25 asil + 10 yedek, eşitler dahil) sunucuda son veriden hesaplanır (inviteTier).
+  let inviteOnly = false;
+  let juryOnly = false;          // Jüri Aday Listesi: toplam puan (100) ile ilk 25 + eşitler, belgeleri doğrulanmış
+  const selectedRefs = new Set();
+  const TIER_LABELS = { main: "Asil", reserve: "Yedek", out: "Liste dışı" };
 
   // Bilinmeyen durum, ilk aşama olarak sayılır; böylece toplam her zaman kovaların toplamına eşit kalır.
   function statusOf(app) {
@@ -158,6 +163,12 @@ document.addEventListener("DOMContentLoaded", () => {
       if (selectedStatuses.size && !selectedStatuses.has(statusOf(app))) {
         return false;
       }
+      if (inviteOnly && app.inviteTier !== "main" && app.inviteTier !== "reserve") {
+        return false;
+      }
+      if (juryOnly && !jury.has(app.ref)) {
+        return false;
+      }
       if (query) {
         const fields = [app.name, app.business, app.ref, app.city];
         const hit = fields.some(f => String(f || "").toLocaleLowerCase("tr-TR").includes(query));
@@ -169,7 +180,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (filtered.length === 0) {
       const tr = document.createElement("tr");
       const td = document.createElement("td");
-      td.setAttribute("colspan", "10");
+      td.setAttribute("colspan", "12");
       td.textContent = loadState === "loading" ? "Başvurular yükleniyor..."
         : loadState === "error" ? loadErrorText
         : "Kriterlere uygun başvuru bulunamadı.";
@@ -182,6 +193,20 @@ document.addEventListener("DOMContentLoaded", () => {
       const status = statusOf(app);
       const inJury = jury.has(app.ref);
       const tr = document.createElement("tr");
+
+      const tdSel = document.createElement("td");
+      const sel = document.createElement("input");
+      sel.type = "checkbox";
+      sel.dataset.ref = app.ref;
+      sel.setAttribute("aria-label", `${app.ref} başvurusunu seç`);
+      sel.disabled = !app.inviteTier;          // elenmiş başvuru davet edilemez
+      sel.checked = selectedRefs.has(app.ref);
+      sel.addEventListener("change", () => {
+        if (sel.checked) selectedRefs.add(app.ref); else selectedRefs.delete(app.ref);
+        syncBulk();
+      });
+      tdSel.appendChild(sel);
+      tr.appendChild(tdSel);
 
       const tdRank = document.createElement("td");
       const rankPill = document.createElement("span");
@@ -213,6 +238,18 @@ document.addEventListener("DOMContentLoaded", () => {
       const tdEmp = document.createElement("td");
       tdEmp.textContent = num(app.totalEmployees) === null ? "—" : `${app.totalEmployees} SGK (%${app.femaleRatio} Kadın)`;
       tr.appendChild(tdEmp);
+
+      const tdInvite = document.createElement("td");
+      tdInvite.dataset.tier = app.inviteTier || "";
+      const tierEl = document.createElement("strong");
+      tierEl.textContent = TIER_LABELS[app.inviteTier] || "—";
+      tdInvite.appendChild(tierEl);
+      if (app.inviteTier) {
+        const inv = document.createElement("small");
+        inv.textContent = app.invited ? "Davet edildi" : "Davet edilmedi";
+        tdInvite.appendChild(inv);
+      }
+      tr.appendChild(tdInvite);
 
       const tdSistem = document.createElement("td");
       const sistem = num(app.sistemScore);
@@ -252,7 +289,9 @@ document.addEventListener("DOMContentLoaded", () => {
         statusBadge.textContent = "Ön Değerlendirme";
       } else if (status === "rejected") {
         statusBadge.className = "badge-status status-rejected";
-        statusBadge.textContent = "Elendi";
+        // Ret, yönetici bildirimi gönderene dek adaya görünmez.
+        statusBadge.textContent = app.rejectionAnnounced === true ? "Elendi (bildirildi)"
+          : app.rejectionAnnounced === false ? "Elendi (bildirilmedi)" : "Elendi";
       } else {
         statusBadge.className = "badge-status status-scored";
         statusBadge.textContent = "Puanlandı";
@@ -276,6 +315,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       appsTableBody.appendChild(tr);
     });
+    if (typeof syncBulk === "function") syncBulk();
   }
 
   function renderDrafts() {
@@ -285,7 +325,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (shown.length === 0) {
       const tr = document.createElement("tr");
       const td = document.createElement("td");
-      td.setAttribute("colspan", "10");
+      td.setAttribute("colspan", "12");
       td.textContent = draftState === "loading" ? "Taslaklar yükleniyor..."
         : draftState === "error" ? draftErrorText
         : "Kriterlere uygun taslak bulunamadı.";
@@ -301,6 +341,7 @@ document.addEventListener("DOMContentLoaded", () => {
         tr.appendChild(td);
         return td;
       };
+      cell("");
       cell("–");
       cell(app.ref);
       const tdApplicant = cell("");
@@ -314,6 +355,7 @@ document.addEventListener("DOMContentLoaded", () => {
       tdApplicant.appendChild(colDiv);
       cell(`${app.city} · ${STRUCTURE_LABELS[app.biztype] || "-"}`);
       cell(num(app.totalEmployees) === null ? "—" : `${app.totalEmployees} SGK (%${app.femaleRatio} Kadın)`);
+      cell("—");
       cell("-");
       cell("-");
       cell("-");
@@ -356,13 +398,18 @@ document.addEventListener("DOMContentLoaded", () => {
       const to = form.elements.to.value;
       // Durum, listedeki seçili filtrelerden gelir; "Tümü" taslak dışındaki dört durumdur.
       const statuses = selectedStatuses.size ? [...selectedStatuses] : EXPORT_ALL_STATUSES;
+
       let msg = "";
       if (from && to && from > to) msg = "Bitiş tarihi başlangıç tarihinden önce olamaz.";
       errEl.textContent = msg;
       errEl.hidden = !msg;
       if (msg) return;
       const a = document.createElement("a");
-      a.href = MYAPI.adminApplicationsExportUrl({ from, to, status: statuses.join(",") });
+      // Üstteki düğmeler sunucuya filtre olarak gider: liste ile CSV aynı seçimi gösterir.
+      const filters = { from, to, status: statuses.join(",") };
+      if (inviteOnly) filters.invite = "1";
+      if (juryOnly) filters.jury = "1";
+      a.href = MYAPI.adminApplicationsExportUrl(filters);
       a.rel = "noopener";
       document.body.appendChild(a);
       a.click();
@@ -373,7 +420,8 @@ document.addEventListener("DOMContentLoaded", () => {
   function syncFilterTabs() {
     filterTabs.forEach(t => {
       const f = t.getAttribute("data-filter");
-      const on = f === "draft" ? draftMode : f === "all" ? !draftMode && selectedStatuses.size === 0 : !draftMode && selectedStatuses.has(f);
+      const on = f === "draft" ? draftMode : f === "invite" ? !draftMode && inviteOnly : f === "jury" ? !draftMode && juryOnly
+        : f === "all" ? !draftMode && selectedStatuses.size === 0 && !inviteOnly && !juryOnly : !draftMode && selectedStatuses.has(f);
       t.classList.toggle("active", on);
       t.setAttribute("aria-pressed", String(on));
     });
@@ -391,7 +439,9 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
       draftMode = false;
-      if (f === "all") selectedStatuses.clear();
+      if (f === "invite") inviteOnly = !inviteOnly;
+      else if (f === "jury") juryOnly = !juryOnly;
+      else if (f === "all") { selectedStatuses.clear(); inviteOnly = false; juryOnly = false; }
       else if (!selectedStatuses.delete(f)) selectedStatuses.add(f);
       syncFilterTabs();
       renderTable();
@@ -431,7 +481,10 @@ document.addEventListener("DOMContentLoaded", () => {
         sistemScore: app.systemScore,
         preScore: app.preScore,
         totalScore: app.totalScore,
-        status: app.status
+        status: app.status,
+        inviteTier: app.inviteTier || null,
+        invited: !!app.invited,
+        rejectionAnnounced: app.rejectionAnnounced
       }));
       await loadJuryRefs();
       loadState = "ready";
@@ -442,6 +495,77 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     updateMetrics();
     renderTable();
+  }
+
+  // ── Toplu davet (belge talebi) ──
+  const btnBulkInvite = document.getElementById("btnBulkInvite");
+  const bulkCount = document.getElementById("bulkCount");
+  const bulkResult = document.getElementById("bulkResult");
+  const bulkModal = document.getElementById("bulkInviteModal");
+  const selectAll = document.getElementById("selectAllRows");
+
+  function syncBulk() {
+    // yalnız listede hâlâ davet edilebilir olanlar sayılır
+    const valid = new Set(applications.filter(a => a.inviteTier).map(a => a.ref));
+    [...selectedRefs].forEach(r => { if (!valid.has(r)) selectedRefs.delete(r); });
+    if (bulkCount) bulkCount.textContent = String(selectedRefs.size);
+    if (btnBulkInvite) btnBulkInvite.disabled = selectedRefs.size === 0;
+  }
+
+  if (selectAll) {
+    selectAll.addEventListener("change", () => {
+      appsTableBody.querySelectorAll("input[type=checkbox][data-ref]").forEach(cb => {
+        if (cb.disabled) return;
+        cb.checked = selectAll.checked;
+        if (cb.checked) selectedRefs.add(cb.dataset.ref); else selectedRefs.delete(cb.dataset.ref);
+      });
+      syncBulk();
+    });
+  }
+
+  if (btnBulkInvite && bulkModal) {
+    const form = bulkModal.querySelector("form");
+    const err = document.getElementById("bulkInviteError");
+    const close = () => MYUI.closeModal(bulkModal);
+    document.getElementById("closeBulkInvite").addEventListener("click", close);
+    document.getElementById("cancelBulkInvite").addEventListener("click", close);
+    btnBulkInvite.addEventListener("click", () => {
+      document.getElementById("bulkInviteSummary").textContent =
+        `${selectedRefs.size} başvuruya belge talebi ve ön değerlendirme daveti gönderilecek.`;
+      err.hidden = true;
+      MYUI.openModal(bulkModal);
+    });
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const kinds = [...form.querySelectorAll("input[name=kind]:checked")].map(i => i.value);
+      if (!kinds.length) { err.textContent = "En az bir belge seçiniz."; err.hidden = false; return; }
+      const confirmBtn = document.getElementById("confirmBulkInvite");
+      confirmBtn.disabled = true;
+      let res;
+      try {
+        res = await MYAPI.requestDocsBulk([...selectedRefs], kinds);
+      } catch (apiErr) {
+        confirmBtn.disabled = false;
+        err.textContent = (apiErr && apiErr.message) || "Davet gönderilemedi.";
+        err.hidden = false;
+        return;
+      }
+      confirmBtn.disabled = false;
+      close();
+      const results = res.results || [];
+      const failed = results.filter(r => !r.ok);
+      const skipped = results.filter(r => r.ok && r.mail === "skipped");
+      const mailFailed = results.filter(r => r.ok && r.mail === "failed");
+      let text = `${res.done} / ${res.total} başvuru davet edildi.`;
+      if (failed.length) text += ` Atlananlar: ${failed.map(r => `${r.ref} (${(r.error && r.error.text) || "hata"})`).join(", ")}.`;
+      if (skipped.length) text += ` E-posta gönderilmedi (aynı belgeler zaten talep edilmişti): ${skipped.map(r => r.ref).join(", ")}.`;
+      if (mailFailed.length) text += ` E-POSTA GÖNDERİLEMEDİ, adaya başka yoldan ulaşın veya değerlendirme sayfasından talebi yeniden gönderin: ${mailFailed.map(r => r.ref).join(", ")}.`;
+      bulkResult.textContent = text;
+      bulkResult.hidden = false;
+      selectedRefs.clear();
+      if (selectAll) selectAll.checked = false;
+      await loadApplications();
+    });
   }
 
   loadApplications();

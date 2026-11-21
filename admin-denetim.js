@@ -7,8 +7,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const ACTION_LABELS = {
     file_view: "Belge görüntüleme",
-    preeval_open: "Ön değerlendirme açıldı",
-    reject: "Başvuru elendi",
+    request_docs: "Belge talep edildi (davet)",
+    verify_doc: "Belge doğrulaması",
+    reject: "Başvuru reddedildi",
+    unreject: "Ret geri alındı",
+    announce_rejections: "Ret bildirimleri gönderildi",
+    edit_application: "Beyan düzenlendi",
+    edit_application_reason: "Beyan düzenleme gerekçesi",
     evaluation: "Puanlama kaydedildi",
     user_block: "Hesap engellendi",
     user_unblock: "Hesap engeli kaldırıldı",

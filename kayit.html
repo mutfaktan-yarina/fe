@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-  <!-- @include head title="Başvuru Yap | Mutfaktan Yarına" description="Mutfaktan Yarına - Eğitim ve Destek Programı 2026 Kayıt ve Başvuru Sayfası." css="base layout-split kayit" scripts="ui config api kayit" -->
+  <!-- @include head title="Başvuru Yap | Mutfaktan Yarına" description="Mutfaktan Yarına - Eğitim ve Destek Programı 2026 Kayıt ve Başvuru Sayfası." css="base layout-split kayit" scripts="ui config api basvuru-donemi kayit" -->
   <!-- DÜZENLEME: partials/head.html dosyasını değiştirin, sonra ./build.sh çalıştırın -->
   <meta charset="UTF-8">
   <script>
@@ -38,6 +38,7 @@
   <script src="ui.js" defer></script>
   <script src="config.js" defer></script>
   <script src="api.js" defer></script>
+  <script src="basvuru-donemi.js" defer></script>
   <script src="kayit.js" defer></script>
   <!-- @end head -->
 </head>
@@ -108,13 +109,13 @@
         </div>
         <!-- @end topbar-mobile -->
 
-        <header class="form-header">
+        <header class="form-header" data-apply-gate>
           <span class="form-tag">ÖN BAŞVURU</span>
           <h1 class="form-title">Başvuru Adımı</h1>
           <p class="form-subtitle">Hibe başvuru adımlarına geçmek için lütfen hesabınızı oluşturun.</p>
         </header>
 
-        <form id="register-form" novalidate>
+        <form id="register-form" novalidate data-apply-gate>
           <div class="field">
             <label for="username">Kullanıcı adı / e-posta</label>
             <div class="input-box">
@@ -189,7 +190,7 @@
           </button>
         </form>
 
-        <div class="notice" role="alert">
+        <div class="notice" role="alert" data-apply-gate>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <circle cx="12" cy="12" r="10"></circle>
             <line x1="12" y1="16" x2="12" y2="12"></line>

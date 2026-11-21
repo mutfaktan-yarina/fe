@@ -634,6 +634,7 @@ main.editor-page-wrap {
   font-size: 0.92rem;
   font-weight: 600;
   color: var(--dark);
+  overflow-wrap: anywhere;   /* uzun e-posta / adres taşmasın */
 }
 
 .doc-files-list {
@@ -1668,4 +1669,194 @@ main[data-admin-ops] > section > form[data-stacked] > button {
 .btn-action-role,
 .btn-action-reset {
   margin: 0 0.4rem 0.5rem 0;
+}
+
+/* Toplu davet çubuğu ve davet sütunu (editor-panel.html) */
+.bulk-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem 1.25rem;
+  margin: 0 0 1rem;
+}
+.bulk-bar > p {
+  margin: 0;
+  flex: 1 1 22rem;
+  font-size: 0.9rem;
+  color: var(--text-muted, #555);
+}
+.bulk-bar > p[role="status"] {
+  flex-basis: 100%;
+  color: inherit;
+  font-weight: 600;
+}
+td[data-tier] > small {
+  display: block;
+  font-size: 0.78rem;
+  color: var(--text-muted, #555);
+}
+td[data-tier="main"] > strong { color: var(--success, #15803d); }
+td[data-tier="reserve"] > strong { color: var(--warning, #b45309); }
+#bulkInviteModal fieldset {
+  border: 0;
+  padding: 0;
+  margin: 0.75rem 0 0;
+  display: grid;
+  gap: 0.45rem;
+}
+#bulkInviteModal legend {
+  font-weight: 600;
+  margin-bottom: 0.35rem;
+}
+
+/* Beyanları düzenle ve başvuru kararı (editor-degerlendirme.html) */
+#editCard > p,
+#decisionCard > p {
+  text-transform: none;
+  letter-spacing: normal;
+  font-weight: 400;
+}
+#editCard > p {
+  margin: 0.75rem 0;
+  font-size: 0.9rem;
+  color: var(--text-muted, #555);
+}
+#editForm .field > small {
+  display: block;
+  margin-top: 0.3rem;
+  font-size: 0.8rem;
+  color: var(--text-muted, #555);
+}
+#editForm .field > small[data-declared] {
+  font-weight: 600;
+  color: var(--primary, #a30006);
+}
+#editForm > p[role="alert"] {
+  color: var(--danger, #dc2626);
+  margin: 0.5rem 0;
+}
+#decisionCard {
+  display: grid;
+  gap: 0.6rem;
+}
+#decisionCard > h2 {
+  margin: 0;
+  font-size: 1.05rem;
+}
+#decisionCard > p {
+  margin: 0;
+  font-size: 0.88rem;
+}
+
+/* Boşluk düzeni: düzenleme formu alan/etiket/düğme aralıkları tek tip (alanlar ızgarayla aynı 1rem aralıkta) */
+#editForm {
+  display: grid;
+  gap: 1rem;
+  margin-top: 0.25rem;
+}
+#editForm .field > label {
+  display: block;
+  margin-bottom: 0.35rem;
+}
+#editForm :is(input, select, textarea) {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0.6rem 0.75rem;
+  text-indent: 0;
+}
+#editForm > button {
+  justify-self: stretch;
+}
+#decisionCard > button + button {
+  margin-top: 0;
+}
+
+/* Belge talebi sonucu: düğmenin hemen altında (sayfa yukarı kaydırılmaz) */
+#verify-actions > p[role="status"] {
+  margin-top: 0.6rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--success, #15803d);
+}
+#verify-actions > p[role="status"][data-state="error"] {
+  color: var(--danger, #b91c1c);
+}
+
+/* Yönetici bölümleri: tablodan sonra gelen düğme satırı ve formdan sonra gelen onay kutusu yapışmasın */
+main[data-admin-ops] > section > .table-card + div:not([class]) {
+  margin-top: 1rem;
+}
+main[data-admin-ops] > section > form + label {
+  display: block;
+  margin-top: 0.85rem;
+}
+main[data-admin-ops] > section > div:not([class]) > p {
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+/* Toplu davet düğmesindeki sayı metnin parçasıdır: düğme içi span boşluğu uygulanmaz */
+#btnBulkInvite > span {
+  padding: 0;
+  margin: 0;
+  gap: 0;
+}
+
+/* Beyan düzenleme sonucu: düğmenin altında */
+#editForm > p[role="status"] {
+  margin: 0;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--success, #15803d);
+}
+#editForm > p[role="status"][data-state="error"] {
+  color: var(--danger, #b91c1c);
+}
+
+/* Dokunmatik: üst menü bağlantıları da 44 px dokunma hedefi */
+@media (pointer: coarse) {
+  .admin-menu-link {
+    min-height: 44px;
+  }
+}
+
+/* Editörün belge yüklemesi: satırdaki düğmelerle aynı görünen etiket; dosya girdisi görünmez ama odaklanabilir */
+.doc-files-list label[data-upload-label] {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  background: var(--white);
+  border: 1px dashed var(--gray-400, #94a3b8);
+  color: var(--gray-700);
+  padding: 0.35rem 0.75rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+.doc-files-list label[data-upload-label]:hover {
+  border-color: var(--gray-600);
+  color: var(--dark);
+}
+.doc-files-list label[data-upload-label]:focus-within {
+  outline: 2px solid var(--primary, #a30006);
+  outline-offset: 1px;
+}
+.doc-files-list label[data-upload-label] > input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  width: 100%;
+  cursor: pointer;
+}
+.doc-files-list > div > div:first-child > p[data-state="ok"] {
+  color: var(--success, #15803d);
+}
+@media (pointer: coarse) {
+  .doc-files-list label[data-upload-label] {
+    min-height: 44px;
+  }
 }

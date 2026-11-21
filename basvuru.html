@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-  <!-- @include head title="Hibe Başvuru Formu | Mutfaktan Yarına" description="Mutfaktan Yarına - 2026 Hibe Başvuru Sihirbazı." css="base layout-split basvuru" scripts="ui config api basvuru" robots=noindex bold=1 -->
+  <!-- @include head title="Hibe Başvuru Formu | Mutfaktan Yarına" description="Mutfaktan Yarına - 2026 Hibe Başvuru Sihirbazı." css="base layout-split basvuru" scripts="ui config api basvuru-donemi basvuru" robots=noindex bold=1 -->
   <!-- DÜZENLEME: partials/head.html dosyasını değiştirin, sonra ./build.sh çalıştırın -->
   <meta charset="UTF-8">
   <script>
@@ -40,10 +40,11 @@
   <script src="ui.js" defer></script>
   <script src="config.js" defer></script>
   <script src="api.js" defer></script>
+  <script src="basvuru-donemi.js" defer></script>
   <script src="basvuru.js" defer></script>
   <!-- @end head -->
 </head>
-<body>
+<body data-apply-gate-panel="1">
   <!-- @include skip-link -->
   <!-- DÜZENLEME: partials/skip-link.html dosyasını değiştirin, sonra ./build.sh çalıştırın -->
   <a href="#main">İçeriğe geç</a>
@@ -125,7 +126,7 @@
           </div>
         </div>
 
-    <div class="deadline-banner" id="deadline-banner">
+    <div class="deadline-banner" id="deadline-banner" data-apply-gate>
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
         <circle cx="12" cy="12" r="10"></circle>
         <polyline points="12 6 12 12 16 14"></polyline>
@@ -133,7 +134,7 @@
       <span>Başvuru son tarihi: <strong>20 Kasım 2026 saat 23:59 (Türkiye Saati / UTC+3)</strong></span>
     </div>
 
-    <div class="steps-bar">
+    <div class="steps-bar" data-apply-gate>
       <div class="active" data-step="1">
         <span class="step-circle">1</span>
         <span>Uygunluk</span>
@@ -160,7 +161,7 @@
       </div>
     </div>
 
-    <div class="wizard-card">
+    <div class="wizard-card" data-apply-gate>
 
       <div id="top-wizard" class="top-wizard">
         <div class="top-wizard-header">
@@ -390,8 +391,8 @@
 
             <div class="field">
               <label for="inp-q12">Bu çalışanların kaçı kadın?</label>
-              <input type="number" id="inp-q12" min="2" placeholder="Kadın çalışan sayısı (En az 2)">
-              <span class="error">Kendiniz hariç en az 2 SGK'lı kadın çalışan olmalı ve sayı toplam çalışandan fazla olamaz.</span>
+              <input type="number" id="inp-q12" min="0" placeholder="Kadın çalışan sayısı">
+              <span class="error">Kadın çalışan sayısı toplam çalışan sayısından fazla olamaz.</span>
             </div>
 
             <div class="field" id="field-q13">

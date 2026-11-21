@@ -66,6 +66,10 @@
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
         <span>Başvuru Masası</span>
       </a>
+      <a href="bildirimler.html" class="admin-menu-link" id="navNotifications">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        <span>Bildirimler</span>
+      </a>
       <a href="admin-kullanicilar.html" class="admin-menu-link" id="navAdminUsers" data-admin-only hidden>
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
         <span>Kullanıcı Yönetimi</span>
@@ -104,7 +108,6 @@
     </div>
 
     <div id="saveFeedback" class="feedback-banner" hidden></div>
-    <div id="calendarNotice" class="feedback-banner feedback-warning" role="status" hidden></div>
 
     <div class="split-layout">
       <div>
@@ -139,8 +142,53 @@
               <span>Faaliyete Başlama Yılı</span>
               <strong id="applicantSpace">-</strong>
             </div>
+            <div>
+              <span>E-posta</span>
+              <strong id="applicantEmail">-</strong>
+            </div>
+            <div>
+              <span>Telefon</span>
+              <strong id="applicantPhone">-</strong>
+            </div>
+            <div>
+              <span>Adres</span>
+              <strong id="applicantAddress">-</strong>
+            </div>
           </div>
         </div>
+
+        <details class="card-box" id="editCard">
+          <summary>Beyanları Düzenle</summary>
+          <p>Belge incelemesinde farklı çıkan bilgileri düzeltebilirsiniz. Puanlar kaydedilen son veriye göre yeniden hesaplanır; aday düzeltmeyi görmez ve bilgilendirilmez. Adayın beyan ettiği değer, değiştirilen alanın altında gösterilir.</p>
+          <form id="editForm" novalidate>
+            <div class="data-grid-two">
+              <div class="field"><label for="edit-fullname">Ad Soyad</label><input id="edit-fullname" name="fullname" type="text" maxlength="120"></div>
+              <div class="field"><label for="edit-birthdate">Doğum Tarihi</label><input id="edit-birthdate" name="birthdate" type="date"></div>
+              <div class="field"><label for="edit-phone">Cep Telefonu</label><input id="edit-phone" name="phone" type="tel" maxlength="20"></div>
+              <div class="field"><label for="edit-city">İşletmenin Bulunduğu İl</label><select id="edit-city" name="city"><option value="">İl seçiniz</option><option>Adana</option><option>Adıyaman</option><option>Afyonkarahisar</option><option>Ağrı</option><option>Aksaray</option><option>Amasya</option><option>Ankara</option><option>Antalya</option><option>Ardahan</option><option>Artvin</option><option>Aydın</option><option>Balıkesir</option><option>Bartın</option><option>Batman</option><option>Bayburt</option><option>Bilecik</option><option>Bingöl</option><option>Bitlis</option><option>Bolu</option><option>Burdur</option><option>Bursa</option><option>Çanakkale</option><option>Çankırı</option><option>Çorum</option><option>Denizli</option><option>Diyarbakır</option><option>Düzce</option><option>Edirne</option><option>Elazığ</option><option>Erzincan</option><option>Erzurum</option><option>Eskişehir</option><option>Gaziantep</option><option>Giresun</option><option>Gümüşhane</option><option>Hakkari</option><option>Hatay</option><option>Iğdır</option><option>Isparta</option><option>İstanbul</option><option>İzmir</option><option>Kahramanmaraş</option><option>Karabük</option><option>Karaman</option><option>Kars</option><option>Kastamonu</option><option>Kayseri</option><option>Kilis</option><option>Kırıkkale</option><option>Kırklareli</option><option>Kırşehir</option><option>Kocaeli</option><option>Konya</option><option>Kütahya</option><option>Malatya</option><option>Manisa</option><option>Mardin</option><option>Mersin</option><option>Muğla</option><option>Muş</option><option>Nevşehir</option><option>Niğde</option><option>Ordu</option><option>Osmaniye</option><option>Rize</option><option>Sakarya</option><option>Samsun</option><option>Siirt</option><option>Sinop</option><option>Sivas</option><option>Şanlıurfa</option><option>Şırnak</option><option>Tekirdağ</option><option>Tokat</option><option>Trabzon</option><option>Tunceli</option><option>Uşak</option><option>Van</option><option>Yalova</option><option>Yozgat</option><option>Zonguldak</option></select></div>
+              <div class="field"><label for="edit-biztype">İşletme Yapısı</label>
+                <select id="edit-biztype" name="biztype"><option value="sahis">Şahıs İşletmesi</option><option value="sirket">Şirket (Ltd. / A.Ş.)</option><option value="kooperatif">Kadın Kooperatifi</option></select></div>
+              <div class="field"><label for="edit-bizname">İşletme Unvanı</label><input id="edit-bizname" name="bizname" type="text" maxlength="120"></div>
+              <div class="field"><label for="edit-taxno">Vergi Kimlik Numarası</label><input id="edit-taxno" name="taxno" type="text" inputmode="numeric" maxlength="11"></div>
+              <div class="field"><label for="edit-bizyear">Faaliyete Başlama Yılı</label><input id="edit-bizyear" name="bizyear" type="number" min="1900" max="2026"></div>
+              <div class="field"><label for="edit-instagram">Instagram Hesabı</label><input id="edit-instagram" name="instagram" type="text" maxlength="60"></div>
+              <div class="field"><label for="edit-address">İşletme Adresi</label><textarea id="edit-address" name="address" maxlength="250"></textarea></div>
+              <div class="field"><label for="edit-q11">Şu anda toplam kaç SGK'lı çalışanınız var?</label><input id="edit-q11" name="q11" type="number" min="0"></div>
+              <div class="field"><label for="edit-q12">Bu çalışanların kaçı kadın?</label><input id="edit-q12" name="q12" type="number" min="0"></div>
+              <div class="field"><label for="edit-q13">Bir yıl önce toplam kaç SGK'lı çalışanınız vardı?</label><input id="edit-q13" name="q13" type="number" min="0"></div>
+              <div class="field"><label for="edit-q14_hired_count">Geçen yıl kaç kişi işe başladı?</label><input id="edit-q14_hired_count" name="q14_hired_count" type="number" min="0"></div>
+              <div class="field"><label for="edit-q14_stayed_count">Geçen yıl işe başlayanlardan kaçı hâlâ çalışıyor?</label><input id="edit-q14_stayed_count" name="q14_stayed_count" type="number" min="0"></div>
+              <div class="field"><label for="edit-q15">Hibe alırsanız yeni kişi işe alır mısınız?</label><select id="edit-q15" name="q15"><option value="">Yanıtlanmadı</option><option value="yes">Evet</option><option value="no">Hayır</option></select></div>
+              <div class="field"><label for="edit-q21">Bu iş ailenizin tek geçim kaynağı mı?</label><select id="edit-q21" name="q21"><option value="">Yanıtlanmadı</option><option value="yes">Evet</option><option value="no">Hayır</option></select></div>
+              <div class="field"><label for="edit-q22a">Hibe ile ne yapacaksınız? (1)</label><select id="edit-q22a" name="q22a"></select></div>
+              <div class="field"><label for="edit-q22b">Hibe ile ne yapacaksınız? (2)</label><select id="edit-q22b" name="q22b"></select></div>
+            </div>
+            <div class="field"><label for="edit-reason">Düzenleme Gerekçesi (zorunlu)</label><textarea id="edit-reason" maxlength="250" placeholder="Örn. SGK dökümünde 1 kadın çalışan görüldü"></textarea></div>
+            <p id="editError" role="alert" hidden></p>
+            <button type="submit" class="btn" id="btnSaveEdit">Düzeltmeleri Kaydet</button>
+            <p id="editResult" role="status" hidden></p>
+          </form>
+        </details>
 
         <div class="card-box">
           <div class="card-box-header">
@@ -164,13 +212,14 @@
               <span>Belge Talep Et ve Ön Değerlendirme Sorularını Gönder</span>
             </button>
             <p id="requestHint" hidden></p>
+            <p id="requestResult" role="status" hidden></p>
           </div>
         </details>
 
         <details class="card-box">
           <summary>Ön Değerlendirme</summary>
 
-          <div id="preevalClosed"><p>Ön değerlendirme henüz açılmadı. Sorular, belge talebi tamamlanınca ya da belge talep edilmeden devam edilince adaya açılır.</p></div>
+          <div id="preevalClosed"><p>Ön değerlendirme henüz açılmadı. Sorular, belge talep edildiğinde adaya açılır.</p></div>
 
           <article>
             <h3><b>Ö1</b>İşletmeniz son iki yılda herhangi bir kurumdan geri ödemesiz hibe veya ayni destek aldı mı? Destek aldıysanız hangi kurumdan ne zaman ve ne tutarda aldınız?</h3>
@@ -240,6 +289,14 @@
             </button>
           </div>
         </form>
+
+        <div class="card-box" id="decisionCard">
+          <h2>Başvuru Kararı</h2>
+          <p id="rejectionInfo" hidden></p>
+          <button type="button" class="btn btn-outline" id="btnReject">Başvuruyu Reddet</button>
+          <button type="button" class="btn btn-outline" id="btnUnreject" hidden>Reddi Geri Al</button>
+          <p id="decisionHint">Ret, yönetici ret bildirimlerini gönderene kadar adaya görünmez.</p>
+        </div>
       </div>
     </div>
   </main>
@@ -288,6 +345,24 @@
         <button type="button" class="btn" id="confirmDocValid">Evet, Doğrulandı</button>
       </div>
     </div>
+  </div>
+
+  <div class="modal-backdrop" id="rejectModal" hidden>
+    <form class="modal-card" role="dialog" aria-modal="true" aria-labelledby="rejectTitle">
+      <div class="modal-head">
+        <h3 id="rejectTitle">Başvuruyu Reddet</h3>
+        <button type="button" class="modal-close-btn" id="closeRejectModal" aria-label="Kapat">&times;</button>
+      </div>
+      <div class="field">
+        <label for="rejectReason">Ret gerekçesi (zorunlu; adaya gönderilmez)</label>
+        <textarea id="rejectReason" maxlength="500"></textarea>
+        <span id="rejectError" role="alert" hidden>Gerekçe yazılması zorunludur.</span>
+      </div>
+      <div class="card-box-header">
+        <button type="button" class="btn btn-outline" id="cancelReject">Vazgeç</button>
+        <button type="submit" class="btn">Reddet</button>
+      </div>
+    </form>
   </div>
 
 </body>

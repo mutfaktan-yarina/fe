@@ -67,6 +67,10 @@
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
         <span>Başvuru Masası</span>
       </a>
+      <a href="bildirimler.html" class="admin-menu-link" id="navNotifications">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        <span>Bildirimler</span>
+      </a>
       <a href="admin-kullanicilar.html" class="admin-menu-link" id="navAdminUsers" data-admin-only hidden>
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
         <span>Kullanıcı Yönetimi</span>
@@ -144,6 +148,8 @@
         <button type="button" class="filter-tab" data-filter="pending-score" aria-pressed="false">Ön Değerlendirme Bekleyen</button>
         <button type="button" class="filter-tab" data-filter="scored" aria-pressed="false">Puanlandı (Tamamlanan)</button>
         <button type="button" class="filter-tab" data-filter="rejected" aria-pressed="false">Elendi</button>
+        <button type="button" class="filter-tab" data-filter="invite" aria-pressed="false" title="Sistem Puanına (70) göre ilk 25 + 10 yedek (eşitler dahil)">Davet Listesi (Asil + Yedek)</button>
+        <button type="button" class="filter-tab" data-filter="jury" aria-pressed="false" title="Toplam Puana (100) göre ilk 25 (eşitler dahil); belgeleri doğrulanmış puanlanan adaylar">Jüri Aday Listesi</button>
       </div>
 
       <div class="input-box">
@@ -157,7 +163,7 @@
       <form id="appsExportForm" novalidate hidden>
         <label>Başlangıç <input type="date" id="exportFrom" name="from"></label>
         <label>Bitiş <input type="date" id="exportTo" name="to"></label>
-        <button type="submit" id="btnExportApps" title="Seçili durum ve tarih aralığına göre CSV indir">
+        <button type="submit" id="btnExportApps" title="Üstte seçili filtrelere ve tarih aralığına göre CSV indir">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
           <span>CSV İndir</span>
         </button>
@@ -166,15 +172,23 @@
     </div>
 
 
+    <div class="bulk-bar" id="bulkBar">
+      <p id="bulkInfo">Davet etmek istediğiniz başvuruları soldaki kutulardan seçiniz. Davet, seçilen belgeleri talep eder, ön değerlendirme sorularını açar ve adaya e-posta gönderir.</p>
+      <button type="button" class="btn" id="btnBulkInvite" disabled>Seçilenlere Belge Talep Et (<span id="bulkCount">0</span>)</button>
+      <p id="bulkResult" role="status" hidden></p>
+    </div>
+
     <div class="table-card">
       <table>
         <thead>
           <tr>
+            <th><input type="checkbox" id="selectAllRows" aria-label="Görünen ve davet edilebilir başvuruların tümünü seç"></th>
             <th>Sıra</th>
             <th>Ref No</th>
             <th>Girişimci & İşletme</th>
             <th>İl / Yapı</th>
             <th>İstihdam (Kadın %)</th>
+            <th>Davet</th>
             <th data-sort="form" aria-sort="descending"><button type="button">Form (70)</button></th>
             <th data-sort="pre" aria-sort="none"><button type="button">Ön Değerlendirme (30)</button></th>
             <th data-sort="total" aria-sort="none"><button type="button">Toplam (100)</button></th>
@@ -187,6 +201,29 @@
       </table>
     </div>
   </main>
+
+  <div class="modal-backdrop" id="bulkInviteModal" hidden>
+    <form class="modal-card" role="dialog" aria-modal="true" aria-labelledby="bulkInviteTitle">
+      <div class="modal-head">
+        <h3 id="bulkInviteTitle">Seçilenlere Belge Talep Et</h3>
+        <button type="button" class="modal-close-btn" id="closeBulkInvite" aria-label="Kapat">&times;</button>
+      </div>
+      <div class="modal-body-text">
+        <p id="bulkInviteSummary"></p>
+        <fieldset>
+          <legend>Talep edilecek belgeler</legend>
+          <label><input type="checkbox" name="kind" value="tax" checked> Vergi Levhası / Kooperatif Kayıtları</label>
+          <label><input type="checkbox" name="kind" value="sgk" checked> SGK Hizmet Dökümü</label>
+          <label><input type="checkbox" name="kind" value="id" checked> Kimlik Fotokopisi</label>
+        </fieldset>
+        <p id="bulkInviteError" role="alert" hidden>En az bir belge seçiniz.</p>
+      </div>
+      <div class="card-box-header">
+        <button type="button" class="btn btn-outline" id="cancelBulkInvite">Vazgeç</button>
+        <button type="submit" class="btn" id="confirmBulkInvite">Talep Et ve Davet Gönder</button>
+      </div>
+    </form>
+  </div>
 
 </body>
 </html>

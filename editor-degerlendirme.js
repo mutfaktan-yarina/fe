@@ -88,8 +88,9 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   const details = currentApp;
-  const bizType = currentApp.biztype;
-  const askQ2 = bizType === 'sirket';
+  // Beyan düzenlemesinden sonra yerinde güncellenir (sayfa yenilenmez).
+  let bizType = currentApp.biztype;
+  let askQ2 = bizType === 'sirket';
 
   function num(v) {
     const n = Number(v);
@@ -114,24 +115,44 @@ document.addEventListener('DOMContentLoaded', async () => {
     el.append(maxEl);
   }
 
-  // Künye
-  if (appRefBadge) appRefBadge.textContent = `Ref: ${currentApp.ref}`;
-  if (applicantName) applicantName.textContent = currentApp.name || '-';
-  if (applicantBusiness) applicantBusiness.textContent = currentApp.business || '-';
+  // Künye (beyan düzenlemesinden sonra yeniden çizilir)
   // API işletme yapısını biztype olarak gönderir (editor-panel.js ile aynı etiketler).
   const STRUCTURE_LABELS = { sahis: 'Şahıs İşletmesi', sirket: 'Şirket', kooperatif: 'Kadın Kooperatifi' };
-  if (applicantStructure) applicantStructure.textContent = `${STRUCTURE_LABELS[currentApp.biztype] || '-'} · ${currentApp.city || '-'}`;
-  if (applicantVkn) applicantVkn.textContent = isFilled(details.taxno) ? details.taxno : '-';
-  if (applicantSpace) applicantSpace.textContent = isFilled(details.bizyear) ? details.bizyear : '-';
-  if (applicantAge) {
-    const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(details.birthdate || ''));
-    if (m) {
-      const eligible = MYUI.isAgeEligible(details.birthdate);
-      applicantAge.textContent = `${m[3]}.${m[2]}.${m[1]} — Yaş şartı: ${eligible ? 'Uygun' : 'Uygun değil'}`;
-    } else {
-      applicantAge.textContent = '-';
+  function renderKunye() {
+    if (appRefBadge) appRefBadge.textContent = `Ref: ${currentApp.ref}`;
+    if (applicantName) applicantName.textContent = currentApp.name || '-';
+    if (applicantBusiness) applicantBusiness.textContent = currentApp.business || '-';
+    if (applicantStructure) applicantStructure.textContent = `${STRUCTURE_LABELS[currentApp.biztype] || '-'} · ${currentApp.city || '-'}`;
+    if (applicantVkn) applicantVkn.textContent = isFilled(details.taxno) ? details.taxno : '-';
+    if (applicantSpace) applicantSpace.textContent = isFilled(details.bizyear) ? details.bizyear : '-';
+    // İletişim: e-posta ve telefon tıklanabilir (kullanıcı verisi yalnız metin ve güvenli şemalı bağlantı olarak yazılır).
+    const contactLink = (id, value, scheme) => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.replaceChildren();
+      if (!isFilled(value)) { el.textContent = '-'; return; }
+      const a = document.createElement('a');
+      a.href = `${scheme}:${scheme === 'tel' ? String(value).replace(/[^\d+]/g, '') : value}`;
+      a.textContent = value;
+      el.appendChild(a);
+    };
+    contactLink('applicantEmail', details.email, 'mailto');
+    contactLink('applicantPhone', details.phone, 'tel');
+    {
+      const el = document.getElementById('applicantAddress');
+      if (el) el.textContent = isFilled(details.address) ? details.address : '-';
+    }
+    if (applicantAge) {
+      const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(details.birthdate || ''));
+      if (m) {
+        const eligible = MYUI.isAgeEligible(details.birthdate);
+        applicantAge.textContent = `${m[3]}.${m[2]}.${m[1]} — Yaş şartı: ${eligible ? 'Uygun' : 'Uygun değil'}`;
+      } else {
+        applicantAge.textContent = '-';
+      }
     }
   }
+  renderKunye();
 
   const STATUS_LABELS = { yes: 'Evet', no: 'Hayır' };
   const Q14_LABELS = {
@@ -151,12 +172,16 @@ document.addEventListener('DOMContentLoaded', async () => {
   };
 
   // Puanlar sunucuda hesaplanır; burada yalnızca API'nin döndürdüğü değer gösterilir (sayı ya da { total, items }).
-  const rawSistem = isFilled(currentApp.systemScore) ? currentApp.systemScore : currentApp.sistemScore;
-  const scoreResult = rawSistem && typeof rawSistem === 'object' ? rawSistem : null;
-  const sistemScore = num(scoreResult ? scoreResult.total : rawSistem);
-
-  setScore(sistemScoreDisplay, sistemScore, 70);
-  if (summarySistemScore) summarySistemScore.textContent = sistemScore === null ? '-' : sistemScore;
+  let scoreResult = null;
+  let sistemScore = null;
+  function renderSystemScore() {
+    const rawSistem = isFilled(currentApp.systemScore) ? currentApp.systemScore : currentApp.sistemScore;
+    scoreResult = rawSistem && typeof rawSistem === 'object' ? rawSistem : null;
+    sistemScore = num(scoreResult ? scoreResult.total : rawSistem);
+    setScore(sistemScoreDisplay, sistemScore, 70);
+    if (summarySistemScore) summarySistemScore.textContent = sistemScore === null ? '-' : sistemScore;
+  }
+  renderSystemScore();
 
   function addScoreItem(label, value, note) {
     if (!scoreDataGrid) return;
@@ -323,50 +348,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     sgk: 'Kendisi hariç en az 2 aktif SGK\'lı çalışan; beyan edilen çalışan sayıları',
     id: '31 Aralık 2026 itibarıyla 18–55 yaş (doğum 1971-01-01 – 2008-12-31)'
   };
-  // Takvim (GET /v1/calendar): ön değerlendirme penceresi dışında MSA/belge doğrulama, belge talebi ve soruları açma;
-  // değerlendirme penceresi dışında puan kaydetme ve ret sunucuda reddedilir. Uyarı ve pasiflik tarihleri takvimden gelir.
-  const calendarNotice = document.getElementById('calendarNotice');
-  const calendarState = { preeval: 'open', eval: 'open', preevalMsg: '', evalMsg: '' };
-  const trDate = iso => new Date(iso).toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'Europe/Istanbul' });
-  const preevalOpen = () => calendarState.preeval === 'open';
-  const evalOpen = () => calendarState.eval === 'open';
-
-  function windowMessage(state, openIso, closeIso, what, name) {
-    if (state === 'before') return `${name} dönemi ${trDate(openIso)} tarihinde başlıyor. Bu tarihe kadar ${what} yapılamaz.`;
-    if (state === 'closed') return `${name} dönemi ${trDate(closeIso)} tarihinde sona erdi. ${what[0].toUpperCase()}${what.slice(1)} artık yapılamaz.`;
-    return '';
-  }
-
-  async function loadCalendar() {
-    let cal = null;
-    try { cal = await MYAPI.getCalendar(); } catch (e) { /* takvim okunamazsa uyarı gösterilmez; sunucu yine de kuralı uygular */ }
-    if (!cal || !cal.ok) return;
-    calendarState.preeval = cal.preeval_state;
-    calendarState.eval = cal.eval_state;
-    calendarState.preevalMsg = windowMessage(cal.preeval_state, cal.preeval_open, cal.preeval_close,
-      'MSA sertifikası ve belge doğrulama, belge talebi ve ön değerlendirme sorularının açılması', 'Ön değerlendirme');
-    calendarState.evalMsg = windowMessage(cal.eval_state, cal.eval_open, cal.eval_close,
-      'puan kaydetme ve başvuruyu belge uyumsuzluğuyla eleme', 'Değerlendirme');
-    if (calendarNotice) {
-      calendarNotice.replaceChildren();
-      [calendarState.preevalMsg, calendarState.evalMsg].filter(Boolean).forEach((m) => {
-        const line = document.createElement('span');
-        line.textContent = m;
-        calendarNotice.appendChild(line);
-      });
-      calendarNotice.hidden = !calendarNotice.firstChild;
-    }
-    renderDocs();
-    syncSaveButton();
-  }
-
-  function syncSaveButton() {
-    const save = document.getElementById('btnSaveEvaluation');
-    if (!save) return;
-    save.disabled = !evalOpen();
-    save.title = evalOpen() ? '' : calendarState.evalMsg;
-  }
-
   // Arayüz durumu: seçilen talep anahtarı ve (kalıcı olmayan) Uyumsuz gerekçesi.
   const docUi = {};
   ['msa', ...DOC_KINDS].forEach((k) => { docUi[k] = { invalid: '' }; });
@@ -375,7 +356,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   const requestHint = document.getElementById('requestHint');
   const OPEN_STATES = ['awaiting-answers', 'pending-score', 'scored'];
 
-  const isMsaValid = () => !!currentApp.docVerification && currentApp.docVerification.msa === 'valid';
   const isKindValid = k => !!currentApp.docVerification && currentApp.docVerification[k] === 'valid';
   const requestedList = () => (Array.isArray(currentApp.requestedDocs) ? currentApp.requestedDocs : []);
 
@@ -446,6 +426,14 @@ document.addEventListener('DOMContentLoaded', async () => {
       p.textContent = `Uyumsuzluk gerekçesi: ${ui.invalid}`;
       text.appendChild(p);
     }
+    // Yükleme sonucu satırın içinde yazılır (sayfa kaydırılmaz); yeniden çizimde korunur.
+    if (ui.uploadNote) {
+      const p = document.createElement('p');
+      p.setAttribute('role', ui.uploadOk ? 'status' : 'alert');
+      p.dataset.state = ui.uploadOk ? 'ok' : 'error';
+      p.textContent = ui.uploadNote;
+      text.appendChild(p);
+    }
 
     const actions = document.createElement('div');
     if (kind === 'msa' || openUrl) {
@@ -464,7 +452,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         btn.textContent = caption;
         if (status === 'valid' && valid) btn.classList.add('active-valid');
         if (status === 'invalid' && ui.invalid) btn.classList.add('active-invalid');
-        if (status === 'valid' && !preevalOpen()) { btn.disabled = true; btn.title = calendarState.preevalMsg; }
         btn.addEventListener('click', () => (status === 'valid' ? askValid : askInvalid)(kind));
         actions.appendChild(btn);
       });
@@ -475,8 +462,48 @@ document.addEventListener('DOMContentLoaded', async () => {
       btn.textContent = 'Talep Edildi';
       actions.appendChild(btn);
     }
+    // Başka kanaldan (e-posta, elden) gelen belge: editör yükler ya da değiştirir (MSA dahil).
+    const upLabel = document.createElement('label');
+    upLabel.dataset.uploadLabel = '';
+    upLabel.textContent = openUrl ? 'Belgeyi Değiştir' : 'Belge Yükle';
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = '.pdf,.jpg,.jpeg,.png';
+    input.dataset.upload = kind;
+    input.setAttribute('aria-label', `${label}: ${upLabel.textContent}`);
+    input.addEventListener('change', () => uploadDoc(kind, input));
+    upLabel.appendChild(input);
+    actions.appendChild(upLabel);
+
     row.append(text, actions);
     list.appendChild(row);
+  }
+
+  async function uploadDoc(kind, input) {
+    const file = input.files && input.files[0];
+    if (!file) return;
+    const ui = docUi[kind];
+    const fail = (msg) => { ui.uploadNote = msg; ui.uploadOk = false; renderDocs(); };
+    if (!/\.(pdf|jpe?g|png)$/i.test(file.name)) { input.value = ''; fail('Yalnızca PDF, JPG veya PNG dosyası yükleyebilirsiniz.'); return; }
+    if (file.size === 0) { input.value = ''; fail('Dosya boş; lütfen geçerli bir dosya seçiniz.'); return; }
+    if (file.size > 10 * 1024 * 1024) { input.value = ''; fail('Dosya boyutu en fazla 10 MB olabilir.'); return; }
+    input.disabled = true;
+    try {
+      await MYAPI.editorUploadDocument(currentApp.ref, kind, file);
+    } catch (apiErr) {
+      input.disabled = false;
+      fail(apiErr.message || 'Belge yüklenemedi.');
+      return;
+    }
+    ui.invalid = '';
+    ui.uploadNote = `${file.name} yüklendi; belgeyi inceleyip doğrulayınız.`;
+    ui.uploadOk = true;
+    try {
+      await refreshDetail();                // dosya adı, doğrulama durumu (yeni belge doğrulanmamış sayılır)
+    } catch (err) {
+      ui.uploadNote = 'Belge yüklendi ancak ekran yenilenemedi; sayfayı yenileyiniz.';
+      renderDocs();
+    }
   }
 
   function renderDocs() {
@@ -505,18 +532,20 @@ document.addEventListener('DOMContentLoaded', async () => {
       return;
     }
     if (box) box.hidden = false;
+    // Davet (belge talebi) MSA doğrulaması da sayılır (R20): MSA önceden işaretlenmek zorunda değildir.
+    // Sorular açıldıktan sonra aynı düğme talebi ve e-postasını yeniden gönderir (K14).
     if (OPEN_STATES.includes(status)) {
-      label = 'Ön Değerlendirme Açık';
-      disabled = true;
+      label = 'Belge Talebini Yeniden Gönder';
     } else {
       label = 'Belge Talep Et ve Ön Değerlendirme Sorularını Gönder';
-      if (!preevalOpen()) {
-        disabled = true;
-        hint = calendarState.preevalMsg;
-      } else if (!isMsaValid() || verifyWrites > 0) {
-        disabled = true;
-        hint = isMsaValid() ? 'Doğrulama kaydediliyor…' : 'Önce MSA Sertifikası belgesini inceleyip Doğrulandı olarak işaretleyiniz.';
-      }
+    }
+    if (verifyWrites > 0) {
+      disabled = true;
+      hint = 'Doğrulama kaydediliyor…';
+    } else if (docUi.msa.invalid) {
+      // Davet MSA'yı doğrulanmış sayar (R20): MSA uyumsuz işaretliyken davet gönderilmez.
+      disabled = true;
+      hint = 'MSA Sertifikası uyumsuz işaretli: davet gönderilemez. Başvuruyu reddetmek için Kaydet\'e basınız ya da işareti kaldırınız.';
     }
     if (sp) sp.textContent = label;
     btnRequestDocs.disabled = disabled;
@@ -588,24 +617,39 @@ document.addEventListener('DOMContentLoaded', async () => {
     renderPreeval();
   }
 
+  // Sonuç düğmenin hemen altında yazılır; sayfa yukarı kaydırılmaz.
+  const requestResult = document.getElementById('requestResult');
+  function requestNote(msg, ok) {
+    if (!requestResult) { showBanner(msg, ok); return; }
+    requestResult.textContent = msg;
+    requestResult.dataset.state = ok ? 'ok' : 'error';
+    requestResult.hidden = !msg;
+  }
+
   if (btnRequestDocs) {
     btnRequestDocs.addEventListener('click', async () => {
       if (btnRequestDocs.disabled) return;
       btnRequestDocs.disabled = true;
+      requestNote('', true);
+      const resend = OPEN_STATES.includes(currentApp.status);
+      let res;
       try {
-        await MYAPI.requestDocs(currentApp.ref, DOC_KINDS);
+        res = await MYAPI.requestDocs(currentApp.ref, DOC_KINDS, resend);
       } catch (apiErr) {
         syncRequestButton();
-        showBanner(apiErr.message || 'İşlem tamamlanamadı.', false);
+        requestNote(apiErr.message || 'İşlem tamamlanamadı.', false);
         return;
       }
       try {
         await refreshDetail();
       } catch (err) {
-        showBanner((err && err.message) || 'Başvuru yenilenemedi. Sayfayı yenileyiniz.', false);
+        requestNote((err && err.message) || 'Başvuru yenilenemedi. Sayfayı yenileyiniz.', false);
         return;
       }
-      showBanner('Belgeler talep edildi ve ön değerlendirme soruları açıldı; adaya e-posta gönderildi.', true);
+      syncRequestButton();
+      const mailNote = res && res.mail === 'failed' ? ' Ancak e-posta gönderilemedi; adaya başka yoldan ulaşınız.' : '';
+      requestNote((resend ? 'Belge talebi e-postası adaya yeniden gönderildi.'
+        : 'Belgeler talep edildi ve ön değerlendirme soruları açıldı; adaya e-posta gönderildi.') + mailNote, !mailNote);
     });
   }
 
@@ -618,7 +662,8 @@ document.addEventListener('DOMContentLoaded', async () => {
       applicantStatusBadge.textContent = `Puanlandı (${currentApp.totalScore} Puan)`;
     } else if (status === 'rejected') {
       applicantStatusBadge.className = 'badge-status status-pending-verify status-rejected';
-      applicantStatusBadge.textContent = 'Elendi';
+      const rej = currentApp.rejection;
+      applicantStatusBadge.textContent = rej && !rej.announcedAt ? 'Elendi (adaya bildirilmedi)' : 'Elendi';
     } else if (status === 'pending-verify') {
       applicantStatusBadge.className = 'badge-status status-pending-verify';
       applicantStatusBadge.textContent = 'Belge Doğrulama Bekliyor';
@@ -652,6 +697,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
     if (!askQ2) vals[1] = 5;
   }
+  // R18: tür şirkete düzeltildiyse Ö2'deki 0 bilinçli bir puan değildir: editör yeniden seçmeden kayıt yapılamaz.
+  if (currentApp.rescoreQ2) vals[1] = null;
   let useStoredTotals = num(currentApp.preScore) !== null;
   const starGroups = [];
 
@@ -748,12 +795,249 @@ document.addEventListener('DOMContentLoaded', async () => {
     saveFeedback.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   }
 
+  // ── Başvuru kararı: ret (iç karar; yönetici bildirene dek adaya görünmez) ve geri alma ──
+  const rejectionInfo = document.getElementById('rejectionInfo');
+  const btnReject = document.getElementById('btnReject');
+  const btnUnreject = document.getElementById('btnUnreject');
+  const rejectModal = document.getElementById('rejectModal');
+  const isAdmin = currentUser.role === 'admin';
+  const fmtDate = s => new Date(Number(s) * 1000).toLocaleString('tr-TR', { timeZone: 'Europe/Istanbul' });
+
+  function renderDecision() {
+    const rej = currentApp.status === 'rejected' ? currentApp.rejection : null;
+    if (btnReject) btnReject.hidden = currentApp.status === 'rejected';
+    if (rejectionInfo) {
+      rejectionInfo.hidden = !rej;
+      if (rej) {
+        const when = rej.announcedAt ? `Adaya bildirildi: ${fmtDate(rej.announcedAt)}.` : 'Adaya henüz bildirilmedi.';
+        rejectionInfo.textContent = `Reddedildi (${fmtDate(rej.rejectedAt)}). Gerekçe: ${rej.reason} ${when}`;
+      }
+    }
+    // Bildirilmiş ret yalnız yönetici tarafından geri alınır (sonrası manuel süreç).
+    if (btnUnreject) btnUnreject.hidden = !rej || (!!rej.announcedAt && !isAdmin);
+  }
+
+  if (btnReject && rejectModal) {
+    const form = rejectModal.querySelector('form');
+    const reasonEl = document.getElementById('rejectReason');
+    const errEl = document.getElementById('rejectError');
+    const close = () => MYUI.closeModal(rejectModal);
+    document.getElementById('closeRejectModal').addEventListener('click', close);
+    document.getElementById('cancelReject').addEventListener('click', close);
+    btnReject.addEventListener('click', () => {
+      reasonEl.value = '';
+      errEl.hidden = true;
+      MYUI.openModal(rejectModal);
+    });
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const reason = reasonEl.value.trim();
+      if (!reason) { errEl.textContent = 'Gerekçe yazılması zorunludur.'; errEl.hidden = false; reasonEl.focus(); return; }
+      // sunucu sınırı bayt cinsindendir (Türkçe harfler 2 bayt)
+      if (new TextEncoder().encode(reason).length > 500) { errEl.textContent = 'Gerekçe çok uzun; lütfen kısaltınız.'; errEl.hidden = false; return; }
+      try {
+        await MYAPI.rejectApplication(currentApp.ref, reason);
+      } catch (apiErr) {
+        errEl.textContent = apiErr.message || 'Başvuru reddedilemedi.';
+        errEl.hidden = false;
+        return;
+      }
+      close();
+      try { await refreshDetail(); } catch (err) { showBanner('Başvuru reddedildi; ekran yenilenemedi, sayfayı yenileyiniz.', false); return; }
+      renderDecision();
+      showBanner('Başvuru reddedildi. Ret, yönetici bildirimi gönderene kadar adaya görünmez.', true);
+    });
+  }
+  if (btnUnreject) {
+    btnUnreject.addEventListener('click', async () => {
+      btnUnreject.disabled = true;
+      try {
+        await MYAPI.unrejectApplication(currentApp.ref);
+      } catch (apiErr) {
+        btnUnreject.disabled = false;
+        showBanner(apiErr.message || 'Ret geri alınamadı.', false);
+        return;
+      }
+      btnUnreject.disabled = false;
+      try { await refreshDetail(); } catch (err) { showBanner('Ret geri alındı; ekran yenilenemedi, sayfayı yenileyiniz.', false); return; }
+      renderDecision();
+      showBanner('Ret geri alındı; başvuru önceki aşamasına döndü.', true);
+    });
+  }
+
+  // R18: işletme türü şirkete çevrildi, aday Ö2'yi yanıtlamadı: Ö2 bilinçli verilmiş bir 0 değildir.
+  function renderRescoreWarning() {
+    const old = document.querySelector('[data-rescore="q2"]');
+    if (old) old.remove();
+    const host = document.getElementById('ansQ2');
+    if (!currentApp.rescoreQ2 || !host) return;
+    const warn = document.createElement('p');
+    warn.setAttribute('role', 'status');
+    warn.dataset.rescore = 'q2';
+    warn.textContent = 'Ö2 yeniden puanlanmalı: işletme türü editör tarafından şirket olarak düzeltildi; aday bu soruyu yanıtlamadı.';
+    host.insertAdjacentElement('beforebegin', warn);
+  }
+
+  // ── Beyanları düzenle (K1–K7): yalnız değişen alanlar gönderilir; aday düzeltmeyi görmez ──
+  const editForm = document.getElementById('editForm');
+  // Başvuru formundaki seçenek metinleri (fe/basvuru.html name="q22")
+  const Q22_FORM_LABELS = { mutfak: 'Mutfak imkânlarımı artıracağım', masa: 'Masa-sandalye sayımı artıracağım', istihdam: 'İstihdam artıracağım',
+    dekorasyon: 'Dekorasyona yatırım yapacağım', tanitim: 'Tanıtım ve reklama harcayacağım', borc: 'Borçlarımı ödeyeceğim' };
+  const EDIT_FIELDS = ['fullname', 'birthdate', 'phone', 'city', 'biztype', 'bizname', 'taxno', 'bizyear', 'instagram', 'address',
+    'q11', 'q12', 'q13', 'q14_hired_count', 'q14_stayed_count', 'q15', 'q21'];
+  const NUMERIC = new Set(['bizyear', 'q11', 'q12', 'q13', 'q14_hired_count', 'q14_stayed_count']);
+  const yn = v => (v === 'yes' ? 'Evet' : v === 'no' ? 'Hayır' : 'Yanıtlanmadı');
+  const SHOW = { biztype: v => STRUCTURE_LABELS[v] || v, q15: yn, q21: yn };
+  // Başvuru şartları yalnız bilgi verir (K3): değer şartın altındaysa alanın altında not görünür.
+  const CONDITIONS = {
+    q11: v => (Number(v) < 2 ? 'Başvuru şartı: kendisi hariç en az 2 SGK\'lı çalışan.' : ''),
+    birthdate: v => (v && !MYUI.isAgeEligible(v) ? 'Başvuru şartı: 31 Aralık 2026 itibarıyla 18–55 yaş.' : '')
+  };
+
+  function fieldNote(name, kind) {
+    const input = editForm.elements[name];
+    const box = input && input.closest('.field');
+    if (!box) return null;
+    let el = box.querySelector(`small[data-${kind}]`);
+    if (!el) {
+      el = document.createElement('small');
+      el.dataset[kind] = '1';
+      box.appendChild(el);
+    }
+    return el;
+  }
+
+  function syncConditions() {
+    Object.keys(CONDITIONS).forEach(name => {
+      const el = fieldNote(name, 'note');
+      if (!el) return;
+      el.textContent = CONDITIONS[name](editForm.elements[name].value);
+      el.hidden = !el.textContent;
+    });
+  }
+
+  function fillEditForm() {
+    if (!editForm) return;
+    ['edit-q22a', 'edit-q22b'].forEach(id => {
+      const sel = document.getElementById(id);
+      sel.replaceChildren(...Object.keys(Q22_FORM_LABELS).map(k => new Option(Q22_FORM_LABELS[k], k)));
+    });
+    EDIT_FIELDS.forEach(name => {
+      const input = editForm.elements[name];
+      if (input) input.value = isFilled(currentApp[name]) ? String(currentApp[name]) : '';
+    });
+    const q22 = Array.isArray(currentApp.q22) ? currentApp.q22 : [];
+    editForm.elements.q22a.value = q22[0] || 'mutfak';
+    editForm.elements.q22b.value = q22[1] || 'istihdam';
+    const dec = currentApp.edited ? currentApp.declared : null;
+    EDIT_FIELDS.concat(['q22a']).forEach(name => {
+      const el = fieldNote(name, 'declared');
+      if (!el) return;
+      let before = null;
+      if (dec && name === 'q22a') {
+        const a = [...(dec.q22 || [])].sort().join(','), b = [...q22].sort().join(',');
+        if (a !== b) before = (dec.q22 || []).map(k => Q22_FORM_LABELS[k] || k).join(', ');
+      } else if (dec && String(dec[name] ?? '') !== String(currentApp[name] ?? '')) {
+        before = SHOW[name] ? SHOW[name](dec[name]) : (isFilled(dec[name]) ? dec[name] : '(boş)');
+      }
+      el.textContent = before === null ? '' : `Önceki Beyan: ${before}`;
+      el.hidden = before === null;
+    });
+    syncConditions();
+  }
+
+  if (editForm) {
+    fillEditForm();
+    editForm.addEventListener('input', syncConditions);
+    const editError = document.getElementById('editError');
+    const editResult = document.getElementById('editResult');
+    const editNote = (msg, ok) => {
+      editResult.textContent = msg;
+      editResult.dataset.state = ok ? 'ok' : 'error';
+      editResult.hidden = !msg;
+    };
+    editForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const fields = {};
+      EDIT_FIELDS.forEach(name => {
+        const raw = editForm.elements[name].value.trim();
+        const was = isFilled(currentApp[name]) ? String(currentApp[name]) : '';
+        if (raw === was) return;
+        fields[name] = NUMERIC.has(name) ? (raw === '' ? null : Number(raw)) : raw;
+      });
+      // Kooperatiften çıkan başvuruda "tek geçim kaynağı" sorusu artık puanlanır: seçili yanıt her zaman gönderilir.
+      if (fields.biztype && fields.biztype !== 'kooperatif' && !('q21' in fields)) {
+        const v = editForm.elements.q21.value;
+        fields.q21 = v === '' ? null : v;
+      }
+      // "işe başlayan" değişince "hâlâ çalışan" da gönderilir: sunucu ikisini birlikte değerlendirir (0 da geçerli bir yanıt)
+      if ('q14_hired_count' in fields && !('q14_stayed_count' in fields)) {
+        const st = editForm.elements.q14_stayed_count.value.trim();
+        fields.q14_stayed_count = st === '' ? null : Number(st);
+      }
+      const q22 = [editForm.elements.q22a.value, editForm.elements.q22b.value];
+      const sameSet = (x, y) => x.length === y.length && x.every(k => y.includes(k));
+      if (!sameSet(q22, currentApp.q22 || [])) fields.q22 = q22;
+      const reason = document.getElementById('edit-reason').value.trim();
+      let msg = '';
+      if (!Object.keys(fields).length) msg = 'Değiştirilmiş bir alan yok.';
+      else if (!reason) msg = 'Düzenleme gerekçesi yazılması zorunludur.';
+      else if (new TextEncoder().encode(reason).length > 250) msg = 'Gerekçe çok uzun; lütfen kısaltınız.';
+      editError.textContent = msg;
+      editError.hidden = !msg;
+      if (msg) return;
+      editNote('', true);
+      const btn = document.getElementById('btnSaveEdit');
+      btn.disabled = true;
+      let res;
+      try {
+        res = await MYAPI.editApplication(currentApp.ref, fields, reason);
+      } catch (apiErr) {
+        btn.disabled = false;
+        editError.textContent = apiErr.message || 'Düzeltme kaydedilemedi.';
+        editError.hidden = false;
+        return;
+      }
+      // Sayfa yenilenmez, kart açık kalır, kaydırma değişmez: veriler yerinde güncellenir, sonuç düğmenin altında yazılır.
+      btn.disabled = false;
+      try {
+        await refreshDetail();
+      } catch (err) {
+        editNote('Düzeltmeler kaydedildi ancak ekran yenilenemedi; sayfayı yenileyiniz.', false);
+        return;
+      }
+      bizType = currentApp.biztype;
+      askQ2 = bizType === 'sirket';
+      if (!askQ2) vals[1] = 5;
+      else if (currentApp.rescoreQ2) vals[1] = null;
+      else if (Array.isArray(currentApp.rubric) && Number.isInteger(currentApp.rubric[1])) vals[1] = currentApp.rubric[1];
+      useStoredTotals = num(currentApp.preScore) !== null;
+      renderKunye();
+      renderSystemScore();
+      buildScoreGrid();
+      renderPreeval();
+      renderSummary();
+      renderStatusBadge();
+      renderRescoreWarning();
+      fillEditForm();
+      document.getElementById('edit-reason').value = '';
+      if (!res.changed || res.changed.length === 0) {
+        editNote('Değişiklik yok: kayıttaki değerlerle aynı.', true);
+        return;
+      }
+      const notes = (res.notices || []).filter(n => n.field === 'rubric').map(n => n.text).join(' ');
+      editNote(`Düzeltmeler kaydedildi. Sistem Puanı: ${res.systemTotal}.` +
+        (res.finalTotal !== null && res.finalTotal !== undefined ? ` Toplam: ${res.finalTotal}.` : '') + (notes ? ` ${notes}` : ''), true);
+    });
+  }
+
   buildStars();
   renderStatusBadge();
   renderDocs();
-  loadCalendar();
   renderPreeval();
   renderSummary();
+  renderDecision();
+  renderRescoreWarning();
 
   if (evaluationForm) {
     // Devam eden kayıt varken (veya kayıt başarılı olup yönlendirme beklenirken) ikinci gönderim yok sayılır.
@@ -776,11 +1060,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
 
         try {
-          await MYAPI.verifyApplication({
-            ref: currentApp.ref,
-            status: 'rejected',
-            reason: reasonVal
-          });
+          await MYAPI.rejectApplication(currentApp.ref, reasonVal);
         } catch (apiErr) {
           showBanner(apiErr.message || 'Başvuru elendi olarak kaydedilemedi.', false);
           return;
@@ -817,7 +1097,12 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
 
       currentApp.status = 'scored';
-      const saved = (res && res.application) || res || {};
+      const raw = (res && res.application) || res || {};
+      // API: {"pre_total", "total_score"}; eski biçim {"preScore", "totalScore"} de okunur.
+      const saved = {
+        totalScore: num(raw.total_score) !== null ? raw.total_score : raw.totalScore,
+        preScore: num(raw.pre_total) !== null ? raw.pre_total : raw.preScore
+      };
       if (num(saved.totalScore) !== null) currentApp.totalScore = saved.totalScore;
       if (num(saved.preScore) !== null) currentApp.preScore = saved.preScore;
 

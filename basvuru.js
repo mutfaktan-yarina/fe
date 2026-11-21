@@ -547,7 +547,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     const val12 = toInt(q12.value);
-    if (isNaN(val12) || val12 < 2 || val12 > val11) {
+    if (isNaN(val12) || val12 < 0 || val12 > val11) {
       q12.closest('.field').classList.add('invalid');
       valid = false;
     }

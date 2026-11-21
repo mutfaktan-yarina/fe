@@ -53,7 +53,9 @@
     [/belge degistirme suresi doldugu/i, 'Belge değiştirme süresi dolduğu için belge artık değiştirilemez.'],
     [/incelemede ilerledigi icin belge degistirilemez/i, 'Başvurunuz incelemede ilerlediği için belge artık değiştirilemez.'],
     [/belge yalnizca editor belge talep ettiginde veya on degerlendirme asamasinda yuklenebilir/i, 'Belge yalnızca editör belge talep ettiğinde veya ön değerlendirme aşamasında yüklenebilir.'],
-    [/gonderilmis basvurunun belgesi degistirilemez/i, 'Gönderilmiş başvurunun belgesi değiştirilemez.']
+    [/gonderilmis basvurunun belgesi degistirilemez/i, 'Gönderilmiş başvurunun belgesi değiştirilemez.'],
+    [/dogrulanmis belge degistirilemez/i, 'Bu belge doğrulandığı için değiştirilemez.'],
+    [/bu belge sizden talep edilmedi/i, 'Bu belge sizden talep edilmedi.']
   ];
   var ENGLISH_HINT = /(^|[^a-z])(upstream|unavailable|bad gateway|gateway|time-?out|timed out|too many|rate limit|forbidden|unauthori[sz]ed|authentication|not found|internal server|server error|bad request|payload|entity too large|service|failed|failure|error|invalid|denied|required|something went wrong|try again|please|the|is|are|was|not|cannot|could not|unable|connection|refused|reset|closed|busy|overloaded)([^a-z]|$)/i;
   function statusText(status) {
@@ -234,6 +236,13 @@
       var path = '/application/verification-doc?kind=' + encodeURIComponent(kind || 'tax');
       return retryWhileBusy(function () { return request(path, { method: 'POST', body: form }); });
     },
+    // Editör/yönetici: başka kanaldan gelen belgeyi adayın adına yükler (ilk kez ya da değiştirme; MSA dahil).
+    editorUploadDocument: function (ref, kind, file) {
+      var form = new FormData();
+      form.append('file', file);
+      var path = '/editor/applications/document?ref=' + encodeURIComponent(ref) + '&kind=' + encodeURIComponent(kind);
+      return retryWhileBusy(function () { return request(path, { method: 'POST', body: form }); });
+    },
     verificationDocDownloadUrl: function (kind) {
       var base = (window.MYCONFIG && window.MYCONFIG.apiBase) || '/v1';
       return base + '/application/verification-doc?kind=' + encodeURIComponent(kind || 'tax');
@@ -273,17 +282,31 @@
     getEditorApplicationDetail: function (ref) {
       return request('/editor/applications/detail?ref=' + encodeURIComponent(ref), { method: 'GET' });
     },
-    openPreeval: function (ref) {
-      return request('/editor/applications/open-preeval', { method: 'POST', body: { ref: ref } });
+    requestDocs: function (ref, kinds, resend) {
+      var body = { ref: ref, kinds: kinds };
+      if (resend) body.resend = true;
+      return request('/editor/applications/request-docs', { method: 'POST', body: body });
     },
-    requestDocs: function (ref, kinds) {
-      return request('/editor/applications/request-docs', { method: 'POST', body: { ref: ref, kinds: kinds } });
+    requestDocsBulk: function (refs, kinds) {
+      return request('/editor/applications/request-docs-bulk', { method: 'POST', body: { refs: refs, kinds: kinds } });
     },
     verifyDoc: function (payload) {
       return request('/editor/applications/verify-doc', { method: 'POST', body: payload });
     },
-    verifyApplication: function (payload) {
-      return request('/editor/applications/verify', { method: 'POST', body: payload });
+    rejectApplication: function (ref, reason) {
+      return request('/editor/applications/reject', { method: 'POST', body: { ref: ref, reason: reason } });
+    },
+    unrejectApplication: function (ref) {
+      return request('/editor/applications/unreject', { method: 'POST', body: { ref: ref } });
+    },
+    editApplication: function (ref, fields, reason) {
+      return request('/editor/applications/edit', { method: 'POST', body: { ref: ref, fields: fields, reason: reason } });
+    },
+    getPendingRejections: function () {
+      return request('/editor/rejections/pending', { method: 'GET' });
+    },
+    announceRejections: function (expectedCount) {
+      return request('/editor/rejections/announce', { method: 'POST', body: { expectedCount: expectedCount } });
     },
     submitEvaluation: function (payload) {
       return request('/editor/applications/evaluation', { method: 'POST', body: payload });
