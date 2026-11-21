@@ -787,8 +787,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     renderStars();
   }
 
-  function showBanner(msg, isSuccess) {
+  // Uyarı varsayılan olarak sayfa başında; "anchor" verilirse o öğenin hemen altına taşınır (ör. Kaydet düğmesi).
+  const feedbackHome = saveFeedback ? { parent: saveFeedback.parentNode, next: saveFeedback.nextSibling } : null;
+  function showBanner(msg, isSuccess, anchor) {
     if (!saveFeedback) return;
+    if (anchor) anchor.insertAdjacentElement('afterend', saveFeedback);
+    else if (saveFeedback.parentNode !== feedbackHome.parent) feedbackHome.parent.insertBefore(saveFeedback, feedbackHome.next);
     saveFeedback.textContent = msg;
     saveFeedback.className = isSuccess ? 'feedback-banner feedback-success' : 'feedback-banner feedback-error';
     saveFeedback.removeAttribute('hidden');
@@ -1040,48 +1044,60 @@ document.addEventListener('DOMContentLoaded', async () => {
   renderRescoreWarning();
 
   if (evaluationForm) {
-    // Devam eden kayıt varken (veya kayıt başarılı olup yönlendirme beklenirken) ikinci gönderim yok sayılır.
+    // Devam eden kayıt varken ikinci gönderim yok sayılır. Kayıttan sonra sayfada kalınır; listeye editör kendisi döner.
     let saving = false;
+    const btnSaveEvaluation = document.getElementById('btnSaveEvaluation');
+    const note = (msg, ok) => showBanner(msg, ok, btnSaveEvaluation);
     evaluationForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       if (saving) return;
       saving = true;
-      let redirecting = false;
-      try { redirecting = await saveEvaluation(); } finally { if (!redirecting) saving = false; }
+      if (saveFeedback) saveFeedback.hidden = true;   // önceki sonuç, yeni kaydın sonucuyla karışmasın
+      if (btnSaveEvaluation) btnSaveEvaluation.disabled = true;
+      try { await saveEvaluation(); } finally {
+        saving = false;
+        if (btnSaveEvaluation) btnSaveEvaluation.disabled = false;
+      }
     });
+
+    // Kayıttan sonra ekran sunucudaki güncel durumla yenilenir; yenilenemezse kayıt yine de yapılmıştır.
+    async function afterSave() {
+      try { await refreshDetail(); } catch (err) { /* kayıt yapıldı; görünüm bir sonraki açılışta güncellenir */ }
+      renderSummary();
+      renderDecision();
+      renderRescoreWarning();
+    }
 
     async function saveEvaluation() {
       const hasInvalid = document.querySelector('[data-v].active-invalid');
       if (hasInvalid) {
         const reasonVal = collectRejectionReason();
         if (!reasonVal || new TextEncoder().encode(reasonVal).length > 500) {
-          showBanner(reasonVal ? 'Belge gerekçeleri çok uzun; lütfen kısaltınız.' : 'Uyumsuz belge için gerekçe yazılması zorunludur.', false);
+          note(reasonVal ? 'Belge gerekçeleri çok uzun; lütfen kısaltınız.' : 'Uyumsuz belge için gerekçe yazılması zorunludur.', false);
           return;
         }
 
         try {
           await MYAPI.rejectApplication(currentApp.ref, reasonVal);
         } catch (apiErr) {
-          showBanner(apiErr.message || 'Başvuru elendi olarak kaydedilemedi.', false);
+          note(apiErr.message || 'Başvuru elendi olarak kaydedilemedi.', false);
           return;
         }
 
         currentApp.status = 'rejected';
 
         renderStatusBadge();
-        showBanner('Başvuru belge uyumsuzluğu tutanağı işlenerek elendi olarak kaydedildi. Yönlendiriliyorsunuz...', true);
-        setTimeout(() => {
-          window.location.href = 'editor-panel.html';
-        }, 1400);
-        return true;
+        await afterSave();
+        note('Başvuru belge uyumsuzluğu tutanağı işlenerek elendi olarak kaydedildi.', true);
+        return;
       }
 
       if (vals.some(v => v === null)) {
-        showBanner('Lütfen 6 sorunun hepsi için yıldız seçiniz (puan vermeyecekseniz "Temizle" ile 0 yapınız).', false);
+        note('Lütfen 6 sorunun hepsi için yıldız seçiniz (puan vermeyecekseniz "Temizle" ile 0 yapınız).', false);
         return;
       }
       if (currentApp.status !== 'pending-score' && currentApp.status !== 'scored') {
-        showBanner('Aday ön değerlendirme sorularına yanıt vermeden puanlama yapılamaz.', false);
+        note('Aday ön değerlendirme sorularına yanıt vermeden puanlama yapılamaz.', false);
         return;
       }
       let res;
@@ -1092,7 +1108,7 @@ document.addEventListener('DOMContentLoaded', async () => {
           notes: evalNotes ? evalNotes.value.trim() : ''
         });
       } catch (apiErr) {
-        showBanner(apiErr.message || 'Ön değerlendirme kaydedilemedi.', false);
+        note(apiErr.message || 'Ön değerlendirme kaydedilemedi.', false);
         return;
       }
 
@@ -1109,12 +1125,8 @@ document.addEventListener('DOMContentLoaded', async () => {
       renderStatusBadge();
 
       const totalText = num(saved.totalScore) !== null ? ` Toplam Ön Sıralama Puanı: ${saved.totalScore} / 100.` : '';
-      showBanner(`Ön Değerlendirme başarıyla kaydedildi.${totalText} Yönlendiriliyorsunuz...`, true);
-
-      setTimeout(() => {
-        window.location.href = 'editor-panel.html';
-      }, 1400);
-      return true;
+      await afterSave();
+      note(`Ön Değerlendirme başarıyla kaydedildi.${totalText}`, true);
     }
   }
 });

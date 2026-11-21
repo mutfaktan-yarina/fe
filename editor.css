@@ -1020,6 +1020,11 @@ main.editor-page-wrap {
   font-weight: 600;
 }
 
+/* Kaydet düğmesinin altına taşınan sonuç uyarısı */
+#btnSaveEvaluation + .feedback-banner {
+  margin: 1rem 0 0;
+}
+
 .feedback-success {
   background: var(--success-light);
   border: 1px solid rgba(21, 128, 61, 0.3);
