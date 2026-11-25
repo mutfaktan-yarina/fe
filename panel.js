@@ -115,9 +115,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   const appData = getStoredData();
 
-  // Ön değerlendirme yanıtları yalnızca bu başvurunun ref numarasıyla eşleşiyorsa bu başvuruya aittir.
-  const storedAnswers = MYUI.readJSON(getUserScopedKey('onDegerlendirmeAnswers')) || MYUI.readJSON('onDegerlendirmeAnswers');
-  const hasAnswers = !!(appData && appData.refNo && storedAnswers && storedAnswers.ref === appData.refNo);
+  // Ön değerlendirme durumu sunucudan gelir (GET /v1/application: "none" | "draft" | "submitted"); yerel yanıt kopyasına bakılmaz.
+  const preevalState = (appData && appData.preeval) || 'none';
 
   // Durum -> rozet metni.
   const STATUS_INFO = {
@@ -143,8 +142,10 @@ document.addEventListener('DOMContentLoaded', async () => {
       statusTextEl.textContent = loadFailed
         ? 'Başvuru durumunuz alınamadı: sunucuya ulaşılamıyor. Lütfen biraz sonra tekrar deneyin.'
         : 'Kayıtlı başvuru bulunamadı';
-    } else if (status === 'answered' || (status === 'preeval-open' && hasAnswers)) {
+    } else if (status === 'answered') {
       statusTextEl.textContent = 'Ön Değerlendirme Yanıtları Alındı';
+    } else if (status === 'preeval-open' && appData.preevalClosed === true) {
+      statusTextEl.textContent = 'Ön Değerlendirme Süresi Doldu';
     } else {
       statusTextEl.textContent = statusInfo.text;
     }
@@ -219,7 +220,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // Ön değerlendirme bandı aşama açıkken giriş, yanıtlar alındıktan sonra (puanlama dahil) görüntüleme içindir;
   // belge yükleme ve sorular tek sayfadadır (on-degerlendirme-formu.html).
-  const preevalAnswered = status === 'answered' || status === 'scored' || (status === 'preeval-open' && hasAnswers);
+  const preevalAnswered = status === 'answered' || status === 'scored';
+  const preevalDraft = status === 'preeval-open' && preevalState === 'draft';
   setVisible(document.getElementById('banner-preeval'), !!appData && (status === 'preeval-open' || preevalAnswered));
 
   // Talep Edilen Belgeler: belge doğrulama aşamasında ve yanıtlardan sonra gelen ek taleplerde (K14) yalnız talep edilen
@@ -231,14 +233,22 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   function renderRequestedDocs(app) {
     if (!docsSection) return;
-    const requested = DOC_ORDER.filter(k => Array.isArray(app.requestedDocs) && app.requestedDocs.indexOf(k) >= 0);
-    const show = DOC_STATES.indexOf(app.status) >= 0 && requested.length > 0;
+    // Yanıtlar gönderildikten sonra yalnız sonradan talep edilen türler (K14 ek talep, lateDocs) yüklenir; gönderimden
+    // önce istenip yüklenmeyen belge eklenmez. Kart bu türlerden bekleyen varken görünür; gönderilen belgeler
+    // "Cevaplarımı İncele" sayfasında zaten listelenir.
+    const answered = app.status === 'answered' || app.status === 'scored';
+    const asked = answered ? app.lateDocs : app.requestedDocs;
+    const requested = DOC_ORDER.filter(k => Array.isArray(asked) && asked.indexOf(k) >= 0);
+    const uploaded = {};
+    (app.verificationDocs || []).forEach(d => { if (d && d.kind) uploaded[d.kind] = d; });
+    const pending = requested.some(k => !uploaded[k]);
+    const show = DOC_STATES.indexOf(app.status) >= 0 && requested.length > 0 && (app.status === 'verifying' || pending);
     setVisible(docsSection, show);
+    // "sorular açılır" cümlesi yalnız belge doğrulama aşamasında doğru; yanıtlardan sonraki ek talepte gizlenir
+    setVisible(document.getElementById('requested-docs-opens'), app.status === 'verifying');
     const list = docsSection.querySelector('ul');
     list.replaceChildren();
     if (!show) return;
-    const uploaded = {};
-    (app.verificationDocs || []).forEach(d => { if (d && d.kind) uploaded[d.kind] = d; });
     requested.forEach(kind => {
       const doc = uploaded[kind];
       const li = document.createElement('li');
@@ -310,6 +320,26 @@ document.addEventListener('DOMContentLoaded', async () => {
   const deadlineBanner = document.getElementById('deadline-banner-panel');
   if (deadlineBanner && appData && (status === 'draft' || status === 'submitted')) {
     deadlineBanner.style.display = 'flex';
+  }
+
+  // Taslak (ya da yeniden açılmış form + taslak): aşama açık kalır, yalnız bant hatırlatır.
+  if (appData && preevalDraft) {
+    const bannerTitle = document.getElementById('preeval-banner-title');
+    const bannerDesc = document.getElementById('preeval-banner-desc');
+    const btnText = document.getElementById('btn-preeval-text');
+    if (bannerTitle) bannerTitle.textContent = 'Taslağınız kayıtlı, göndermeyi unutmayın';
+    if (bannerDesc) bannerDesc.textContent = 'Yanıtlarınızı tamamlayıp “Gönder” ile iletiniz. Gönderdikten sonra belge eklenemez ve yanıtlar değiştirilemez.';
+    if (btnText) btnText.textContent = 'Taslağa Devam Et';
+  }
+
+  // Süre doldu ama hiç kaydetmedi (kayıtlı taslak süre dolunca gönderilir): forma gitmeden söylenir.
+  if (appData && status === 'preeval-open' && appData.preevalClosed === true) {
+    const bannerTitle = document.getElementById('preeval-banner-title');
+    const bannerDesc = document.getElementById('preeval-banner-desc');
+    const btnLink = document.getElementById('btn-preeval-link');
+    if (bannerTitle) bannerTitle.textContent = 'Ön Değerlendirme Süresi Doldu';
+    if (bannerDesc) bannerDesc.textContent = 'Ön değerlendirme süresi sona erdiği için yanıt gönderilemez ve belge yüklenemez. Süre uzatılırsa size e-posta ile bildirilecektir.';
+    if (btnLink) btnLink.setAttribute('hidden', '');
   }
 
   if (appData && preevalAnswered) {

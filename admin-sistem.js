@@ -39,13 +39,84 @@ document.addEventListener("DOMContentLoaded", () => {
   const calFreezeNote = document.getElementById("calFreezeNote");
   const CAL_FIELDS = ["apply_open", "apply_close", "preeval_open", "preeval_close", "eval_open", "eval_close"];
 
-  // "2026-11-20T23:59:59+03:00" -> "2026-11-20T23:59" (datetime-local değeri)
+  // "2026-11-20T23:59:59+03:00" -> "2026-11-20T23:59" (gizli alanın değeri)
   function toInputValue(iso) { return iso.slice(0, 16); }
-  // datetime-local değeri -> API: bitiş alanları günün son saniyesine, diğerleri :00'a oturur
+
+  // Tarih ve saat tarayıcı dilinden bağımsız: her zaman GG.AA.YYYY ve 24 saat SS:DD. Her gizli alanın önüne iki metin
+  // kutusu konur; gizli alan (name ile gönderilen değer) bu ikisinden kurulur, dışarıdan yazılırsa ikisine dağıtılır.
+  const TIME_RE = /^([01]\d|2[0-3]):[0-5]\d$/;
+  const TIME_MSG = "Saati 24 saat biçiminde SS:DD olarak giriniz (ör. 16:30).";
+  const DATE_MSG = "Tarihi GG.AA.YYYY biçiminde giriniz (ör. 02.12.2026).";
+  // "02.12.2026" -> "2026-12-02"; geçersiz ya da takvimde olmayan gün (31.02) -> ""
+  function dateToIso(text) {
+    const m = /^(\d{2})\.(\d{2})\.(\d{4})$/.exec(text);
+    if (!m) return "";
+    const d = new Date(Date.UTC(+m[3], +m[2] - 1, +m[1]));
+    return d.getUTCFullYear() === +m[3] && d.getUTCMonth() === +m[2] - 1 && d.getUTCDate() === +m[1] ? `${m[3]}-${m[2]}-${m[1]}` : "";
+  }
+  const isoToDate = iso => iso ? `${iso.slice(8, 10)}.${iso.slice(5, 7)}.${iso.slice(0, 4)}` : "";
+  CAL_FIELDS.forEach(name => {
+    const hidden = calForm.elements[name];
+    const label = calForm.querySelector(`label[for="${hidden.id}"]`);
+    const date = document.createElement("input");
+    date.type = "text";
+    date.id = hidden.id + "Date";
+    date.inputMode = "numeric";
+    date.maxLength = 10;
+    date.placeholder = "GG.AA.YYYY";
+    date.autocomplete = "off";
+    date.required = true;
+    date.dataset.part = "date";
+    const time = document.createElement("input");
+    time.type = "text";
+    time.id = hidden.id + "Time";
+    time.inputMode = "numeric";
+    time.maxLength = 5;
+    time.placeholder = "SS:DD";
+    time.autocomplete = "off";
+    time.required = true;
+    time.dataset.part = "time";
+    time.setAttribute("aria-label", (label ? label.textContent : name) + " saati (24 saat, SS:DD)");
+    date.setAttribute("aria-label", (label ? label.textContent : name) + " tarihi (GG.AA.YYYY)");
+    if (label) label.htmlFor = date.id;
+    const row = document.createElement("span");
+    row.append(date, time);
+    hidden.before(row);
+    const compose = () => {
+      const iso = dateToIso(date.value);
+      date.setCustomValidity(date.value === "" || iso ? "" : DATE_MSG);
+      time.setCustomValidity(time.value === "" || TIME_RE.test(time.value) ? "" : TIME_MSG);
+      if (iso && TIME_RE.test(time.value)) hidden.value = `${iso}T${time.value}`;
+    };
+    date.addEventListener("input", compose);
+    time.addEventListener("input", compose);
+    // "2.12.2026" ya da "2/12/2026" yazılırsa "02.12.2026" yapılır
+    date.addEventListener("blur", () => {
+      const m = /^(\d{1,2})[./-](\d{1,2})[./-](\d{4})$/.exec(date.value.trim());
+      if (m) { date.value = `${m[1].padStart(2, "0")}.${m[2].padStart(2, "0")}.${m[3]}`; compose(); }
+    });
+    // "9:30" ya da "9.30" yazılırsa "09:30" yapılır
+    time.addEventListener("blur", () => {
+      const m = /^(\d{1,2})[:.](\d{2})$/.exec(time.value.trim());
+      if (m) { time.value = m[1].padStart(2, "0") + ":" + m[2]; compose(); }
+    });
+    hidden.addEventListener("input", () => {
+      date.value = isoToDate(hidden.value.slice(0, 10));
+      time.value = hidden.value.slice(11, 16);
+      date.setCustomValidity("");
+      time.setCustomValidity("");
+    });
+  });
+  function setCalField(name, value) {
+    const hidden = calForm.elements[name];
+    hidden.value = value;
+    hidden.dispatchEvent(new Event("input"));
+  }
+  // gizli alanın değeri -> API: bitiş alanları günün son saniyesine, diğerleri :00'a oturur
   function toApiValue(name, value) { return `${value}:${name.endsWith("_close") ? "59" : "00"}+03:00`; }
 
   function showCalendar(cal) {
-    CAL_FIELDS.forEach(name => { calForm.elements[name].value = toInputValue(cal[name]); });
+    CAL_FIELDS.forEach(name => setCalField(name, toInputValue(cal[name])));
     const left = cal.apply_seconds_left;
     const extra = cal.apply_state === "open" ? ` (kalan ${Math.ceil(left / 86400)} gün)` : "";
     calFreeze.checked = !!cal.frozen;
@@ -57,8 +128,11 @@ document.addEventListener("DOMContentLoaded", () => {
     const payload = {};
     CAL_FIELDS.forEach(name => { payload[name] = toApiValue(name, values[name]); });
     try {
-      showCalendar(await MYAPI.setCalendar(payload));
-      note(calFeedback, "Takvim kaydedildi ve hemen geçerli oldu.", true);
+      const saved = await MYAPI.setCalendar(payload);
+      showCalendar(saved);
+      // Sunucu uyarısı kaydı engellemez; kaydın başarılı olduğu mesajın yanında gösterilir.
+      const late = saved && Array.isArray(saved.warnings) && saved.warnings.includes("preeval_close_after_eval_open");
+      note(calFeedback, "Takvim kaydedildi ve hemen geçerli oldu." + (late ? " Uyarı: Ön değerlendirme bitişi değerlendirme başlangıcından sonra." : ""), !late);
     } catch (err) {
       note(calFeedback, err.message || "Takvim kaydedilemedi.", false);
     }

@@ -54,8 +54,15 @@
     [/incelemede ilerledigi icin belge degistirilemez/i, 'Başvurunuz incelemede ilerlediği için belge artık değiştirilemez.'],
     [/belge yalnizca editor belge talep ettiginde veya on degerlendirme asamasinda yuklenebilir/i, 'Belge yalnızca editör belge talep ettiğinde veya ön değerlendirme aşamasında yüklenebilir.'],
     [/gonderilmis basvurunun belgesi degistirilemez/i, 'Gönderilmiş başvurunun belgesi değiştirilemez.'],
+    [/on degerlendirme suresi doldugu icin belge yuklenemez/i, 'Ön değerlendirme süresi dolduğu için belge yüklenemez.'],
     [/dogrulanmis belge degistirilemez/i, 'Bu belge doğrulandığı için değiştirilemez.'],
-    [/bu belge sizden talep edilmedi/i, 'Bu belge sizden talep edilmedi.']
+    [/yanitlar gonderildikten sonra belge eklenemez/i, 'Yanıtlarınız gönderildikten sonra belge eklenemez.'],
+    [/bu belge sizden talep edilmedi/i, 'Bu belge sizden talep edilmedi.'],
+    [/on degerlendirme donemi kapandi/i, 'Ön değerlendirme dönemi kapandı.'],
+    [/on degerlendirme donemi henuz baslamadi/i, 'Ön değerlendirme dönemi henüz başlamadı.'],
+    [/on degerlendirme asamasi acik degil/i, 'Ön değerlendirme aşaması açık değil.'],
+    [/on degerlendirme penceresi kapali; hatirlatma gonderilemez/i, 'Ön değerlendirme penceresi kapalı; hatırlatma gönderilemez.'],
+    [/bu son tarih icin gonderilecek hatirlatma yok/i, 'Bu son tarih için gönderilecek hatırlatma yok.']
   ];
   var ENGLISH_HINT = /(^|[^a-z])(upstream|unavailable|bad gateway|gateway|time-?out|timed out|too many|rate limit|forbidden|unauthori[sz]ed|authentication|not found|internal server|server error|bad request|payload|entity too large|service|failed|failure|error|invalid|denied|required|something went wrong|try again|please|the|is|are|was|not|cannot|could not|unable|connection|refused|reset|closed|busy|overloaded)([^a-z]|$)/i;
   function statusText(status) {
@@ -261,8 +268,19 @@
     getPreeval: function () {
       return request('/preeval', { method: 'GET' });
     },
+    // Kaydet: taslak (final:false); Gönder: kesin gönderim (final:true).
+    savePreevalDraft: function (payload) {
+      return request('/preeval', { method: 'POST', body: Object.assign({}, payload, { final: false }) });
+    },
     submitPreeval: function (payload) {
-      return request('/preeval', { method: 'POST', body: payload });
+      return request('/preeval', { method: 'POST', body: Object.assign({}, payload, { final: true }) });
+    },
+    // Bildirimler sayfası (Görev 7): ön değerlendirme hatırlatma / süre uzatma önizlemesi ve gönderimi.
+    getPreevalNotices: function () {
+      return request('/editor/preeval-notices', { method: 'GET' });
+    },
+    sendPreevalNotices: function (token) {
+      return request('/editor/preeval-notices/send', { method: 'POST', body: { token: token } });
     },
 
     // Editor & Admin

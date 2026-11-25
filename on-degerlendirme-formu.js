@@ -2,12 +2,17 @@ document.addEventListener('DOMContentLoaded', async () => {
   // Basit istemci koruması (gerçek kimlik doğrulama arka uç işidir).
   const currentUser = MYUI.readJSON('currentUser');
   if (!currentUser || (currentUser.role !== 'applicant' && currentUser.role !== 'member')) {
-    window.location.replace('giris.html');
+    // Oturumsuz açılan bağlantı (ör. yeniden açılma e-postası) girişten sonra forma döner.
+    window.location.replace('giris.html?next=on-degerlendirme-formu.html');
     return;
   }
 
   const form = document.getElementById('preeval-form');
   const submitBtn = document.getElementById('btn-submit-preeval');
+  const saveBtn = document.getElementById('btn-save-preeval');
+  const savedAtEl = document.getElementById('preeval-saved-at');
+  const sendConfirm = document.getElementById('preeval-send-confirm');
+  const warningEl = document.getElementById('preeval-warning');
   const confirmCheck = document.getElementById('preeval-confirm');
   const feedbackBox = document.getElementById('preeval-feedback');
   const userEl = document.getElementById('preeval-username');
@@ -27,7 +32,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   }
 
-  function showFeedback(title, text) {
+  // scroll=false: sayfa açılışındaki iletiler kaydırılmaz (kaydırma klavyenin ilk Tab başlangıç noktasını kutuya taşır,
+  // "İçeriğe geç" atlanırdı); kutu zaten sayfanın başındadır.
+  function showFeedback(title, text, scroll = true) {
     if (!feedbackBox) return;
     feedbackBox.replaceChildren();
     const wrap = document.createElement('div');
@@ -38,7 +45,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     wrap.append(h, p);
     feedbackBox.append(wrap);
     feedbackBox.removeAttribute('hidden');
-    feedbackBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    if (scroll) feedbackBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   }
 
   // Panel sunucudaki başvuruyu kullanıcıya özel anahtara yazar; eski tek anahtar yedek olarak okunur.
@@ -46,16 +53,21 @@ document.addEventListener('DOMContentLoaded', async () => {
   const appData = MYUI.readJSON(appKey) || MYUI.readJSON('mutfaktan_application');
   // Sunucu tek doğru kaynaktır: ref, iş türü ve pencerenin açıklığı varsa oradan alınır; yerel kayıt yalnız çevrimdışı yedektir.
   let server = null;
+  let serverFailStatus = 0;   // GET /v1/preeval başarısızsa HTTP durumu (ağ hatası 0)
   if (window.MYAPI) {
-    try { server = await MYAPI.getPreeval(); } catch (e) { server = null; }
+    try { server = await MYAPI.getPreeval(); } catch (e) { server = null; serverFailStatus = (e && e.status) || 0; }
     if (server && !server.ok) server = null;
   }
   // Doğrulama belgeleri sunucuda ayrı kayıttır; liste yalnızca sunucunun tuttuğu belgeleri gösterir.
   let serverDocs = null;
+  let requestedKinds = null;   // editörün talep ettiği türler (GET /v1/application requestedDocs); bilinmiyorsa null
   if (server) {
     try {
       const res = await MYAPI.getApplication();
-      if (res && res.application) serverDocs = res.application.verificationDocs || [];
+      if (res && res.application) {
+        serverDocs = res.application.verificationDocs || [];
+        if (Array.isArray(res.application.requestedDocs)) requestedKinds = res.application.requestedDocs;
+      }
     } catch (e) { serverDocs = null; }
   }
   const refNo = (server && server.ref) || (appData && appData.refNo);
@@ -76,13 +88,15 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   // Gönderilmiş yanıtlar sunucudan gelir (başka cihazda ya da yerel kayıt silinmişken de görünür); yerel kopya
-  // yalnız sunucuya ulaşılamazken kullanılır ve ancak bu başvurunun ref numarasıyla eşleşiyorsa bu başvuruya aittir.
-  // GET /v1/preeval: {ok, ref, status, biztype, is_open, answers}; answers aday yanıtlayana dek null'dır.
-  const serverAnswers = server && server.answers && typeof server.answers === 'object' ? server.answers : null;
+  // yalnız sunucuya ulaşılamazken okunur (yazılmaz) ve ancak bu başvurunun ref numarasıyla eşleşiyorsa bu başvuruya aittir.
+  // GET /v1/preeval: {ok, ref, status, biztype, is_open, submitted, answers (yalnız gönderilmişse), draft, savedAt, ...}.
+  const serverAnswers = server && server.submitted && server.answers && typeof server.answers === 'object' ? server.answers : null;
   const storedAnswers = server ? null : MYUI.readJSON(getPreevalAnswersKey());
   const localAnswers = storedAnswers && refNo && storedAnswers.ref === refNo ? storedAnswers : null;
   const existingAnswers = serverAnswers || localAnswers;
+  // Salt okunur kip yalnız gönderilmişte: kayıtlı taslak düzenlenebilir kalır.
   const isViewMode = !!existingAnswers;
+  const draftAnswers = server && !server.submitted && server.draft && typeof server.draft === 'object' ? server.draft : null;
 
   const textareas = [1, 2, 3, 4, 5, 6].map(n => ({
     key: `q${n}`,
@@ -90,15 +104,37 @@ document.addEventListener('DOMContentLoaded', async () => {
     countId: `count-q${n}`
   }));
 
+  // Ö1: sunucu varken GET /v1/preeval başarısızsa form açılmaz; yoksa boş form "Kaydet" ile sunucudaki taslağın üstüne yazabilir.
+  // Yalnız bu başvurunun yerel, gönderilmiş kopyası salt okunur gösterilebilir (hiçbir şey yazamaz). 401'de api.js girişe yönlendirir.
+  if (window.MYAPI && !server && !localAnswers) {
+    if (form) form.setAttribute('hidden', '');
+    if (serverFailStatus === 401) return;
+    if (serverFailStatus === 404) {
+      showFeedback('Başvuru kaydı bulunamadı', 'Ön Değerlendirme sorularını yanıtlamak için başvurunuzu göndermiş olmanız gerekir.', false);
+    } else {
+      showFeedback('Bağlantı hatası', 'Sunucuya ulaşılamadı. Lütfen sayfayı yenileyiniz.', false);
+    }
+    return;
+  }
+
   if (!refNo) {
     if (form) form.setAttribute('hidden', '');
-    showFeedback('Başvuru kaydı bulunamadı', 'Ön Değerlendirme sorularını yanıtlamak için başvurunuzu göndermiş olmanız gerekir.');
+    showFeedback('Başvuru kaydı bulunamadı', 'Ön Değerlendirme sorularını yanıtlamak için başvurunuzu göndermiş olmanız gerekir.', false);
+    return;
+  }
+
+  // Aşama açık ama süre doldu (hiç kaydedilmemiş form; kayıtlı taslak süre dolunca gönderilmiş görünür): form ve
+  // belge yükleme açılmaz, durum baştan söylenir.
+  if (!isViewMode && formOpen && server && server.closed === true) {
+    if (form) form.setAttribute('hidden', '');
+    if (statusBadge) statusBadge.textContent = 'Ön Değerlendirme Süresi Doldu';
+    showFeedback('Ön Değerlendirme Süresi Doldu', 'Ön değerlendirme süresi sona erdiği için yanıt gönderilemez ve belge yüklenemez. Süre uzatılırsa size e-posta ile bildirilecektir.', false);
     return;
   }
 
   if (!isViewMode && !formOpen) {
     if (form) form.setAttribute('hidden', '');
-    showFeedback('Ön Değerlendirme aşamanız henüz açılmadı', 'Bu aşama, program ekibi tarafından açılan adaylar içindir. Aşamanız açıldığında belgelerinizi bu sayfadan yükleyip soruları yanıtlayabilirsiniz.');
+    showFeedback('Ön Değerlendirme aşamanız henüz açılmadı', 'Bu aşama, program ekibi tarafından açılan adaylar içindir. Aşamanız açıldığında belgelerinizi bu sayfadan yükleyip soruları yanıtlayabilirsiniz.', false);
     return;
   }
 
@@ -131,12 +167,9 @@ document.addEventListener('DOMContentLoaded', async () => {
   function docOfKind(kind) {
     return currentDocs().find(d => d && d.kind === kind) || null;
   }
+  // Yalnız rozet metni içindir; belge zorunlu olmadığından Gönder düğmesini kısıtlamaz.
   function requiredDocsDone() {
     return docKinds.filter(k => k.required).every(k => docOfKind(k.kind));
-  }
-  // Zorunlu belge yokken sorular gönderilemez (sunucu da aynısını uygular).
-  function syncSubmit() {
-    if (submitBtn && !readOnly) submitBtn.disabled = !requiredDocsDone();
   }
 
   function formatDocMeta(doc) {
@@ -169,7 +202,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
       const info = document.createElement('div');
       const title = document.createElement('strong');
-      title.textContent = k.label + (k.required || readOnly ? '' : ' (isteğe bağlı)');
+      title.textContent = k.label;
       const state = document.createElement('div');
       state.dataset.role = 'doc-state';
       state.textContent = doc ? doc.name + ' — ' + formatDocMeta(doc) : 'Belge bekleniyor';
@@ -216,7 +249,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     const done = readOnly || (requiredDocsDone() && currentDocs().length > 0);
     if (docBadge) docBadge.textContent = readOnly ? 'Belgeler Teslim Edildi' : (done ? 'Belgeler Yüklendi' : 'Belge Bekleniyor');
     if (docSuccess) docSuccess.style.display = done && !readOnly ? 'block' : 'none';
-    syncSubmit();
   }
 
   // Her işlem tek dosyadır ve sonunda liste sunucudaki gerçek duruma göre yeniden çizilir; başarısız ya da
@@ -289,83 +321,152 @@ document.addEventListener('DOMContentLoaded', async () => {
       confirmCheck.disabled = true;
     }
     if (submitBtn) submitBtn.setAttribute('hidden', '');
+    if (saveBtn) saveBtn.setAttribute('hidden', '');
+    if (warningEl) warningEl.setAttribute('hidden', '');
     if (statusBadge) statusBadge.textContent = 'Cevaplar Gönderildi';
-    showFeedback('Ön Değerlendirme Yanıtlarınız Alındı', 'Verdiğiniz yanıtlar ve yüklediğiniz belgeler aşağıda yer almaktadır; program ekibi tarafından incelenmektedir.');
+    showFeedback('Ön Değerlendirme Yanıtlarınız Alındı', 'Verdiğiniz yanıtlar ve yüklediğiniz belgeler aşağıda yer almaktadır; program ekibi tarafından incelenmektedir.', false);
+  }
+
+  // Kayıtlı taslak: alanlar sunucudan dolar, düzenlenebilir kalır. "Son kayıt" yalnız adayın kendi Kaydet'inden gelir (savedAt null ise gösterilmez).
+  function showSavedAt(iso) {
+    if (!savedAtEl) return;
+    const d = iso ? new Date(iso) : null;
+    if (!d || isNaN(d)) {
+      savedAtEl.setAttribute('hidden', '');
+      return;
+    }
+    const sameDay = d.toDateString() === new Date().toDateString();
+    savedAtEl.textContent = 'Son kayıt: ' + (sameDay
+      ? d.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' })
+      : d.toLocaleString('tr-TR', { dateStyle: 'short', timeStyle: 'short' }));
+    savedAtEl.removeAttribute('hidden');
+  }
+
+  if (draftAnswers) {
+    textareas.forEach(item => {
+      const el = document.getElementById(item.id);
+      if (el && typeof draftAnswers[item.key] === 'string' && draftAnswers[item.key]) {
+        el.value = draftAnswers[item.key];
+        const countEl = document.getElementById(item.countId);
+        if (countEl) countEl.textContent = el.value.length;
+      }
+    });
+  }
+  if (!isViewMode) showSavedAt(server && server.savedAt);
+
+  function errText(apiErr, fallback) {
+    return (apiErr.errors && apiErr.errors[0] && apiErr.errors[0].text) || apiErr.message || fallback;
+  }
+
+  // Ö2 şirket dışında sorulmaz ve gönderilmez (sunucu da temizler).
+  function collectAnswers() {
+    const out = {};
+    textareas.forEach(item => {
+      if (item.key === 'q2' && !askQ2) {
+        out.q2 = '';
+        return;
+      }
+      const el = document.getElementById(item.id);
+      out[item.key] = el ? el.value.trim() : '';
+    });
+    return out;
+  }
+
+  function bytesExceeded(answers) {
+    const encoder = new TextEncoder();
+    return textareas.some(item => !(item.key === 'q2' && !askQ2) && encoder.encode(answers[item.key] || '').length > 1024);
+  }
+
+  function setBusy(busy) {
+    if (saveBtn) saveBtn.disabled = busy;
+    if (submitBtn) submitBtn.disabled = busy;
+  }
+
+  function hideSendConfirm() {
+    if (sendConfirm) sendConfirm.setAttribute('hidden', '');
   }
 
   if (form && !isViewMode) {
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      if (!requiredDocsDone()) {
-        if (docError) {
-          docError.textContent = 'Soruları gönderebilmek için lütfen önce zorunlu doğrulama belgelerinizi yükleyiniz.';
-          docError.style.display = 'block';
-        }
-        sectionDocs.scrollIntoView({ behavior: 'smooth' });
-        return;
-      }
+    form.addEventListener('input', hideSendConfirm);
 
-      let allFilled = true;
-      const answers = { ref: refNo };
-
-      textareas.forEach(item => {
-        if (item.key === 'q2' && !askQ2) {
-          answers.q2 = null;
+    // Kaydet: hiçbir alan zorunlu değildir; hata olursa alanlar olduğu gibi kalır.
+    if (saveBtn) {
+      saveBtn.addEventListener('click', async () => {
+        hideSendConfirm();
+        const answers = collectAnswers();
+        if (bytesExceeded(answers)) {
+          showFeedback('Karakter sınırı aşıldı', 'Yanıtlarınız en fazla 1024 bayt uzunluğunda olmalıdır.');
           return;
         }
-        const el = document.getElementById(item.id);
-        const val = el ? el.value.trim() : '';
-        if (!val) allFilled = false;
-        answers[item.key] = val;
+        if (!window.MYAPI) {
+          showFeedback('Kayıt hatası', 'Sunucuya ulaşılamadı; taslağınız kaydedilemedi.');
+          return;
+        }
+        setBusy(true);
+        try {
+          const res = await MYAPI.savePreevalDraft(answers);
+          showFeedback('Taslağınız kaydedildi', 'Yanıtlarınızı daha sonra tamamlayabilirsiniz; tamamladığınızda “Gönder” ile iletiniz.');
+          showSavedAt((res && res.savedAt) || new Date().toISOString());
+        } catch (apiErr) {
+          showFeedback('Kayıt hatası', errText(apiErr, 'Taslak kaydedilemedi.'));
+        } finally {
+          setBusy(false);
+        }
       });
+    }
 
+    // Gönder: önce zorunlu yanıt, bayt ve beyan denetimi; sonra satır içi onay (eksik belgeler adıyla).
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const answers = collectAnswers();
+      const allFilled = textareas.every(item => (item.key === 'q2' && !askQ2) || answers[item.key]);
       if (!allFilled) {
+        hideSendConfirm();
         showFeedback('Eksik yanıt', 'Lütfen size sorulan tüm soruları yanıtlayınız.');
         return;
       }
-
-      const encoder = new TextEncoder();
-      let byteExceeded = false;
-      textareas.forEach(item => {
-        if (item.key === 'q2' && !askQ2) return;
-        const val = answers[item.key] || '';
-        if (encoder.encode(val).length > 1024) {
-          byteExceeded = true;
-        }
-      });
-      if (byteExceeded) {
+      if (bytesExceeded(answers)) {
+        hideSendConfirm();
         showFeedback('Karakter sınırı aşıldı', 'Yanıtlarınız en fazla 1024 bayt uzunluğunda olmalıdır.');
         return;
       }
-
       if (!confirmCheck.checked) {
+        hideSendConfirm();
         showFeedback('Doğruluk beyanı gerekli', 'Lütfen doğruluk beyanını onaylayınız.');
         return;
       }
+      // Yalnız talep edilen ve yüklenmemiş türler listelenir (talep yoksa liste yok); talep bilinmiyorsa tüm türler.
+      const asked = requestedKinds ? docKinds.filter(k => requestedKinds.indexOf(k.kind) >= 0) : docKinds;
+      const missing = asked.filter(k => !docOfKind(k.kind)).map(k => k.label);
+      const lines = [];
+      if (missing.length) lines.push('Yüklemediğiniz belgeler: ' + missing.join(', ') + '.');
+      lines.push('Gönderdikten sonra belge eklenemez ve yanıtlar değiştirilemez. Göndermek istiyor musunuz?');
+      sendConfirm.querySelector('span').textContent = lines.join(' ');
+      sendConfirm.removeAttribute('hidden');
+      document.getElementById('btn-send-yes').focus();
+    });
 
-      if (window.MYAPI) {
-        try {
-          await MYAPI.submitPreeval({
-            q1: answers.q1 || '',
-            q2: answers.q2 || '',
-            q3: answers.q3 || '',
-            q4: answers.q4 || '',
-            q5: answers.q5 || '',
-            q6: answers.q6 || ''
-          });
-        } catch (apiErr) {
-          showFeedback('Gönderim hatası', (apiErr.errors && apiErr.errors[0] && apiErr.errors[0].text) || apiErr.message || 'Cevaplar iletilemedi.');
-          return;
-        }
+    document.getElementById('btn-send-no').addEventListener('click', () => {
+      hideSendConfirm();
+      submitBtn.focus();
+    });
+
+    document.getElementById('btn-send-yes').addEventListener('click', async () => {
+      hideSendConfirm();
+      if (!window.MYAPI) {
+        showFeedback('Gönderim hatası', 'Sunucuya ulaşılamadı; cevaplar iletilemedi.');
+        return;
       }
-
-      answers.submittedAt = new Date().toISOString();
-      MYUI.writeJSON(getPreevalAnswersKey(), answers);
-
+      setBusy(true);
+      try {
+        await MYAPI.submitPreeval(collectAnswers());
+      } catch (apiErr) {
+        showFeedback('Gönderim hatası', errText(apiErr, 'Cevaplar iletilemedi.'));
+        setBusy(false);
+        return;
+      }
+      // Sunucu tek doğru kaynaktır: yerel kopya yazılmaz.
       showFeedback('Ön Değerlendirme cevaplarınız gönderildi', 'Cevaplarınız program ekibine iletildi. Takip paneline yönlendiriliyorsunuz...');
-
-      submitBtn.disabled = true;
-
       setTimeout(() => {
         window.location.href = 'panel.html';
       }, 1500);

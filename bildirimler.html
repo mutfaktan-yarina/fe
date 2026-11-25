@@ -35,11 +35,11 @@
   <link rel="stylesheet" href="editor.css">
   <link rel="stylesheet" href="print.css" media="print">
   <link rel="stylesheet" href="cerez.css">
-  <script src="cerez.js" defer></script>
-  <script src="ui.js" defer></script>
-  <script src="config.js" defer></script>
-  <script src="api.js" defer></script>
-  <script src="bildirimler.js" defer></script>
+  <script src="cerez.js?v=a2a44814" defer></script>
+  <script src="ui.js?v=53ab6809" defer></script>
+  <script src="config.js?v=58273c24" defer></script>
+  <script src="api.js?v=a5ec3878" defer></script>
+  <script src="bildirimler.js?v=9f8a3e68" defer></script>
   <!-- @end head -->
 </head>
 <body>
@@ -128,6 +128,49 @@
         <p id="rejConfirm" hidden><span></span> <button type="button" id="btnAnnounceYes">Evet, Gönder</button> <button type="button" id="btnAnnounceNo">Vazgeç</button></p>
       </div>
       <p id="rejFeedback" role="status" hidden></p>
+    </section>
+
+    <section aria-labelledby="pnTitle" id="pnSection">
+      <h2 id="pnTitle">Ön Değerlendirme Hatırlatma / Süre Uzatma</h2>
+      <p>Ön değerlendirme süresi uzatıldıysa, “Hatırlatmaları Gönder” formu henüz göndermemiş adaylara hatırlatma, süre dolunca otomatik gönderilmiş ve henüz puanlanmamış adaylara ise formun yeniden açıldığını bildiren e-posta yollar. Her aday, her son tarih için yalnızca bir kez bilgilendirilir.</p>
+      <p id="pnWindow" role="status"></p>
+      <p id="pnAuto" role="status"></p>
+      <div class="table-card">
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">Grup</th>
+              <th scope="col">Kişi</th>
+              <th scope="col">E-posta konusu</th>
+            </tr>
+          </thead>
+          <tbody id="pnTableBody">
+          </tbody>
+        </table>
+      </div>
+      <div id="pnActions">
+        <button type="button" id="btnPreevalSend" disabled>Hatırlatmaları Gönder</button>
+        <p id="pnConfirm" hidden role="status"><span></span> <button type="button" id="btnPreevalYes">Evet, Gönder</button> <button type="button" id="btnPreevalNo">Vazgeç</button></p>
+      </div>
+      <p id="pnFeedback" role="status" hidden></p>
+      <h3 id="pnUndeliveredTitle">Teslim edilemeyen e-postalar (son 7 gün)</h3>
+      <p id="pnUndeliveredEmpty" role="status" hidden>Teslim edilemeyen e-posta yok.</p>
+      <div class="table-card" id="pnUndeliveredCard" hidden>
+        <table aria-labelledby="pnUndeliveredTitle">
+          <thead>
+            <tr>
+              <th scope="col">Ref No</th>
+              <th scope="col">Ad Soyad</th>
+              <th scope="col">Telefon</th>
+              <th scope="col">E-posta</th>
+              <th scope="col">Zaman</th>
+              <th scope="col">Konu</th>
+            </tr>
+          </thead>
+          <tbody id="pnUndeliveredBody">
+          </tbody>
+        </table>
+      </div>
     </section>
 
   </main>

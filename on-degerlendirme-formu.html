@@ -34,11 +34,11 @@
   <link rel="stylesheet" href="panel.css">
   <link rel="stylesheet" href="print.css" media="print">
   <link rel="stylesheet" href="cerez.css">
-  <script src="cerez.js" defer></script>
-  <script src="ui.js" defer></script>
-  <script src="config.js" defer></script>
-  <script src="api.js" defer></script>
-  <script src="on-degerlendirme-formu.js" defer></script>
+  <script src="cerez.js?v=a2a44814" defer></script>
+  <script src="ui.js?v=53ab6809" defer></script>
+  <script src="config.js?v=58273c24" defer></script>
+  <script src="api.js?v=a5ec3878" defer></script>
+  <script src="on-degerlendirme-formu.js?v=b10d8aa6" defer></script>
   <!-- @end head -->
 </head>
 <body>
@@ -88,7 +88,7 @@
           </span>
         </h1>
         <p class="preeval-q-sub">
-          Aşağıdaki soruları en fazla 1000 karakter olacak şekilde yanıtlayınız. Cevapları size bildirilen süre içinde (takvim: 25 Kasım – 2 Aralık 2026) tamamlamalısınız; tamamlanmayan başvurular değerlendirme dışı kalır.
+          Aşağıdaki soruları en fazla 1000 karakter olacak şekilde yanıtlayınız. Cevapları size bildirilen süre içinde tamamlamalısınız; tamamlanmayan başvurular değerlendirme dışı kalır.
         </p>
       </div>
     </div>
@@ -187,8 +187,12 @@
         </label>
       </div>
 
-      <button type="submit" id="btn-submit-preeval" disabled>
-        <span>Ön Değerlendirme Cevaplarını Gönder</span>
+      <p id="preeval-warning">Önce belgelerinizi yükleyiniz, soruları en son gönderiniz; gönderdikten sonra belge eklenemez ve yanıtlar değiştirilemez.</p>
+      <p id="preeval-saved-at" role="status" hidden></p>
+      <p id="preeval-send-confirm" role="alert" hidden><span></span> <button type="button" id="btn-send-yes" class="btn btn-sm">Evet, Gönder</button> <button type="button" id="btn-send-no" class="btn btn-outline btn-sm">Vazgeç</button></p>
+      <button type="button" id="btn-save-preeval" class="btn btn-outline">Kaydet</button>
+      <button type="submit" id="btn-submit-preeval">
+        <span>Gönder</span>
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
           <line x1="5" y1="12" x2="19" y2="12"></line>
           <polyline points="12 5 19 12 12 19"></polyline>

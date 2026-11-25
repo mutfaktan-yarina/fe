@@ -725,7 +725,8 @@ main.editor-page-wrap {
   color: var(--white);
 }
 
-#preevalClosed > p {
+#preevalClosed > p,
+#autoSubmittedNote {
   font-size: 0.9rem;
   color: var(--gray-600);
 }
@@ -1457,6 +1458,8 @@ main.editor-page-wrap {
     margin-left: 0;
     margin-top: 0.5rem;
     justify-content: flex-start;
+    /* Yöneticinin beş bağlantısı dar ekranda sığmaz: satır kırılır, yatay taşma olmaz */
+    flex-wrap: wrap;
   }
 }
 
@@ -1864,4 +1867,19 @@ main[data-admin-ops] > section > div:not([class]) > p {
   .doc-files-list label[data-upload-label] {
     min-height: 44px;
   }
+}
+
+/* Takvim: GG.AA.YYYY tarih ve 24 saatlik SS:DD saat kutusu yan yana */
+main[data-admin-ops] > section > form[data-stacked] > div > span {
+  display: flex;
+  gap: 0.5rem;
+}
+
+main[data-admin-ops] > section > form[data-stacked] > div > span > input {
+  width: 8.5rem;
+  text-align: center;
+}
+
+main[data-admin-ops] > section > form[data-stacked] > div > span > input[data-part="time"] {
+  width: 5.5rem;
 }

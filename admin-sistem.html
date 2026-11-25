@@ -35,11 +35,11 @@
   <link rel="stylesheet" href="editor.css">
   <link rel="stylesheet" href="print.css" media="print">
   <link rel="stylesheet" href="cerez.css">
-  <script src="cerez.js" defer></script>
-  <script src="ui.js" defer></script>
-  <script src="config.js" defer></script>
-  <script src="api.js" defer></script>
-  <script src="admin-sistem.js" defer></script>
+  <script src="cerez.js?v=a2a44814" defer></script>
+  <script src="ui.js?v=53ab6809" defer></script>
+  <script src="config.js?v=58273c24" defer></script>
+  <script src="api.js?v=a5ec3878" defer></script>
+  <script src="admin-sistem.js?v=49b58efc" defer></script>
   <!-- @end head -->
 </head>
 <body>
@@ -132,27 +132,28 @@
       <form id="calendarForm" data-stacked>
         <div>
           <label for="calApplyOpen">Başvuru Başlangıcı</label>
-          <input type="datetime-local" id="calApplyOpen" name="apply_open" required>
+          <input type="hidden" id="calApplyOpen" name="apply_open">
         </div>
         <div>
           <label for="calApplyClose">Başvuru Bitişi</label>
-          <input type="datetime-local" id="calApplyClose" name="apply_close" required>
+          <input type="hidden" id="calApplyClose" name="apply_close">
         </div>
         <div>
           <label for="calPreevalOpen">Ön Değerlendirme Başlangıcı</label>
-          <input type="datetime-local" id="calPreevalOpen" name="preeval_open" required>
+          <input type="hidden" id="calPreevalOpen" name="preeval_open">
         </div>
         <div>
           <label for="calPreevalClose">Ön Değerlendirme Bitişi</label>
-          <input type="datetime-local" id="calPreevalClose" name="preeval_close" required>
+          <input type="hidden" id="calPreevalClose" name="preeval_close">
+          <p id="calPreevalNote">Süreyi uzattıktan sonra adaylara hatırlatma göndermek için <a href="bildirimler.html">Bildirimler</a> sayfasına gidin.</p>
         </div>
         <div>
           <label for="calEvalOpen">Değerlendirme Başlangıcı</label>
-          <input type="datetime-local" id="calEvalOpen" name="eval_open" required>
+          <input type="hidden" id="calEvalOpen" name="eval_open">
         </div>
         <div>
           <label for="calEvalClose">Değerlendirme Bitişi</label>
-          <input type="datetime-local" id="calEvalClose" name="eval_close" required>
+          <input type="hidden" id="calEvalClose" name="eval_close">
         </div>
         <button type="submit" id="calSave">Takvimi Kaydet</button>
       </form>

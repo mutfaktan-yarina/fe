@@ -772,6 +772,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     const answers = storedAnswersOf();
     const opened = OPEN_STATES.includes(status) || (status === 'rejected' && !!answers);
     if (preevalClosed) preevalClosed.hidden = opened;
+    // Taslak süre dolunca sistem tarafından gönderildiyse (aday kendisi göndermediyse) belirtilir.
+    const autoNote = document.getElementById('autoSubmittedNote');
+    if (autoNote) autoNote.hidden = !(opened && currentApp.autoSubmitted === true && !!answers);
     document.querySelectorAll('details > article').forEach((a) => { a.hidden = !opened; });
     for (let n = 1; n <= 6; n++) {
       const el = document.getElementById(`ansQ${n}`);

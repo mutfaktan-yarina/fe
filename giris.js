@@ -88,7 +88,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const next = (new URLSearchParams(window.location.search).get('next') || '').trim();
       const allowed = isStaff
         ? /^(editor-panel|editor-degerlendirme|admin-kullanicilar|admin-denetim|admin-sistem)\.html$/
-        : /^(panel|basvuru)\.html$/;
+        : /^(panel|basvuru|on-degerlendirme-formu)\.html$/;
       window.location.href = allowed.test(next) ? next : (isStaff ? 'editor-panel.html' : 'panel.html');
     }
 

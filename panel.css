@@ -791,6 +791,40 @@ footer.site-footer a:hover {
   margin-bottom: 1.5rem;
 }
 
+/* Kaydet / Gönder: kalıcı uyarı, son kayıt saati, satır içi gönderim onayı */
+#preeval-warning,
+#preeval-saved-at,
+#preeval-send-confirm {
+  margin: 0 0 1rem;
+  font-size: 0.9rem;
+}
+
+#preeval-warning {
+  font-weight: 600;
+}
+
+#preeval-send-confirm {
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--gray-300, var(--gray-200));
+  border-radius: var(--radius-sm);
+  background: var(--white);
+}
+
+/* message on its own line, then the two buttons with room above and between them */
+#preeval-send-confirm > span {
+  display: block;
+  margin-bottom: 0.75rem;
+}
+
+#preeval-send-confirm > button + button {
+  margin-left: 0.75rem;
+}
+
+#btn-save-preeval {
+  width: 100%;
+  margin-bottom: 0.75rem;
+}
+
 @media print {
   .panel-header,
   .status-actions,
@@ -1015,4 +1049,9 @@ footer.site-footer a:hover {
   margin: 0;
   font-size: 0.85rem;
   color: var(--danger, #dc2626);
+}
+
+/* the form page's feedback banner sits above the cards: same gap as between two cards */
+#preeval-feedback {
+  margin-bottom: 1.5rem;
 }

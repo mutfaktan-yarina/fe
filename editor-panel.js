@@ -170,7 +170,7 @@ document.addEventListener("DOMContentLoaded", () => {
         return false;
       }
       if (query) {
-        const fields = [app.name, app.business, app.ref, app.city];
+        const fields = [app.name, app.email, app.business, app.ref, app.city];
         const hit = fields.some(f => String(f || "").toLocaleLowerCase("tr-TR").includes(query));
         if (!hit) return false;
       }
@@ -226,8 +226,11 @@ document.addEventListener("DOMContentLoaded", () => {
       nameSpan.textContent = app.name;
       const bizSpan = document.createElement("span");
       bizSpan.textContent = app.business;
+      const mailSpan = document.createElement("span");
+      mailSpan.textContent = app.email;
       colDiv.appendChild(nameSpan);
       colDiv.appendChild(bizSpan);
+      colDiv.appendChild(mailSpan);
       tdApplicant.appendChild(colDiv);
       tr.appendChild(tdApplicant);
 
@@ -321,7 +324,7 @@ document.addEventListener("DOMContentLoaded", () => {
   function renderDrafts() {
     const query = searchQuery.toLocaleLowerCase("tr-TR");
     const shown = drafts.filter(app => !query ||
-      [app.name, app.business, app.ref, app.city].some(f => String(f || "").toLocaleLowerCase("tr-TR").includes(query)));
+      [app.name, app.email, app.business, app.ref, app.city].some(f => String(f || "").toLocaleLowerCase("tr-TR").includes(query)));
     if (shown.length === 0) {
       const tr = document.createElement("tr");
       const td = document.createElement("td");
@@ -351,7 +354,9 @@ document.addEventListener("DOMContentLoaded", () => {
       nameSpan.textContent = app.name;
       const bizSpan = document.createElement("span");
       bizSpan.textContent = app.business;
-      colDiv.append(nameSpan, bizSpan);
+      const mailSpan = document.createElement("span");
+      mailSpan.textContent = app.email;
+      colDiv.append(nameSpan, bizSpan, mailSpan);
       tdApplicant.appendChild(colDiv);
       cell(`${app.city} · ${STRUCTURE_LABELS[app.biztype] || "-"}`);
       cell(num(app.totalEmployees) === null ? "—" : `${app.totalEmployees} SGK (%${app.femaleRatio} Kadın)`);
@@ -473,6 +478,7 @@ document.addEventListener("DOMContentLoaded", () => {
         order: Number.isFinite(Number(app.id)) ? Number(app.id) : i,
         ref: app.ref,
         name: app.name,
+        email: app.email || "",
         business: app.business,
         city: app.city,
         biztype: app.biztype,
