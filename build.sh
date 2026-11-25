@@ -5,7 +5,7 @@
 # İşaret:  <!-- @include ad anahtar=değer anahtar="boşluklu değer" -->  ...üretilen blok...  <!-- @end ad -->
 # Partial söz dizimi: {{k}} · {{k|varsayılan}} · {{aria:k}} (active=k ise aria-current="page") · {{id:k}} (k doluysa id="…")
 #   tek satırlık {{css}} / {{scripts}} (boşlukla ayrılmış ad listesi → <link> / <script defer>)
-#   betikler <script src="ad.js?v=sha1-ilk-8"> olarak yazılır (önbellek aşımı; içerik değişince adres değişir)
+#   betikler <script src="ad.js?v=sha1-ilk-8">, stiller <link … href="ad.css?v=sha1-ilk-8"> olarak yazılır (önbellek aşımı; içerik değişince adres değişir)
 #   satır blokları: {{#k}}…{{/}} (k dolu) · {{^k}}…{{/}} (k boş) · {{#k=v}} / {{^k=v}}
 # Çıkış: 0 tamam · 1 --check'te fark ya da kırık bağlantı · 2 hata (eşleşmeyen işaret, bilinmeyen partial, doldurulmamış {{…}})
 set -euo pipefail
@@ -102,25 +102,33 @@ function subst(s,    out, p, q, tok) {
   return out s
 }
 
-# Cache busting: <script src="ad.js" defer> gets ?v=<first 8 chars of the file's sha1> so a new release is never served from a stale cache.
-function jsver(name,    f, cmd, h, probe) {
-  if (name in VER) return VER[name]
-  f = name ".js"
-  VER[name] = ""
+# Cache busting: <script src="ad.js" defer> and <link rel="stylesheet" href="ad.css"> get ?v=<first 8 chars of the file's
+# sha1> so a new release is never served from a stale cache.
+function filever(f,    cmd, h, probe) {
+  if (f in VER) return VER[f]
+  VER[f] = ""
   if ((getline probe < f) >= 0) {
     close(f)
     cmd = "sha1sum < \"" f "\""
-    if ((cmd | getline h) > 0) VER[name] = substr(h, 1, 8)
+    if ((cmd | getline h) > 0) VER[f] = substr(h, 1, 8)
     close(cmd)
   }
-  return VER[name]
+  return VER[f]
 }
 function vscript(s,    name, v) {
-  if (!match(s, /<script src="[a-z0-9-]+\.js" defer>/)) return s
-  name = substr(s, RSTART + 13, RLENGTH - 13 - 11)
-  v = jsver(name)
-  if (v == "") return s
-  return substr(s, 1, RSTART + 12) name ".js?v=" v substr(s, RSTART + RLENGTH - 8)
+  if (match(s, /<script src="[a-z0-9-]+\.js" defer>/)) {
+    name = substr(s, RSTART + 13, RLENGTH - 13 - 11)
+    v = filever(name ".js")
+    if (v == "") return s
+    return substr(s, 1, RSTART + 12) name ".js?v=" v substr(s, RSTART + RLENGTH - 8)
+  }
+  if (match(s, /<link rel="stylesheet" href="[a-z0-9-]+\.css">/)) {
+    name = substr(s, RSTART + 29, RLENGTH - 29 - 6)
+    v = filever(name ".css")
+    if (v == "") return s
+    return substr(s, 1, RSTART + 28) name ".css?v=" v substr(s, RSTART + RLENGTH - 2)
+  }
+  return s
 }
 function emit(s) { if (s == "") print ""; else print bind vscript(s) }
 

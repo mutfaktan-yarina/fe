@@ -180,7 +180,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (filtered.length === 0) {
       const tr = document.createElement("tr");
       const td = document.createElement("td");
-      td.setAttribute("colspan", "12");
+      td.setAttribute("colspan", "11");
       td.textContent = loadState === "loading" ? "Başvurular yükleniyor..."
         : loadState === "error" ? loadErrorText
         : "Kriterlere uygun başvuru bulunamadı.";
@@ -193,6 +193,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const status = statusOf(app);
       const inJury = jury.has(app.ref);
       const tr = document.createElement("tr");
+      tr.dataset.ref = app.ref;
 
       const tdSel = document.createElement("td");
       const sel = document.createElement("input");
@@ -215,22 +216,18 @@ document.addEventListener("DOMContentLoaded", () => {
       tdRank.appendChild(rankPill);
       tr.appendChild(tdRank);
 
-      const tdRef = document.createElement("td");
-      tdRef.textContent = app.ref;
-      tr.appendChild(tdRef);
-
       const tdApplicant = document.createElement("td");
       const colDiv = document.createElement("div");
       colDiv.className = "applicant-col-main";
       const nameSpan = document.createElement("strong");
       nameSpan.textContent = app.name;
+      const refEl = document.createElement("small");
+      refEl.textContent = app.ref;
       const bizSpan = document.createElement("span");
       bizSpan.textContent = app.business;
       const mailSpan = document.createElement("span");
       mailSpan.textContent = app.email;
-      colDiv.appendChild(nameSpan);
-      colDiv.appendChild(bizSpan);
-      colDiv.appendChild(mailSpan);
+      colDiv.append(nameSpan, refEl, bizSpan, mailSpan);
       tdApplicant.appendChild(colDiv);
       tr.appendChild(tdApplicant);
 
@@ -328,7 +325,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (shown.length === 0) {
       const tr = document.createElement("tr");
       const td = document.createElement("td");
-      td.setAttribute("colspan", "12");
+      td.setAttribute("colspan", "11");
       td.textContent = draftState === "loading" ? "Taslaklar yükleniyor..."
         : draftState === "error" ? draftErrorText
         : "Kriterlere uygun taslak bulunamadı.";
@@ -338,6 +335,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     shown.forEach(app => {
       const tr = document.createElement("tr");
+      tr.dataset.ref = app.ref;
       const cell = (text) => {
         const td = document.createElement("td");
         td.textContent = text;
@@ -346,17 +344,18 @@ document.addEventListener("DOMContentLoaded", () => {
       };
       cell("");
       cell("–");
-      cell(app.ref);
       const tdApplicant = cell("");
       const colDiv = document.createElement("div");
       colDiv.className = "applicant-col-main";
       const nameSpan = document.createElement("strong");
       nameSpan.textContent = app.name;
+      const refEl = document.createElement("small");
+      refEl.textContent = app.ref;
       const bizSpan = document.createElement("span");
       bizSpan.textContent = app.business;
       const mailSpan = document.createElement("span");
       mailSpan.textContent = app.email;
-      colDiv.append(nameSpan, bizSpan, mailSpan);
+      colDiv.append(nameSpan, refEl, bizSpan, mailSpan);
       tdApplicant.appendChild(colDiv);
       cell(`${app.city} · ${STRUCTURE_LABELS[app.biztype] || "-"}`);
       cell(num(app.totalEmployees) === null ? "—" : `${app.totalEmployees} SGK (%${app.femaleRatio} Kadın)`);
